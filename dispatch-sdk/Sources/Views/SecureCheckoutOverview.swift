@@ -27,7 +27,7 @@ struct SecureCheckoutOverview: View {
 struct SecureCheckoutOverview_Previews: PreviewProvider {
     static var previews: some View {
         SecureCheckoutOverview(
-            theme: Theme()
+            theme: Theme.sharp
         )
         .previewDevice("iPhone 12")
     }

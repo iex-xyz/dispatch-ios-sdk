@@ -38,8 +38,8 @@ internal struct VariantPreviewButton: View {
 struct VariantPreviewButton_Previews: PreviewProvider {
     static var previews: some View {
         VStack {
-            VariantPreviewButton(theme: .init(), title: "Selected Color")
-            VariantPreviewButton(theme: .init(), title: "Selected Size")
+            VariantPreviewButton(theme: .sharp, title: "Selected Color")
+            VariantPreviewButton(theme: .sharp, title: "Selected Size")
         }
         .padding()
         .background(.black)

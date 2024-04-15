@@ -7,6 +7,7 @@ public struct DispatchSDK {
             return
         }
         
+        let testViewModel = CheckoutViewModel()
         let viewModel: ProductMediaViewModel = ProductMediaViewModel(images: [
             "https://fastly.picsum.photos/id/868/400/300.jpg?hmac=5C4AshIrWvAN9A0sY5Zgv6X_MVpHWivtCnxEMLRW8OE",
             "https://fastly.picsum.photos/id/889/400/300.jpg?hmac=bnjifYNFcybzu2SpzMsIa7Od1iOA9Jjz7imYROcHw-Q",

@@ -30,7 +30,7 @@ internal struct ProductOverviewDetailsCell: View {
                 }
                 .font(.footnote.bold())
             }
-            .buttonStyle(SecondaryButtonStyle(theme: Theme()))
+            .buttonStyle(SecondaryButtonStyle(theme: Theme.sharp))
         }
     }
 }
@@ -38,30 +38,8 @@ internal struct ProductOverviewDetailsCell: View {
 
 
 struct ThemeButtonStyle_Preview: PreviewProvider {
-    static let product: Product = .init(
-        attributes: nil,
-        baseCompareAtPrice: nil,
-        baseImages: [],
-        basePrice: 150.0,
-        baseQuantity: 10,
-        baseStrikethroughPrice: nil,
-        currencyCode: .usd,
-        description: "On the trail, details matter. Fast, rugged and ready for whatever wild comes your",
-        descriptionHtml: "On the trail, details matter. Fast, rugged and ready for whatever wild comes your",
-        hideCoverTransactionCosts: nil,
-        id: UUID().uuidString,
-        merchantId: nil,
-        name: "Nike ACG Mountain Fly 2 Low",
-        pdpUrl: nil,
-        priceSubtitleText: nil,
-        productLanguage: nil,
-        requiresBilling: nil,
-        requiresShipping: nil,
-        salesEnabled: true,
-        type: .product,
-        variations: nil
-    )
-    static let theme: Theme = .init()
+    static let product: Product = .mock()
+    static let theme: Theme = .sharp
     static var previews: some View {
         @State var text: String = ""
         VStack(spacing: 24) {

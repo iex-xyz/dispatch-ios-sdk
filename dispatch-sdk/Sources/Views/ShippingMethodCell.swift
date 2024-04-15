@@ -40,14 +40,14 @@ struct ShippingMethodCell_Preview: PreviewProvider {
                     handle: "Delivery within 4 to 6 business days.",
                     title: "Ground Shipping"
                 ),
-                theme: Theme()
+                theme: Theme.sharp
             )
             ShippingMethodCell(
                 shippingMethod: ShippingMethod.random(
                     handle: "Delivery within 2 business days.",
                     title: "Express 2nd Day"
                 ),
-                theme: Theme()
+                theme: Theme.sharp
             )
 
         }

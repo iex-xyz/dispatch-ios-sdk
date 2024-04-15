@@ -56,9 +56,9 @@ internal struct QuantityStepControl : View {
 
 
 struct QuantityStepControl_Preview: PreviewProvider {
-    static let round = Theme(inputStyle: .round)
-    static let soft = Theme(inputStyle: .soft)
-    static let hard = Theme(inputStyle: .sharp)
+    static let round = Theme.round
+    static let soft = Theme.soft
+    static let hard = Theme.sharp
 
     static var previews: some View {
         VStack {

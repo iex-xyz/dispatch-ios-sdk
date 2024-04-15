@@ -36,7 +36,7 @@ struct CheckboxToggleStyle: ToggleStyle {
 
 struct CheckboxToggleStyle_Preview: PreviewProvider {
     
-    static let theme: Theme = .init()
+    static let theme: Theme = .sharp
     
     static var previews: some View {
         VStack {

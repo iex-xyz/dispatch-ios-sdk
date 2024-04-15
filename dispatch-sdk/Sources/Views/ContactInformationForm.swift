@@ -3,6 +3,7 @@ import SwiftUI
 struct ContactInformationForm: View {
     let theme: Theme
     @State var isCheckboxChecked: Bool = false
+    @FocusState var isFocused: Bool
     
     var body: some View {
         VStack(alignment: .leading, spacing: 24) {
@@ -23,11 +24,10 @@ struct ContactInformationForm: View {
                 Text("Please enter your email to continue.")
                     .font(.footnote)
                 TextField("your@email.com", text: .constant(""))
+                    .focused($isFocused)
                     .textFieldStyle(
                         ThemeTextFieldStyle(
-                            isFocused: .constant(
-                                false
-                            ),
+                            isFocused: isFocused,
                             isValid: .constant(true),
                             theme: theme
                         )
@@ -38,7 +38,12 @@ struct ContactInformationForm: View {
                 Text("Allow |merchantName| to use this email address for marketing and newsletters.")
                     .font(.caption)
             })
-            .toggleStyle(CheckboxToggleStyle(isValid: .constant(true), theme: theme))
+            .toggleStyle(
+                CheckboxToggleStyle(
+                    isValid: .constant(true),
+                    theme: theme
+                )
+            )
             
             Button(action: {
                 
@@ -61,7 +66,7 @@ struct ContactInformationForm: View {
 
 
 struct ContactInformationForm_Preview: PreviewProvider {
-    static let theme: Theme = .init(inputStyle: .soft)
+    static let theme: Theme = .sharp
     static var previews: some View {
         @State var text: String = ""
         VStack {

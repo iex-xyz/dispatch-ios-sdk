@@ -20,9 +20,9 @@ struct SecondaryButtonStyle: ButtonStyle {
 
 
 struct SecondaryButtonStyle_Preview: PreviewProvider {
-    static let round = Theme(inputStyle: .round)
-    static let soft = Theme(inputStyle: .soft)
-    static let sharp = Theme(inputStyle: .sharp)
+    static let round = Theme.round
+    static let soft = Theme.soft
+    static let sharp = Theme.sharp
 
     static var previews: some View {
         VStack {

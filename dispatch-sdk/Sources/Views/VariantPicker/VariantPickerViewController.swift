@@ -212,7 +212,7 @@ class VariantPickerViewController: UIViewController, UICollectionViewDelegate {
                         .truncationMode(.middle)
                         .foregroundStyle(.white)
                 }
-                .frame(maxWidth: .infinity, maxHeight: .infinity)
+                .frame(maxWidth: .infinity, minHeight: 40, maxHeight: .infinity)
                 .overlay(RoundedRectangle(cornerRadius: 8).stroke(.blue))
                 .clipShape(RoundedRectangle(cornerRadius: 8))
             }

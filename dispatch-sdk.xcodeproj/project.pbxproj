@@ -23,6 +23,17 @@
 		DC64F45D2BCC84C800D29DF0 /* PaymentOptionsPickerView.swift in Sources */ = {isa = PBXBuildFile; fileRef = DC7BA95F2BCA2406003AF015 /* PaymentOptionsPickerView.swift */; };
 		DC64F45E2BCC84C800D29DF0 /* QuantityStepControl.swift in Sources */ = {isa = PBXBuildFile; fileRef = DC64F4462BCC540300D29DF0 /* QuantityStepControl.swift */; };
 		DC64F4602BCC878900D29DF0 /* SecureCheckoutOverview.swift in Sources */ = {isa = PBXBuildFile; fileRef = DC64F45F2BCC878900D29DF0 /* SecureCheckoutOverview.swift */; };
+		DC64F4692BCC8B6100D29DF0 /* GraphQLResult.swift in Sources */ = {isa = PBXBuildFile; fileRef = DC7BA95A2BCA2406003AF015 /* GraphQLResult.swift */; };
+		DC64F46A2BCC8B6100D29DF0 /* GetDistribution.swift in Sources */ = {isa = PBXBuildFile; fileRef = DC64F4612BCC8B3500D29DF0 /* GetDistribution.swift */; };
+		DC64F46B2BCC8B6100D29DF0 /* GraphQLRequest.swift in Sources */ = {isa = PBXBuildFile; fileRef = DC7BA9592BCA2406003AF015 /* GraphQLRequest.swift */; };
+		DC64F46C2BCC8B6100D29DF0 /* FetchPostRequest.swift in Sources */ = {isa = PBXBuildFile; fileRef = DC7BA9552BCA2406003AF015 /* FetchPostRequest.swift */; };
+		DC64F46D2BCC8B6100D29DF0 /* GraphQLOperation.swift in Sources */ = {isa = PBXBuildFile; fileRef = DC7BA9582BCA2406003AF015 /* GraphQLOperation.swift */; };
+		DC64F46F2BCC8B6100D29DF0 /* NetworkService.swift in Sources */ = {isa = PBXBuildFile; fileRef = DC7BA95B2BCA2406003AF015 /* NetworkService.swift */; };
+		DC64F4712BCC8C7200D29DF0 /* HTMLTextView.swift in Sources */ = {isa = PBXBuildFile; fileRef = DC64F4702BCC8C7200D29DF0 /* HTMLTextView.swift */; };
+		DC64F4732BCC96FF00D29DF0 /* ShippingAddressForm.swift in Sources */ = {isa = PBXBuildFile; fileRef = DC64F4722BCC96FF00D29DF0 /* ShippingAddressForm.swift */; };
+		DC64F4762BCDD6A900D29DF0 /* CheckoutViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = DC64F4752BCDD6A900D29DF0 /* CheckoutViewModel.swift */; };
+		DC64F4782BCDDF0C00D29DF0 /* GraphQLClient.swift in Sources */ = {isa = PBXBuildFile; fileRef = DC7BA9572BCA2406003AF015 /* GraphQLClient.swift */; };
+		DC64F47A2BCDE3BD00D29DF0 /* Content.swift in Sources */ = {isa = PBXBuildFile; fileRef = DC64F4792BCDE3BD00D29DF0 /* Content.swift */; };
 		DC7BA9232BC9E307003AF015 /* dispatch_sdk.docc in Sources */ = {isa = PBXBuildFile; fileRef = DC7BA9222BC9E307003AF015 /* dispatch_sdk.docc */; };
 		DC7BA9292BC9E307003AF015 /* dispatch_sdk.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = DC7BA91E2BC9E307003AF015 /* dispatch_sdk.framework */; };
 		DC7BA92E2BC9E307003AF015 /* dispatch_sdkTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = DC7BA92D2BC9E307003AF015 /* dispatch_sdkTests.swift */; };
@@ -109,6 +120,11 @@
 		DC64F4502BCC840E00D29DF0 /* StrokedCircularProgressViewStyle.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = StrokedCircularProgressViewStyle.swift; sourceTree = "<group>"; };
 		DC64F4522BCC848100D29DF0 /* SecondaryButtonStyle.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SecondaryButtonStyle.swift; sourceTree = "<group>"; };
 		DC64F45F2BCC878900D29DF0 /* SecureCheckoutOverview.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SecureCheckoutOverview.swift; sourceTree = "<group>"; };
+		DC64F4612BCC8B3500D29DF0 /* GetDistribution.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = GetDistribution.swift; sourceTree = "<group>"; };
+		DC64F4702BCC8C7200D29DF0 /* HTMLTextView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HTMLTextView.swift; sourceTree = "<group>"; };
+		DC64F4722BCC96FF00D29DF0 /* ShippingAddressForm.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ShippingAddressForm.swift; sourceTree = "<group>"; };
+		DC64F4752BCDD6A900D29DF0 /* CheckoutViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CheckoutViewModel.swift; sourceTree = "<group>"; };
+		DC64F4792BCDE3BD00D29DF0 /* Content.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Content.swift; sourceTree = "<group>"; };
 		DC7BA91E2BC9E307003AF015 /* dispatch_sdk.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = dispatch_sdk.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 		DC7BA9212BC9E307003AF015 /* dispatch_sdk.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = dispatch_sdk.h; sourceTree = "<group>"; };
 		DC7BA9222BC9E307003AF015 /* dispatch_sdk.docc */ = {isa = PBXFileReference; lastKnownFileType = folder.documentationcatalog; path = dispatch_sdk.docc; sourceTree = "<group>"; };
@@ -199,9 +215,18 @@
 			path = Styles;
 			sourceTree = "<group>";
 		};
+		DC64F4742BCDD69F00D29DF0 /* ViewModels */ = {
+			isa = PBXGroup;
+			children = (
+				DC64F4752BCDD6A900D29DF0 /* CheckoutViewModel.swift */,
+			);
+			path = ViewModels;
+			sourceTree = "<group>";
+		};
 		DC7BA9142BC9E307003AF015 = {
 			isa = PBXGroup;
 			children = (
+				DC64F4792BCDE3BD00D29DF0 /* Content.swift */,
 				DC7BA9202BC9E307003AF015 /* dispatch-sdk */,
 				DC7BA92C2BC9E307003AF015 /* dispatch-sdkTests */,
 				DC7BA93D2BC9E352003AF015 /* Demo */,
@@ -272,6 +297,7 @@
 			isa = PBXGroup;
 			children = (
 				DC7BA9552BCA2406003AF015 /* FetchPostRequest.swift */,
+				DC64F4612BCC8B3500D29DF0 /* GetDistribution.swift */,
 			);
 			path = Requests;
 			sourceTree = "<group>";
@@ -332,6 +358,8 @@
 				DC7BA9982BCAE7B8003AF015 /* MediaCarousel */,
 				DC64F4542BCC84A200D29DF0 /* Styles */,
 				DC7BA99D2BCAE869003AF015 /* VariantPicker */,
+				DC64F4702BCC8C7200D29DF0 /* HTMLTextView.swift */,
+				DC64F4722BCC96FF00D29DF0 /* ShippingAddressForm.swift */,
 			);
 			path = Views;
 			sourceTree = "<group>";
@@ -339,6 +367,7 @@
 		DC7BA9612BCA2406003AF015 /* Sources */ = {
 			isa = PBXGroup;
 			children = (
+				DC64F4742BCDD69F00D29DF0 /* ViewModels */,
 				DC7BA9912BCAE375003AF015 /* Utilities */,
 				DC7BA95C2BCA2406003AF015 /* GraphQL */,
 				DC7BA95D2BCA2406003AF015 /* Models */,
@@ -527,11 +556,13 @@
 				DC7BA9742BCA283D003AF015 /* PaymentMethods.swift in Sources */,
 				DC7BA9232BC9E307003AF015 /* dispatch_sdk.docc in Sources */,
 				DC7BA97A2BCA2923003AF015 /* ShippingMethod.swift in Sources */,
+				DC64F47A2BCDE3BD00D29DF0 /* Content.swift in Sources */,
 				DC7BA9662BCA26B8003AF015 /* Variation.swift in Sources */,
 				DC7BA9862BCA2A15003AF015 /* PromoCode.swift in Sources */,
 				DC64F4532BCC848100D29DF0 /* SecondaryButtonStyle.swift in Sources */,
 				DC7BA99A2BCAE7C4003AF015 /* ProductMediaViewModel.swift in Sources */,
 				DC7BA9642BCA269C003AF015 /* Product.swift in Sources */,
+				DC64F4732BCC96FF00D29DF0 /* ShippingAddressForm.swift in Sources */,
 				DC64F4512BCC840E00D29DF0 /* StrokedCircularProgressViewStyle.swift in Sources */,
 				DC7BA9932BCAE381003AF015 /* UIImageView+Remote.swift in Sources */,
 				DC7BA99C2BCAE7D8003AF015 /* MediaCarouselLargeImageCell.swift in Sources */,
@@ -542,6 +573,7 @@
 				DC64F45B2BCC84C800D29DF0 /* VariantPreviewButton.swift in Sources */,
 				DC64F45C2BCC84C800D29DF0 /* ShippingMethodCell.swift in Sources */,
 				DC64F45D2BCC84C800D29DF0 /* PaymentOptionsPickerView.swift in Sources */,
+				DC64F4712BCC8C7200D29DF0 /* HTMLTextView.swift in Sources */,
 				DC64F4602BCC878900D29DF0 /* SecureCheckoutOverview.swift in Sources */,
 				DC64F45E2BCC84C800D29DF0 /* QuantityStepControl.swift in Sources */,
 				DC64F4432BCC49F300D29DF0 /* ThemeTextFieldStyle.swift in Sources */,
@@ -549,6 +581,7 @@
 				DC64F43D2BCB08BF00D29DF0 /* UIHostingConfigurationBackport.swift in Sources */,
 				DC64F43F2BCC463B00D29DF0 /* PrimaryButtonStyle.swift in Sources */,
 				DC64F44B2BCC5BB100D29DF0 /* CheckboxToggleStyle.swift in Sources */,
+				DC64F4762BCDD6A900D29DF0 /* CheckoutViewModel.swift in Sources */,
 				DC7BA9782BCA2896003AF015 /* Order.swift in Sources */,
 				DC7BA96A2BCA2755003AF015 /* JSONValue.swift in Sources */,
 				DC7BA9722BCA2817003AF015 /* PaymentType.swift in Sources */,
@@ -563,10 +596,17 @@
 				DC7BA9882BCA2A43003AF015 /* CollectionStep.swift in Sources */,
 				DC7BA98C2BCA2A6D003AF015 /* LeadgenLayout.swift in Sources */,
 				DC7BA9802BCA29A7003AF015 /* Leadgen.swift in Sources */,
+				DC64F4782BCDDF0C00D29DF0 /* GraphQLClient.swift in Sources */,
 				DC7BA9702BCA27D9003AF015 /* ProductLanguage.swift in Sources */,
 				DC7BA99F2BCAE876003AF015 /* VariantPickerViewController.swift in Sources */,
 				DC7BA9952BCAE44E003AF015 /* DispatchSDK.swift in Sources */,
 				DC7BA9762BCA2878003AF015 /* OrderStatus.swift in Sources */,
+				DC64F4692BCC8B6100D29DF0 /* GraphQLResult.swift in Sources */,
+				DC64F46A2BCC8B6100D29DF0 /* GetDistribution.swift in Sources */,
+				DC64F46B2BCC8B6100D29DF0 /* GraphQLRequest.swift in Sources */,
+				DC64F46C2BCC8B6100D29DF0 /* FetchPostRequest.swift in Sources */,
+				DC64F46D2BCC8B6100D29DF0 /* GraphQLOperation.swift in Sources */,
+				DC64F46F2BCC8B6100D29DF0 /* NetworkService.swift in Sources */,
 				DC7BA96E2BCA27C9003AF015 /* ProductType.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;

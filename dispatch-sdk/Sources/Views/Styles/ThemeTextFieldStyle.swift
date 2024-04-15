@@ -12,7 +12,7 @@ fileprivate extension Theme {
 }
 
 struct ThemeTextFieldStyle: TextFieldStyle {
-    @Binding var isFocused: Bool
+    var isFocused: Bool
     @Binding var isValid: Bool
     let theme: Theme
     
@@ -86,9 +86,9 @@ struct ThemeTextFieldStyle: TextFieldStyle {
 }
 
 struct ThemeTextFieldStyle_Preview: PreviewProvider {
-    static let soft = Theme(inputStyle: .soft)
-    static let sharp = Theme(inputStyle: .sharp)
-    static let round = Theme(inputStyle: .round)
+    static let soft = Theme.soft
+    static let sharp = Theme.sharp
+    static let round = Theme.round
     static var previews: some View {
         // Example Theme, replace with your actual theme values.
         VStack(spacing: 24) {
@@ -96,32 +96,32 @@ struct ThemeTextFieldStyle_Preview: PreviewProvider {
                 TextField("Value", text: .constant("")) 
                     .textFieldStyle(
                         ThemeTextFieldStyle(
-                            isFocused: .constant(false), 
-                            isValid: .constant(true), 
+                            isFocused: false,
+                            isValid: .constant(true),
                             theme: soft
                         )
                     )
                 TextField("Value", text: .constant("")) 
                     .textFieldStyle(
                         ThemeTextFieldStyle(
-                            isFocused: .constant(true), 
-                            isValid: .constant(true), 
+                            isFocused: true,
+                            isValid: .constant(true),
                             theme: soft
                         )
                     )
                 TextField("Value", text: .constant("Typing")) 
                     .textFieldStyle(
                         ThemeTextFieldStyle(
-                            isFocused: .constant(true), 
-                            isValid: .constant(true), 
+                            isFocused: true,
+                            isValid: .constant(true),
                             theme: soft
                         )
                     )
                 TextField("Value", text: .constant("Value")) 
                     .textFieldStyle(
                         ThemeTextFieldStyle(
-                            isFocused: .constant(false), 
-                            isValid: .constant(false), 
+                            isFocused: false,
+                            isValid: .constant(false),
                             theme: soft
                         )
                     )
@@ -130,32 +130,32 @@ struct ThemeTextFieldStyle_Preview: PreviewProvider {
                 TextField("Value", text: .constant("")) 
                     .textFieldStyle(
                         ThemeTextFieldStyle(
-                            isFocused: .constant(false), 
-                            isValid: .constant(true), 
+                            isFocused: false,
+                            isValid: .constant(true),
                             theme: sharp
                         )
                     )
                 TextField("Value", text: .constant("")) 
                     .textFieldStyle(
                         ThemeTextFieldStyle(
-                            isFocused: .constant(true), 
-                            isValid: .constant(true), 
+                            isFocused: true,
+                            isValid: .constant(true),
                             theme: sharp
                         )
                     )
                 TextField("Value", text: .constant("Typing")) 
                     .textFieldStyle(
                         ThemeTextFieldStyle(
-                            isFocused: .constant(true), 
-                            isValid: .constant(true), 
+                            isFocused: true,
+                            isValid: .constant(true),
                             theme: sharp
                         )
                     )
                 TextField("Value", text: .constant("Value")) 
                     .textFieldStyle(
                         ThemeTextFieldStyle(
-                            isFocused: .constant(false), 
-                            isValid: .constant(false), 
+                            isFocused: false,
+                            isValid: .constant(false),
                             theme: sharp
                         )
                     )
@@ -164,32 +164,32 @@ struct ThemeTextFieldStyle_Preview: PreviewProvider {
                 TextField("Value", text: .constant("")) 
                     .textFieldStyle(
                         ThemeTextFieldStyle(
-                            isFocused: .constant(false), 
-                            isValid: .constant(true), 
+                            isFocused: false,
+                            isValid: .constant(true),
                             theme: round
                         )
                     )
                 TextField("Value", text: .constant("")) 
                     .textFieldStyle(
                         ThemeTextFieldStyle(
-                            isFocused: .constant(true), 
-                            isValid: .constant(true), 
+                            isFocused: true,
+                            isValid: .constant(true),
                             theme: round
                         )
                     )
                 TextField("Value", text: .constant("Typing")) 
                     .textFieldStyle(
                         ThemeTextFieldStyle(
-                            isFocused: .constant(true), 
-                            isValid: .constant(true), 
+                            isFocused: true,
+                            isValid: .constant(true),
                             theme: round
                         )
                     )
                 TextField("Value", text: .constant("Value")) 
                     .textFieldStyle(
                         ThemeTextFieldStyle(
-                            isFocused: .constant(false), 
-                            isValid: .constant(false), 
+                            isFocused: false,
+                            isValid: .constant(false),
                             theme: round
                         )
                     )

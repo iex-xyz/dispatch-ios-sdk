@@ -65,7 +65,7 @@ struct PaymentOptionsPickerView: View {
 struct PaymentOptionsPickerView_Previews: PreviewProvider {
     static var previews: some View {
         PaymentOptionsPickerView(
-            theme: Theme()
+            theme: Theme.sharp
         )
 //            .previewDevice("iPhone 12") // Specify the device here
     }
