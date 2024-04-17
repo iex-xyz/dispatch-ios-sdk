@@ -197,7 +197,7 @@ struct ThemeTextFieldStyle_Preview: PreviewProvider {
         }
         .padding(.horizontal)
         .edgesIgnoringSafeArea(.all)
-        .background(Color.white)
+        .preferredColorScheme(.dark)
         .previewDevice("iPhone 12")
     }
 }

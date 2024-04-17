@@ -1,7 +1,25 @@
 import SwiftUI
 
 internal struct ProductOverviewDetailsCell: View {
+    private static var priceFormatter: NumberFormatter = {
+        let formatter = NumberFormatter()
+        formatter.numberStyle = .currency
+        formatter.locale = Locale(identifier: "en_US")
+        return formatter
+    }()
+
     let product: Product
+    
+    init(product: Product) {
+        self.product = product
+        Self.priceFormatter.currencyCode = product.currencyCode
+    }
+    
+    func formattedPrice() -> String {
+        Self.priceFormatter.currencyCode = product.currencyCode
+        let priceValue: NSNumber = .init(floatLiteral: Double(product.basePrice) / 100)
+        return Self.priceFormatter.string(from: priceValue) ?? "--"
+    }
 
     var body: some View {
         VStack(alignment: .leading, spacing: 16) {
@@ -13,12 +31,12 @@ internal struct ProductOverviewDetailsCell: View {
                 Text(product.name)
                     .font(.title3)
                     .fontWeight(.bold)
-                Text("$150")
+                Text(formattedPrice())
                     .font(.title3)
                     .fontWeight(.bold)
             }
 
-            Text("On the trail, details matter. Fast, rugged and ready for whatever wild comes your")
+            Text(product.description)
             
             Button(action: {
                 
@@ -44,8 +62,8 @@ struct ThemeButtonStyle_Preview: PreviewProvider {
         @State var text: String = ""
         VStack(spacing: 24) {
             ProductOverviewDetailsCell(product: product)
-            VariantPreviewButton(theme: theme, title: "Select Color")
-            VariantPreviewButton(theme: theme, title: "Select Size")
+//            VariantPreviewButton(theme: theme, title: "Select Color", selectedValue: "M 9 / W 10.5")
+//            VariantPreviewButton(theme: theme, title: "Select Size", selectedValue: "M 9 / W 10.5")
         }
         .padding()
         .preferredColorScheme(.dark)

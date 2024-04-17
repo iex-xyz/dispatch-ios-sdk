@@ -3,26 +3,15 @@ import SwiftUI
 import Combine
 import UIKit
 
-class VariantPickerViewModel: ObservableObject {
-    @Published var variations: [Variation]
-    @Published var selectedVariation: Variation?
+struct VariantPickerView: UIViewControllerRepresentable {
+    @ObservedObject var viewModel: AttributeViewModel
     
-    init(variations: [Variation], selectedVariation: Variation? = nil) {
-        self.variations = variations
-        self.selectedVariation = selectedVariation
+    func makeUIViewController(context: Context) -> some UIViewController {
+        VariantPickerViewController(viewModel: viewModel)
     }
     
-    func onVariationTapped(_ variation: Variation) {
-        guard 
-            let quantityAvailable = variation.quantityAvailable,
-            quantityAvailable > 0
-        else {
-            return
-        }
-
-        if selectedVariation != variation {
-            selectedVariation = variation
-        }
+    func updateUIViewController(_ uiViewController: UIViewControllerType, context: Context) {
+        //
     }
 }
 
@@ -121,7 +110,7 @@ class VariantPickerViewController: UIViewController, UICollectionViewDelegate {
         case variation(Variation)
     }
 
-    let viewModel: VariantPickerViewModel
+    let viewModel: AttributeViewModel
 
     private(set) lazy var collectionView = createCollectionView()
     private(set) lazy var layout: UICollectionViewCompositionalLayout = createLayout()
@@ -129,7 +118,7 @@ class VariantPickerViewController: UIViewController, UICollectionViewDelegate {
 
     private var cancellables: Set<AnyCancellable> = .init()
     
-    init(viewModel: VariantPickerViewModel) {
+    init(viewModel: AttributeViewModel) {
         self.viewModel = viewModel
         super.init(nibName: nil, bundle: nil)
     }
@@ -154,7 +143,7 @@ class VariantPickerViewController: UIViewController, UICollectionViewDelegate {
         
         Publishers.CombineLatest(
             viewModel.variations.publisher,
-            viewModel.selectedVariation.publisher
+            viewModel.selectedVariant.publisher
         )
         .sink { [weak self] _ in
             self?.updateData()
@@ -268,12 +257,11 @@ class VariantPickerViewController: UIViewController, UICollectionViewDelegate {
     }
     
     func didSelect(item: Item, at indexPath: IndexPath) {
-        let vc = VariantPickerViewController(viewModel: viewModel)
-        vc.isModalInPresentation = true
-        if let sheet = vc.sheetPresentationController {
-            sheet.detents = [.medium()]
+        guard case let .variation(variation) = item else {
+            return
         }
-        present(vc, animated: true, completion: nil)
+
+        viewModel.onVariationTapped(variation)
     }
 
     func didDeselect(item: Item, at indexPath: IndexPath) {

@@ -2,30 +2,32 @@ import SwiftUI
 
 internal struct VariantPreviewButton: View {
     let theme: Theme
-    let title: String
+    @ObservedObject var viewModel: AttributeViewModel
+    let onTap: () -> Void
+
     
     internal var body: some View {
         ZStack(alignment: .topLeading) {
             Button(action: {
-                
+                onTap()
             }) {
                 RoundedRectangle(cornerRadius: 4)
-                    .stroke(.white.opacity(0.15), lineWidth: 2)
+                    .stroke(.primary.opacity(0.15), lineWidth: 2)
                     .overlay(
                         HStack {
-                            Text("M 9 / W 10.5")
+                            Text(viewModel.selectedValueText)
                             Spacer()
                             Image(systemName: "chevron.up.chevron.down")
                         }
                             .padding(.horizontal)
-                            .foregroundStyle(.white)
+                            .foregroundStyle(.primary)
                     )
             }
             .padding(.top, 8)
-            Text(title)
+            Text("Select \(viewModel.attribute.title)")
                 .font(.footnote)
                 .fontWeight(.medium)
-                .foregroundStyle(.primary)
+                .foregroundStyle(Color(UIColor.systemBackground))
                 .padding(.horizontal, 8)
                 .background(.black)
                 .padding(.leading, 8)
@@ -38,8 +40,8 @@ internal struct VariantPreviewButton: View {
 struct VariantPreviewButton_Previews: PreviewProvider {
     static var previews: some View {
         VStack {
-            VariantPreviewButton(theme: .sharp, title: "Selected Color")
-            VariantPreviewButton(theme: .sharp, title: "Selected Size")
+//            VariantPreviewButton(theme: .sharp, title: "Selected Color", selectedValue: "M 9 / W 10.5")
+//            VariantPreviewButton(theme: .sharp, title: "Selected Size", selectedValue: "M 9 / W 10.5")
         }
         .padding()
         .background(.black)

@@ -2,8 +2,14 @@ import Foundation
 import Combine
 
 class ProductMediaViewModel: ObservableObject {
+    @Published var product: Product? {
+        didSet {
+            self.images = product?.baseImages ?? []
+            self.currentIndex = 0
+        }
+    }
     @Published private(set) var images: [String]
-    @Published private(set) var currentIndex: Int
+    @Published var currentIndex: Int
     
     var isPreviousButtonEnabled: Bool {
         return currentIndex > 0
@@ -20,19 +26,11 @@ class ProductMediaViewModel: ObservableObject {
     }
     
     func onNextButtonTapped() {
-        guard isNextButtonEnabled else {
-            return
-        }
-        
-        self.currentIndex += 1
+        currentIndex = max(currentIndex + 1, images.count - 1)
     }
     
     func onPreviousButtonTapped() {
-        guard isPreviousButtonEnabled else {
-            return
-        }
-        
-        self.currentIndex -= 1
+        currentIndex = max(currentIndex - 1, 0)
     }
     
     func onCurrentIndexDidChange(_ index: Int) {
