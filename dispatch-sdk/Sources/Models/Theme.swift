@@ -12,10 +12,10 @@ enum Mode: String, Codable {
     case dark = "DARK"
 }
 
-struct Theme: Codable {
+struct Theme: Codable, Equatable {
     let buttonStyle: Style?
     let successButtonText: String?
-    let applyThemeToCheckout: Bool
+    let applyThemeToCheckout: Bool?
     let isDynamic: Bool?
     let ctaStyle: Style
     let inputStyle: Style
@@ -58,6 +58,7 @@ extension Theme {
     static let soft = Theme.mock(ctaStyle: .soft, inputStyle: .soft)
     static let sharp = Theme.mock(ctaStyle: .sharp, inputStyle: .sharp)
     static let round = Theme.mock(ctaStyle: .round, inputStyle: .round)
+    static let `default` = Theme.init(buttonStyle: .round, successButtonText: nil, applyThemeToCheckout: nil, isDynamic: nil, ctaStyle: .round, inputStyle: .round, mode: .light)
 }
 
 struct ThemeInput: Codable {

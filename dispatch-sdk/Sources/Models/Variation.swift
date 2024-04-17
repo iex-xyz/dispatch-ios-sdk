@@ -1,7 +1,7 @@
 import Foundation
 
-struct Variation: Codable, Equatable, Hashable {
-    let attributes: [String: JSONValue]?
+struct Variation: Codable, Equatable, Identifiable, Hashable {
+    let attributes: [String: String]?
     let compareAtPrice: Float?
     let externalVariantId: String?
     let id: String

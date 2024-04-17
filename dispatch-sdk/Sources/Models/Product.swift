@@ -1,30 +1,6 @@
 import Foundation
 
-//struct Product: Codable {
-//    let attributes: [String: JSONValue]? 
-//    let baseCompareAtPrice: Float?
-//    let baseImages: [String]
-//    let basePrice: Float
-//    let baseQuantity: Float?
-//    let baseStrikethroughPrice: Float?
-//    let currencyCode: Currencies
-//    let description: String?
-//    let descriptionHtml: String?
-//    let hideCoverTransactionCosts: Bool?
-//    let id: String
-//    let merchantId: String?
-//    let name: String
-//    let pdpUrl: String?
-//    let priceSubtitleText: String?
-//    let productLanguage: ProductLanguage?
-//    let requiresBilling: Bool?
-//    let requiresShipping: Bool?
-//    let salesEnabled: Bool
-//    let type: ProductType?
-//    let variations: [Variation]?
-//}
-
-struct Product: Codable {
+struct Product: Codable, Equatable {
     let name: String
     let description: String
     let requiresShipping: Bool
@@ -44,17 +20,78 @@ struct Product: Codable {
     let productLanguage: String
     let requiresBilling: Bool
     let id: String
-}
-
-struct Attribute: Codable {
-    let title: String
-    let options: [String: AttributeOption]
     
-    struct AttributeOption: Codable {
-        let title: String
-        let images: [String]
+    init(
+        name: String,
+        description: String,
+        requiresShipping: Bool,
+        basePrice: Int,
+        baseImages: [String],
+        pdpUrl: String,
+        baseQuantity: Int,
+        currencyCode: String,
+        attributes: [String: Attribute],
+        variations: [Variation],
+        salesEnabled: Bool,
+        updatedAt: String,
+        createdAt: String,
+        descriptionHtml: String,
+        priceSubtitleText: String,
+        type: String,
+        productLanguage: String,
+        requiresBilling: Bool,
+        id: String
+    ) {
+        self.name = name
+        self.description = description
+        self.requiresShipping = requiresShipping
+        self.basePrice = basePrice
+        self.baseImages = baseImages
+        self.pdpUrl = pdpUrl
+        self.baseQuantity = baseQuantity
+        self.currencyCode = currencyCode
+        self.attributes = attributes
+        self.variations = variations
+        self.salesEnabled = salesEnabled
+        self.updatedAt = updatedAt
+        self.createdAt = createdAt
+        self.descriptionHtml = descriptionHtml
+        self.priceSubtitleText = priceSubtitleText
+        self.type = type
+        self.productLanguage = productLanguage
+        self.requiresBilling = requiresBilling
+        self.id = id
     }
     
+    init(from decoder: Decoder) throws {
+        let container = try decoder.container(keyedBy: CodingKeys.self)
+        name = try container.decode(String.self, forKey: .name)
+        description = try container.decode(String.self, forKey: .description)
+        requiresShipping = try container.decode(Bool.self, forKey: .requiresShipping)
+        basePrice = try container.decode(Int.self, forKey: .basePrice)
+        baseImages = try container.decode([String].self, forKey: .baseImages)
+        pdpUrl = try container.decode(String.self, forKey: .pdpUrl)
+        baseQuantity = try container.decode(Int.self, forKey: .baseQuantity)
+        currencyCode = try container.decode(String.self, forKey: .currencyCode)
+        attributes = try container.decode([String: Attribute].self, forKey: .attributes)
+        variations = try container.decode([Variation].self, forKey: .variations)
+        salesEnabled = try container.decode(Bool.self, forKey: .salesEnabled)
+        updatedAt = try container.decode(String.self, forKey: .updatedAt)
+        createdAt = try container.decode(String.self, forKey: .createdAt)
+        descriptionHtml = try container.decode(String.self, forKey: .descriptionHtml)
+        priceSubtitleText = try container.decode(String.self, forKey: .priceSubtitleText)
+        type = try container.decode(String.self, forKey: .type)
+        productLanguage = try container.decode(String.self, forKey: .productLanguage)
+        requiresBilling = try container.decode(Bool.self, forKey: .requiresBilling)
+        id = try container.decode(String.self, forKey: .id)
+    }
+}
+
+struct Attribute: Codable, Identifiable, Equatable {
+    var id: String { title }
+    let title: String
+    var options: [String: AttributeOption]
+
     init(from decoder: Decoder) throws {
         let container = try decoder.container(keyedBy: CodingKeys.self)
         title = try container.decode(String.self, forKey: .title)
@@ -84,11 +121,10 @@ struct Attribute: Codable {
 }
 
 
-struct AttributeOption: Codable {
-    let title: String
-    let images: [String]
+struct AttributeOption: Codable, Equatable {
+    var title: String
+    var images: [String]
 }
-
 
 extension Product {
     static func mock(
