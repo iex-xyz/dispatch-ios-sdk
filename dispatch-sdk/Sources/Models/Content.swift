@@ -6,16 +6,16 @@ struct Content: Codable {
     let initScreen: InitScreen
     let product: Product
     let applicationId: String
-    let theme: Theme
+    let theme: Theme?
     let pspPublishableKey: String
     let createdAt: String
     let updatedAt: String
     let type: String
     let externalTracker: String
     let externalTrackerId: String
-    let merchantLogoUrl: String
+    let merchantLogoUrl: String?
     let merchantName: String
-    let merchantSupportUrl: String
+    let merchantSupportUrl: String?
     let pspAccountId: String
     let channel: String
     let dispatchIsReseller: Bool

@@ -1,9 +1,9 @@
 import Foundation
 
-struct Checkout: Codable {
+struct Checkout: Codable, Equatable {
     let version: String
     let subFolderId: String
-    let initScreen: InitScreen
+    let initScreen: InitScreen?
     let product: Product
     let applicationId: String
     let theme: Theme
@@ -27,7 +27,7 @@ struct Checkout: Codable {
     let id: String
 }
 
-struct InitScreen: Codable {
+struct InitScreen: Codable, Equatable {
     let buttonText: String
     let imageUrls: [String]
     let linkoutUrl: String
