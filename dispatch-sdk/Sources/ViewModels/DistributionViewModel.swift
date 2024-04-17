@@ -1,8 +1,6 @@
-//
-//  DistributionViewModel.swift
-//  dispatch-sdk
-//
-//  Created by Stephen Silber on 4/16/24.
-//
-
 import Foundation
+import Combine
+
+internal class DistributionViewModel: ObservableObject {
+    
+}

@@ -7,6 +7,12 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		DC3C49762BCF6B9100E4C76E /* Coordinator.swift in Sources */ = {isa = PBXBuildFile; fileRef = DC3C49752BCF6B9100E4C76E /* Coordinator.swift */; };
+		DC3C49792BCF78A400E4C76E /* MainCoordinator.swift in Sources */ = {isa = PBXBuildFile; fileRef = DC3C49782BCF78A400E4C76E /* MainCoordinator.swift */; };
+		DC3C497B2BCF78B700E4C76E /* CheckoutCoordinator.swift in Sources */ = {isa = PBXBuildFile; fileRef = DC3C497A2BCF78B700E4C76E /* CheckoutCoordinator.swift */; };
+		DC3C497D2BCF7C7A00E4C76E /* Router.swift in Sources */ = {isa = PBXBuildFile; fileRef = DC3C497C2BCF7C7A00E4C76E /* Router.swift */; };
+		DC3C497F2BCF7C9F00E4C76E /* Router+UINavigationController.swift in Sources */ = {isa = PBXBuildFile; fileRef = DC3C497E2BCF7C9F00E4C76E /* Router+UINavigationController.swift */; };
+		DC3C49812BCF7D5000E4C76E /* BaseCoordinator.swift in Sources */ = {isa = PBXBuildFile; fileRef = DC3C49802BCF7D5000E4C76E /* BaseCoordinator.swift */; };
 		DC64F43D2BCB08BF00D29DF0 /* UIHostingConfigurationBackport.swift in Sources */ = {isa = PBXBuildFile; fileRef = DC64F43C2BCB08BF00D29DF0 /* UIHostingConfigurationBackport.swift */; };
 		DC64F43F2BCC463B00D29DF0 /* PrimaryButtonStyle.swift in Sources */ = {isa = PBXBuildFile; fileRef = DC64F43E2BCC463B00D29DF0 /* PrimaryButtonStyle.swift */; };
 		DC64F4432BCC49F300D29DF0 /* ThemeTextFieldStyle.swift in Sources */ = {isa = PBXBuildFile; fileRef = DC64F4422BCC49F300D29DF0 /* ThemeTextFieldStyle.swift */; };
@@ -119,6 +125,12 @@
 /* End PBXCopyFilesBuildPhase section */
 
 /* Begin PBXFileReference section */
+		DC3C49752BCF6B9100E4C76E /* Coordinator.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Coordinator.swift; sourceTree = "<group>"; };
+		DC3C49782BCF78A400E4C76E /* MainCoordinator.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MainCoordinator.swift; sourceTree = "<group>"; };
+		DC3C497A2BCF78B700E4C76E /* CheckoutCoordinator.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CheckoutCoordinator.swift; sourceTree = "<group>"; };
+		DC3C497C2BCF7C7A00E4C76E /* Router.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Router.swift; sourceTree = "<group>"; };
+		DC3C497E2BCF7C9F00E4C76E /* Router+UINavigationController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "Router+UINavigationController.swift"; sourceTree = "<group>"; };
+		DC3C49802BCF7D5000E4C76E /* BaseCoordinator.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BaseCoordinator.swift; sourceTree = "<group>"; };
 		DC64F43C2BCB08BF00D29DF0 /* UIHostingConfigurationBackport.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UIHostingConfigurationBackport.swift; sourceTree = "<group>"; };
 		DC64F43E2BCC463B00D29DF0 /* PrimaryButtonStyle.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PrimaryButtonStyle.swift; sourceTree = "<group>"; };
 		DC64F4402BCC475700D29DF0 /* VariantPreviewButton.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = VariantPreviewButton.swift; sourceTree = "<group>"; };
@@ -227,6 +239,19 @@
 /* End PBXFrameworksBuildPhase section */
 
 /* Begin PBXGroup section */
+		DC3C49772BCF789800E4C76E /* Coordinators */ = {
+			isa = PBXGroup;
+			children = (
+				DC3C49752BCF6B9100E4C76E /* Coordinator.swift */,
+				DC3C49802BCF7D5000E4C76E /* BaseCoordinator.swift */,
+				DC3C497A2BCF78B700E4C76E /* CheckoutCoordinator.swift */,
+				DC3C49782BCF78A400E4C76E /* MainCoordinator.swift */,
+				DC3C497C2BCF7C7A00E4C76E /* Router.swift */,
+				DC3C497E2BCF7C9F00E4C76E /* Router+UINavigationController.swift */,
+			);
+			path = Coordinators;
+			sourceTree = "<group>";
+		};
 		DC64F4542BCC84A200D29DF0 /* Styles */ = {
 			isa = PBXGroup;
 			children = (
@@ -402,6 +427,7 @@
 		DC7BA9612BCA2406003AF015 /* Sources */ = {
 			isa = PBXGroup;
 			children = (
+				DC3C49772BCF789800E4C76E /* Coordinators */,
 				DC64F4742BCDD69F00D29DF0 /* ViewModels */,
 				DC7BA9912BCAE375003AF015 /* Utilities */,
 				DC7BA95C2BCA2406003AF015 /* GraphQL */,
@@ -476,6 +502,8 @@
 			dependencies = (
 			);
 			name = "dispatch-sdk";
+			packageProductDependencies = (
+			);
 			productName = "dispatch-sdk";
 			productReference = DC7BA91E2BC9E307003AF015 /* dispatch_sdk.framework */;
 			productType = "com.apple.product-type.framework";
@@ -547,6 +575,9 @@
 				Base,
 			);
 			mainGroup = DC7BA9142BC9E307003AF015;
+			packageReferences = (
+				DC3C49722BCF695200E4C76E /* XCRemoteSwiftPackageReference "SwiftUIBackports" */,
+			);
 			productRefGroup = DC7BA91F2BC9E307003AF015 /* Products */;
 			projectDirPath = "";
 			projectRoot = "";
@@ -596,7 +627,9 @@
 				DC64F47A2BCDE3BD00D29DF0 /* Content.swift in Sources */,
 				DC7BA9662BCA26B8003AF015 /* Variation.swift in Sources */,
 				DC64F47E2BCE2D2300D29DF0 /* ProductViewModel.swift in Sources */,
+				DC3C497D2BCF7C7A00E4C76E /* Router.swift in Sources */,
 				DC7BA9862BCA2A15003AF015 /* PromoCode.swift in Sources */,
+				DC3C49812BCF7D5000E4C76E /* BaseCoordinator.swift in Sources */,
 				DC64F4532BCC848100D29DF0 /* SecondaryButtonStyle.swift in Sources */,
 				DC64F4922BCE41D900D29DF0 /* CarouselArrowButtonStyle.swift in Sources */,
 				DC7BA99A2BCAE7C4003AF015 /* ProductMediaViewModel.swift in Sources */,
@@ -609,6 +642,7 @@
 				DC7BA9932BCAE381003AF015 /* UIImageView+Remote.swift in Sources */,
 				DC64F4842BCE316000D29DF0 /* InitScreen.swift in Sources */,
 				DC7BA99C2BCAE7D8003AF015 /* MediaCarouselLargeImageCell.swift in Sources */,
+				DC3C497B2BCF78B700E4C76E /* CheckoutCoordinator.swift in Sources */,
 				DC64F4572BCC84C800D29DF0 /* ProductOverviewDetailsCell.swift in Sources */,
 				DC64F4582BCC84C800D29DF0 /* ProductOverviewViewController.swift in Sources */,
 				DC64F4592BCC84C800D29DF0 /* ContactInformationForm.swift in Sources */,
@@ -620,6 +654,7 @@
 				DC64F4712BCC8C7200D29DF0 /* HTMLTextView.swift in Sources */,
 				DC64F4602BCC878900D29DF0 /* SecureCheckoutOverview.swift in Sources */,
 				DC64F45E2BCC84C800D29DF0 /* QuantityStepControl.swift in Sources */,
+				DC3C49792BCF78A400E4C76E /* MainCoordinator.swift in Sources */,
 				DC64F4432BCC49F300D29DF0 /* ThemeTextFieldStyle.swift in Sources */,
 				DC7BA97C2BCA2931003AF015 /* NextPaymentAction.swift in Sources */,
 				DC64F43D2BCB08BF00D29DF0 /* UIHostingConfigurationBackport.swift in Sources */,
@@ -633,6 +668,7 @@
 				DC64F4822BCE313B00D29DF0 /* UpdateOrderShippingRequest.swift in Sources */,
 				DC7BA96C2BCA27B9003AF015 /* Currencies.swift in Sources */,
 				DC7BA97E2BCA2960003AF015 /* LineItem.swift in Sources */,
+				DC3C49762BCF6B9100E4C76E /* Coordinator.swift in Sources */,
 				DC64F48C2BCE336F00D29DF0 /* GetShippingMethodsForOrderRequest.swift in Sources */,
 				DC7BA98A2BCA2A4E003AF015 /* CollectionStepsInput.swift in Sources */,
 				DC64F4882BCE328800D29DF0 /* UpdateOrderShippingMethodRequest.swift in Sources */,
@@ -653,6 +689,7 @@
 				DC64F4692BCC8B6100D29DF0 /* GraphQLResult.swift in Sources */,
 				DC64F46A2BCC8B6100D29DF0 /* GetDistributionRequest.swift in Sources */,
 				DC64F46B2BCC8B6100D29DF0 /* GraphQLRequest.swift in Sources */,
+				DC3C497F2BCF7C9F00E4C76E /* Router+UINavigationController.swift in Sources */,
 				DC64F46C2BCC8B6100D29DF0 /* FetchPostRequest.swift in Sources */,
 				DC64F46F2BCC8B6100D29DF0 /* NetworkService.swift in Sources */,
 				DC7BA96E2BCA27C9003AF015 /* ProductType.swift in Sources */,
@@ -1055,6 +1092,17 @@
 			defaultConfigurationName = Release;
 		};
 /* End XCConfigurationList section */
+
+/* Begin XCRemoteSwiftPackageReference section */
+		DC3C49722BCF695200E4C76E /* XCRemoteSwiftPackageReference "SwiftUIBackports" */ = {
+			isa = XCRemoteSwiftPackageReference;
+			repositoryURL = "https://github.com/shaps80/SwiftUIBackports";
+			requirement = {
+				kind = upToNextMajorVersion;
+				minimumVersion = 2.8.0;
+			};
+		};
+/* End XCRemoteSwiftPackageReference section */
 	};
 	rootObject = DC7BA9152BC9E307003AF015 /* Project object */;
 }

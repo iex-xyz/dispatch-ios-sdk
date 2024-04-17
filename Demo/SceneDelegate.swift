@@ -22,6 +22,6 @@ class SceneDelegate: UIResponder, UIWindowSceneDelegate {
     }
     
     @objc private func handleTap() {
-        DispatchSDK.present()
+        DispatchSDK.shared.present()
     }
 }
