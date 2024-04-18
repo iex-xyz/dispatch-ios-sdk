@@ -98,6 +98,11 @@ struct CreditCardTextField: UIViewRepresentable {
         textField.keyboardType = .numberPad
         textField.delegate = context.coordinator
         textField.borderStyle = .line
+        
+        if textField.text != text {
+            textField.text = text
+        }
+
         return textField
     }
     
@@ -134,7 +139,7 @@ struct CreditCardTextField: UIViewRepresentable {
 }
 
 #Preview {
-    @State var creditCardNumber = "42343434353"
+    @State var creditCardNumber = ""
     return VStack {
         CreditCardTextField(text: $creditCardNumber)
             .padding(.horizontal)

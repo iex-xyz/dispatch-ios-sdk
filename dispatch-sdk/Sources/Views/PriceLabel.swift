@@ -1,9 +1,10 @@
 import SwiftUI
 
 struct PriceLabel: View {
+    @Environment(\.theme) var theme
+    
     let basePrice: String
     let currentPrice: String?
-    let theme: Theme
     
     var body: some View {
         HStack {
@@ -26,12 +27,14 @@ struct PriceLabel: View {
 #Preview {
     HStack(spacing: 32) {
         VStack(alignment: .leading) {
-            PriceLabel(basePrice: "$76.97", currentPrice: nil, theme: .default)
-            PriceLabel(basePrice: "$85.00", currentPrice: "$76.97", theme: .default)
+            PriceLabel(basePrice: "$76.97", currentPrice: nil)
+            PriceLabel(basePrice: "$85.00", currentPrice: "$76.97")
         }
         VStack(alignment: .leading) {
-            PriceLabel(basePrice: "$76.97", currentPrice: nil, theme: .mock(mode: .dark))
-            PriceLabel(basePrice: "$85.00", currentPrice: "$76.97", theme: .mock(mode: .dark))
+            PriceLabel(basePrice: "$76.97", currentPrice: nil)
+                .environment(\.theme, .mock(mode: .light))
+            PriceLabel(basePrice: "$85.00", currentPrice: "$76.97")
+                .environment(\.theme, .mock(mode: .dark))
         }
     }
     .frame(width: 300, height: 200)

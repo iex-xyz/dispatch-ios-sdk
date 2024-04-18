@@ -1,8 +1,8 @@
 import SwiftUI
 
 struct CheckboxToggleStyle: ToggleStyle {
+    @Environment(\.theme) var theme
     @Binding var isValid: Bool
-    let theme: Theme
     
     func makeBody(configuration: Self.Configuration) -> some View {
         HStack(alignment: .top) {
@@ -27,36 +27,24 @@ struct CheckboxToggleStyle: ToggleStyle {
                 .foregroundStyle(.primary)
             Spacer()
         }
-        .preferredColorScheme(theme.mode == .dark ? .dark : .light)
     }
 }
 
 
 
 
-struct CheckboxToggleStyle_Preview: PreviewProvider {
-    
-    static let theme: Theme = .sharp
-    
-    static var previews: some View {
-        VStack {
-            Toggle("Allow |merchantName| to use this email address for marketing and newsletters.", isOn: .constant(true))
-                .toggleStyle(
-                    CheckboxToggleStyle(
-                        isValid: .constant(true),
-                        theme: theme
-                    )
-                )
-            Toggle("Allow |merchantName| to use this email address for marketing and newsletters.", isOn: .constant(false))
-                .toggleStyle(
-                    CheckboxToggleStyle(
-                        isValid: .constant(true),
-                        theme: theme
-                    )
-                )
-        }
-        .padding()
-        .background(.black)
-            .previewDevice("iPhone 12") // Specify the device here
+#Preview {
+    @State var isToggled: Bool = false
+    return VStack {
+        Toggle("Allow |merchantName| to use this email address for marketing and newsletters.", isOn: $isToggled)
+            .toggleStyle(
+                CheckboxToggleStyle(isValid: .constant(true))
+            )
+        Toggle("Allow |merchantName| to use this email address for marketing and newsletters.", isOn: .constant(false))
+            .toggleStyle(
+                CheckboxToggleStyle(isValid: .constant(true))
+            )
     }
+    .padding()
+    .previewDevice("iPhone 12")
 }

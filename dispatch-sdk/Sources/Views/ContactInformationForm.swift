@@ -1,7 +1,7 @@
 import SwiftUI
 
 struct ContactInformationForm: View {
-    let theme: Theme
+    @Environment(\.theme) var theme
     @State var isCheckboxChecked: Bool = false
     @FocusState var isFocused: Bool
     
@@ -28,8 +28,7 @@ struct ContactInformationForm: View {
                     .textFieldStyle(
                         ThemeTextFieldStyle(
                             isFocused: isFocused,
-                            isValid: .constant(true),
-                            theme: theme
+                            isValid: .constant(true)
                         )
                     )
             }
@@ -39,10 +38,7 @@ struct ContactInformationForm: View {
                     .font(.caption)
             })
             .toggleStyle(
-                CheckboxToggleStyle(
-                    isValid: .constant(true),
-                    theme: theme
-                )
+                CheckboxToggleStyle(isValid: .constant(true))
             )
             
             Button(action: {
@@ -52,13 +48,12 @@ struct ContactInformationForm: View {
             }
             .buttonStyle(
                 PrimaryButtonStyle(
-                    theme: theme,
                     isLoading: false,
-                    isDisabled: false,
                     foregroundColor: .white,
                     backgroundColor: .blue
                 )
             )
+            .environment(\.theme, theme)
         }
     }
 }
@@ -71,7 +66,7 @@ struct ContactInformationForm_Preview: PreviewProvider {
         @State var text: String = ""
         VStack {
             Spacer()
-            ContactInformationForm(theme: theme)
+            ContactInformationForm()
         }
         .padding()
         .previewDevice("iPhone 12")

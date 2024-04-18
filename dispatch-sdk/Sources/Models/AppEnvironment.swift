@@ -1,6 +1,6 @@
 import Foundation
 
-internal enum Environment {
+internal enum AppEnvironment {
     case demo
     case staging
     case production

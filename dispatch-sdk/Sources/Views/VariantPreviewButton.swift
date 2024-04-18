@@ -1,7 +1,46 @@
 import SwiftUI
 
+internal struct LightVariantPreviewButton: View {
+    @Environment(\.theme) var theme
+
+    let title: String
+    let selectedValue: String
+    let onTap: () -> Void
+
+    
+    internal var body: some View {
+        ZStack(alignment: .topLeading) {
+            Button(action: {
+                onTap()
+            }) {
+                RoundedRectangle(cornerRadius: 4)
+                    .stroke(.primary.opacity(0.15), lineWidth: 2)
+                    .overlay(
+                        HStack {
+                            Text(selectedValue)
+                            Spacer()
+                            Image(systemName: "chevron.up.chevron.down")
+                        }
+                            .padding(.horizontal)
+                            .foregroundStyle(.primary)
+                    )
+            }
+            .padding(.top, 8)
+            Text("Select \(title)")
+                .font(.footnote)
+                .fontWeight(.medium)
+                .foregroundStyle(Color(UIColor.systemBackground))
+                .padding(.horizontal, 8)
+                .background(.black)
+                .padding(.leading, 8)
+        }
+        .frame(height: 52)
+    }
+}
+
+
 internal struct VariantPreviewButton: View {
-    let theme: Theme
+    @Environment(\.theme) var theme
     @ObservedObject var viewModel: AttributeViewModel
     let onTap: () -> Void
 
@@ -33,7 +72,6 @@ internal struct VariantPreviewButton: View {
                 .padding(.leading, 8)
         }
         .frame(height: 52)
-        .preferredColorScheme(theme.mode == .dark ? .dark : .light)
     }
 }
 

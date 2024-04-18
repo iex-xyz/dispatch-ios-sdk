@@ -1,7 +1,8 @@
 import SwiftUI
 
 struct PaymentOptionsPickerView: View {
-    let theme: Theme
+    @Environment(\.theme) var theme
+
     var body: some View {
         VStack {
             HStack {
@@ -27,9 +28,7 @@ struct PaymentOptionsPickerView: View {
             }
             .buttonStyle(
                 PrimaryButtonStyle(
-                    theme: theme,
                     isLoading: false,
-                    isDisabled: false,
                     foregroundColor: Color(UIColor.systemBackground),
                     backgroundColor: .primary
                 )
@@ -45,9 +44,7 @@ struct PaymentOptionsPickerView: View {
             }
             .buttonStyle(
                 PrimaryButtonStyle(
-                    theme: theme,
                     isLoading: false,
-                    isDisabled: false,
                     foregroundColor: .white,
                     backgroundColor: .blue
                 )
@@ -64,9 +61,7 @@ struct PaymentOptionsPickerView: View {
 
 struct PaymentOptionsPickerView_Previews: PreviewProvider {
     static var previews: some View {
-        PaymentOptionsPickerView(
-            theme: Theme.sharp
-        )
+        PaymentOptionsPickerView()
 //            .previewDevice("iPhone 12") // Specify the device here
     }
 }

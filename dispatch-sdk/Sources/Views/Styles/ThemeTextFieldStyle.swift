@@ -12,9 +12,10 @@ fileprivate extension Theme {
 }
 
 struct ThemeTextFieldStyle: TextFieldStyle {
+    @Environment(\.theme) var theme
+
     var isFocused: Bool
     @Binding var isValid: Bool
-    let theme: Theme
     
     func _body(configuration: TextField<_Label>) -> some View {
         ZStack(alignment: theme.validationAlignment) {
@@ -86,9 +87,6 @@ struct ThemeTextFieldStyle: TextFieldStyle {
 }
 
 struct ThemeTextFieldStyle_Preview: PreviewProvider {
-    static let soft = Theme.soft
-    static let sharp = Theme.sharp
-    static let round = Theme.round
     static var previews: some View {
         // Example Theme, replace with your actual theme values.
         VStack(spacing: 24) {
@@ -97,107 +95,97 @@ struct ThemeTextFieldStyle_Preview: PreviewProvider {
                     .textFieldStyle(
                         ThemeTextFieldStyle(
                             isFocused: false,
-                            isValid: .constant(true),
-                            theme: soft
+                            isValid: .constant(true)
                         )
                     )
                 TextField("Value", text: .constant("")) 
                     .textFieldStyle(
                         ThemeTextFieldStyle(
                             isFocused: true,
-                            isValid: .constant(true),
-                            theme: soft
+                            isValid: .constant(true)
                         )
                     )
                 TextField("Value", text: .constant("Typing")) 
                     .textFieldStyle(
                         ThemeTextFieldStyle(
                             isFocused: true,
-                            isValid: .constant(true),
-                            theme: soft
+                            isValid: .constant(true)
                         )
                     )
                 TextField("Value", text: .constant("Value")) 
                     .textFieldStyle(
                         ThemeTextFieldStyle(
                             isFocused: false,
-                            isValid: .constant(false),
-                            theme: soft
+                            isValid: .constant(false)
                         )
                     )
             }
+            .environment(\.theme, .soft)
             VStack {
                 TextField("Value", text: .constant("")) 
                     .textFieldStyle(
                         ThemeTextFieldStyle(
                             isFocused: false,
-                            isValid: .constant(true),
-                            theme: sharp
+                            isValid: .constant(true)
                         )
                     )
                 TextField("Value", text: .constant("")) 
                     .textFieldStyle(
                         ThemeTextFieldStyle(
                             isFocused: true,
-                            isValid: .constant(true),
-                            theme: sharp
+                            isValid: .constant(true)
                         )
                     )
                 TextField("Value", text: .constant("Typing")) 
                     .textFieldStyle(
                         ThemeTextFieldStyle(
                             isFocused: true,
-                            isValid: .constant(true),
-                            theme: sharp
+                            isValid: .constant(true)
                         )
                     )
                 TextField("Value", text: .constant("Value")) 
                     .textFieldStyle(
                         ThemeTextFieldStyle(
                             isFocused: false,
-                            isValid: .constant(false),
-                            theme: sharp
+                            isValid: .constant(false)
                         )
                     )
             }
+            .environment(\.theme, .sharp)
             VStack {
                 TextField("Value", text: .constant("")) 
                     .textFieldStyle(
                         ThemeTextFieldStyle(
                             isFocused: false,
-                            isValid: .constant(true),
-                            theme: round
+                            isValid: .constant(true)
                         )
                     )
                 TextField("Value", text: .constant("")) 
                     .textFieldStyle(
                         ThemeTextFieldStyle(
                             isFocused: true,
-                            isValid: .constant(true),
-                            theme: round
+                            isValid: .constant(true)
                         )
                     )
                 TextField("Value", text: .constant("Typing")) 
                     .textFieldStyle(
                         ThemeTextFieldStyle(
                             isFocused: true,
-                            isValid: .constant(true),
-                            theme: round
+                            isValid: .constant(true)
                         )
                     )
                 TextField("Value", text: .constant("Value")) 
                     .textFieldStyle(
                         ThemeTextFieldStyle(
                             isFocused: false,
-                            isValid: .constant(false),
-                            theme: round
+                            isValid: .constant(false)
                         )
                     )
             }
+            .environment(\.theme, .round)
         }
         .padding(.horizontal)
         .edgesIgnoringSafeArea(.all)
-        .preferredColorScheme(.dark)
         .previewDevice("iPhone 12")
     }
 }

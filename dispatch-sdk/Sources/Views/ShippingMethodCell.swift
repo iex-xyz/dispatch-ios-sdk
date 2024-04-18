@@ -1,9 +1,9 @@
 import SwiftUI
 
 struct ShippingMethodCell: View {
+    @Environment(\.theme) var theme
 
     let shippingMethod: ShippingMethod
-    let theme: Theme
 
     var body: some View {
         HStack {
@@ -39,20 +39,19 @@ struct ShippingMethodCell_Preview: PreviewProvider {
                 shippingMethod: ShippingMethod.random(
                     handle: "Delivery within 4 to 6 business days.",
                     title: "Ground Shipping"
-                ),
-                theme: Theme.sharp
+                )
             )
+            .environment(\.theme, .sharp)
             ShippingMethodCell(
                 shippingMethod: ShippingMethod.random(
                     handle: "Delivery within 2 business days.",
                     title: "Express 2nd Day"
-                ),
-                theme: Theme.sharp
+                )
             )
+            .environment(\.theme, .sharp)
 
         }
         .padding()
-        .preferredColorScheme(.dark)
-            .previewDevice("iPhone 12") // Specify the device here
+        .previewDevice("iPhone 12") // Specify the device here
     }
 }

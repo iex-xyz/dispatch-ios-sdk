@@ -1,7 +1,7 @@
 import SwiftUI
 
 struct MediaCarouselView: View {
-    let theme: Theme = .round
+    @Environment(\.theme) var theme
     @ObservedObject var viewModel: ProductMediaViewModel
     
     init(viewModel: ProductMediaViewModel) {
@@ -75,7 +75,7 @@ struct MediaCarouselView: View {
                         }) {
                             Image(systemName: "chevron.left")
                         }
-                        .buttonStyle(CarouselArrowButtonStyle(theme: theme))
+                        .buttonStyle(CarouselArrowButtonStyle())
                         
                         Button(action: {
                             withAnimation {
@@ -84,7 +84,7 @@ struct MediaCarouselView: View {
                         }) {
                             Image(systemName: "chevron.right")
                         }
-                        .buttonStyle(CarouselArrowButtonStyle(theme: theme))
+                        .buttonStyle(CarouselArrowButtonStyle())
                     }
                 }
                 .padding(.trailing)

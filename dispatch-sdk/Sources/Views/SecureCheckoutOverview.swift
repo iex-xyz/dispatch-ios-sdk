@@ -1,7 +1,6 @@
 import SwiftUI
 
 struct SecureCheckoutOverview: View {
-    let theme: Theme
     var body: some View {
         VStack(alignment: .leading, spacing: 16) {
             HStack {
@@ -15,9 +14,7 @@ struct SecureCheckoutOverview: View {
                 Text("Need help with your order? Contact Nike Support ") + Text(Image(systemName: "arrow.right"))
             }
             .buttonStyle(
-                SecondaryButtonStyle(
-                    theme: theme
-                )
+                SecondaryButtonStyle()
             )
         }
         .padding()
@@ -26,9 +23,7 @@ struct SecureCheckoutOverview: View {
 
 struct SecureCheckoutOverview_Previews: PreviewProvider {
     static var previews: some View {
-        SecureCheckoutOverview(
-            theme: Theme.sharp
-        )
+        SecureCheckoutOverview()
         .previewDevice("iPhone 12")
     }
 }

@@ -48,26 +48,24 @@ internal struct ProductOverviewDetailsCell: View {
                 }
                 .font(.footnote.bold())
             }
-            .buttonStyle(SecondaryButtonStyle(theme: Theme.sharp))
+            .buttonStyle(SecondaryButtonStyle())
         }
     }
 }
 
 
 
-struct ThemeButtonStyle_Preview: PreviewProvider {
-    static let product: Product = .mock()
-    static let theme: Theme = .sharp
-    static var previews: some View {
-        @State var text: String = ""
-        VStack(spacing: 24) {
-            ProductOverviewDetailsCell(product: product)
-//            VariantPreviewButton(theme: theme, title: "Select Color", selectedValue: "M 9 / W 10.5")
-//            VariantPreviewButton(theme: theme, title: "Select Size", selectedValue: "M 9 / W 10.5")
-        }
-        .padding()
-        .preferredColorScheme(.dark)
-        .previewDevice("iPhone 12") // Specify the device here
+#Preview {
+    let product: Product = .mock()
+    let theme: Theme = .sharp
+    @State var text: String = ""
+    return VStack(spacing: 24) {
+        ProductOverviewDetailsCell(product: product)
+        //            VariantPreviewButton(theme: theme, title: "Select Color", selectedValue: "M 9 / W 10.5")
+        //            VariantPreviewButton(theme: theme, title: "Select Size", selectedValue: "M 9 / W 10.5")
     }
+    .padding()
+    .preferredColorScheme(.dark)
+    .previewDevice("iPhone 12") // Specify the device here
 }
 

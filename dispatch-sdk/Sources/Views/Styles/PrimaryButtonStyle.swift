@@ -1,24 +1,20 @@
 import SwiftUI
 
 struct PrimaryButtonStyle: ButtonStyle {
-    let theme: Theme
+    @Environment(\.theme) var theme
+    @Environment(\.isEnabled) var isEnabled
     var isLoading: Bool
-    var isDisabled: Bool
     var foregroundColor: Color
     var backgroundColor: Color
     var isFullWidth: Bool
     
     init(
-        theme: Theme,
         isLoading: Bool,
-        isDisabled: Bool,
-        foregroundColor: Color,
-        backgroundColor: Color,
+        foregroundColor: Color = .primary,
+        backgroundColor: Color = Color(UIColor.systemBackground),
         isFullWidth: Bool = true
     ) {
-        self.theme = theme
         self.isLoading = isLoading
-        self.isDisabled = isDisabled
         self.foregroundColor = foregroundColor
         self.backgroundColor = backgroundColor
         self.isFullWidth = isFullWidth
@@ -36,15 +32,15 @@ struct PrimaryButtonStyle: ButtonStyle {
 
             }
         }
-        .foregroundColor(isLoading || isDisabled ? .gray : foregroundColor)
+        .foregroundColor(isLoading || !isEnabled ? .gray : foregroundColor)
         .padding(.horizontal)
         .frame(height: 44)
         .frame(maxWidth: isFullWidth ? .infinity : nil)
-        .background(isDisabled ? Color.gray : backgroundColor)
+        .background(!isEnabled ? Color.gray : backgroundColor)
         .cornerRadius(cornerRadius(for: theme.inputStyle))
         .opacity(configuration.isPressed ? 0.5 : 1)
         .animation(.easeInOut, value: configuration.isPressed)
-        .disabled(isDisabled)
+        .disabled(!isEnabled)
         .scaleEffect(configuration.isPressed ? 0.975 : 1)
         .animation(.interactiveSpring, value: configuration.isPressed)
         .animation(.interactiveSpring, value: isLoading)
@@ -78,40 +74,36 @@ struct PrimaryButtonStyle_Preview: PreviewProvider {
                 }
                 .buttonStyle(
                     PrimaryButtonStyle(
-                        theme: soft,
                         isLoading: false,
-                        isDisabled: false,
-                        foregroundColor: .white,
                         backgroundColor: .blue,
                         isFullWidth: true
                     )
                 )
+                .environment(\.theme, soft)
                 Button(action: {}) {
                     Text("Continue")
                 }
                 .buttonStyle(
                     PrimaryButtonStyle(
-                        theme: soft,
                         isLoading: true,
-                        isDisabled: false,
                         foregroundColor: .white,
                         backgroundColor: .blue,
                         isFullWidth: true
                     )
                 )
+                .environment(\.theme, soft)
                 Button(action: {}) {
                     Text("Continue")
                 }
                 .buttonStyle(
                     PrimaryButtonStyle(
-                        theme: soft,
                         isLoading: false,
-                        isDisabled: true,
                         foregroundColor: .white,
                         backgroundColor: .blue,
                         isFullWidth: true
                     )
                 )
+                .environment(\.theme, soft)
             }
             .frame(maxWidth: .infinity)
             .padding()
@@ -121,37 +113,34 @@ struct PrimaryButtonStyle_Preview: PreviewProvider {
                 }
                 .buttonStyle(
                     PrimaryButtonStyle(
-                        theme: round,
                         isLoading: false,
-                        isDisabled: false,
                         foregroundColor: .white,
                         backgroundColor: .blue
                     )
                 )
+                .environment(\.theme, round)
                 Button(action: {}) {
                     Text("Continue")
                 }
                 .buttonStyle(
                     PrimaryButtonStyle(
-                        theme: round,
                         isLoading: true,
-                        isDisabled: false,
                         foregroundColor: .white,
                         backgroundColor: .blue
                     )
                 )
+                .environment(\.theme, round)
                 Button(action: {}) {
                     Text("Continue")
                 }
                 .buttonStyle(
                     PrimaryButtonStyle(
-                        theme: round,
                         isLoading: false,
-                        isDisabled: true,
                         foregroundColor: .white,
                         backgroundColor: .blue
                     )
                 )
+                .environment(\.theme, round)
             }
             .frame(maxWidth: .infinity)
             .padding()
@@ -161,37 +150,34 @@ struct PrimaryButtonStyle_Preview: PreviewProvider {
                 }
                 .buttonStyle(
                     PrimaryButtonStyle(
-                        theme: sharp,
                         isLoading: false,
-                        isDisabled: false,
                         foregroundColor: .white,
                         backgroundColor: .blue
                     )
                 )
+                .environment(\.theme, sharp)
                 Button(action: {}) {
                     Text("Continue")
                 }
                 .buttonStyle(
                     PrimaryButtonStyle(
-                        theme: sharp,
                         isLoading: true,
-                        isDisabled: false,
                         foregroundColor: .white,
                         backgroundColor: .blue
                     )
                 )
+                .environment(\.theme, sharp)
                 Button(action: {}) {
                     Text("Continue")
                 }
                 .buttonStyle(
                     PrimaryButtonStyle(
-                        theme: sharp,
                         isLoading: false,
-                        isDisabled: true,
                         foregroundColor: .white,
                         backgroundColor: .blue
                     )
                 )
+                .environment(\.theme, sharp)
             }
             .frame(maxWidth: .infinity)
             .padding()

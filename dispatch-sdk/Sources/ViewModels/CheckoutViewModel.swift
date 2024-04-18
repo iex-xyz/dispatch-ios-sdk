@@ -23,6 +23,7 @@ internal class CheckoutViewModel: ObservableObject {
                 self.productViewModel = ProductViewModel(product: product)
             }
             guard let checkout else { return }
+            self.selectedVariant = checkout.product.variations.first
             checkout.product.attributes.values.forEach { attribute in
                 self.selectedVariantMap[attribute.id] = .init(
                     attribute: attribute,
@@ -34,8 +35,9 @@ internal class CheckoutViewModel: ObservableObject {
     }
 
     @Published var selectedVariantMap: [String: AttributeViewModel] = [:]
-    @Published var currentAttributePicker: Attribute? = nil
-    @Published var selectedVariantId: String? = nil
+    @Published var selectedAt: Attribute? = nil
+    @Published var selectedVariant: Variation? = nil
+
     @Published var currentQuantity: Int = 1
     
     var maxQuantity: Int {
@@ -43,9 +45,7 @@ internal class CheckoutViewModel: ObservableObject {
             return 0
         }
         
-        if let selectedVariant = product.variations.first(where: { variation in
-            variation.id == selectedVariantId
-        }) {
+        if let selectedVariant {
             return Int(selectedVariant.quantityAvailable ?? 0)
         }
         
@@ -85,10 +85,6 @@ internal class CheckoutViewModel: ObservableObject {
             return
         }
         currentQuantity -= 1
-    }
-    
-    func setCurrentAttributePicker(_ attribute: Attribute?) {
-        self.currentAttributePicker = attribute
     }
     
     func onAttributeTapped(_ attribute: Attribute) {

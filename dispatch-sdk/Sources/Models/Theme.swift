@@ -61,6 +61,33 @@ extension Theme {
     static let `default` = Theme.init(buttonStyle: .round, successButtonText: nil, applyThemeToCheckout: nil, isDynamic: nil, ctaStyle: .round, inputStyle: .round, mode: .light)
 }
 
+// TODO: These are just for testing and can be refactored or removde
+extension Theme {
+    func darkMode() -> Theme {
+        return .init(
+            buttonStyle: buttonStyle,
+            successButtonText: successButtonText,
+            applyThemeToCheckout: applyThemeToCheckout,
+            isDynamic: isDynamic,
+            ctaStyle: ctaStyle,
+            inputStyle: inputStyle,
+            mode: .dark
+        )
+    }
+    
+    func lightMode() -> Theme {
+        return .init(
+            buttonStyle: buttonStyle,
+            successButtonText: successButtonText,
+            applyThemeToCheckout: applyThemeToCheckout,
+            isDynamic: isDynamic,
+            ctaStyle: ctaStyle,
+            inputStyle: inputStyle,
+            mode: .light
+        )
+    }
+}
+
 struct ThemeInput: Codable {
     let applyThemeToCheckout: Bool?
     let ctaStyle: Style?

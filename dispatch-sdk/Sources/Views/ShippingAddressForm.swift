@@ -14,8 +14,8 @@ class ShippingAddressViewModel: ObservableObject {
 }
 
 struct ShippingAddressForm: View {
+    @Environment(\.theme) var theme
     @ObservedObject var viewModel: ShippingAddressViewModel
-    let theme: Theme = .soft
     @FocusState private var focusedField: FocusField?
     
     @State var showCountryPicker: Bool = false
@@ -32,7 +32,7 @@ struct ShippingAddressForm: View {
                 }) {
                     Text("Country")
                 }
-                .buttonStyle(SecondaryButtonStyle(theme: .round))
+                .buttonStyle(SecondaryButtonStyle())
                 .popover(isPresented: $showCountryPicker,
                          content: {
                     if #available(iOS 16.4, *) {
@@ -41,8 +41,7 @@ struct ShippingAddressForm: View {
                                 .textFieldStyle(
                                     ThemeTextFieldStyle(
                                         isFocused: focusedField == .city,
-                                        isValid: .constant(true),
-                                        theme: theme
+                                        isValid: .constant(true)
                                     )
                                 )
                             Text("United States")
@@ -67,8 +66,7 @@ struct ShippingAddressForm: View {
                         .textFieldStyle(
                             ThemeTextFieldStyle(
                                 isFocused: $focusedField.wrappedValue == .firstName,
-                                isValid: .constant(true),
-                                theme: theme
+                                isValid: .constant(true)
                             )
                         )
                     TextField("Last Name", text: $viewModel.lastName)
@@ -77,8 +75,7 @@ struct ShippingAddressForm: View {
                         .textFieldStyle(
                             ThemeTextFieldStyle(
                                 isFocused: $focusedField.wrappedValue == .lastName,
-                                isValid: .constant(true),
-                                theme: theme
+                                isValid: .constant(true)
                             )
                         )
                     TextField("Address Line 1", text: $viewModel.address1)
@@ -87,8 +84,7 @@ struct ShippingAddressForm: View {
                         .textFieldStyle(
                             ThemeTextFieldStyle(
                                 isFocused: $focusedField.wrappedValue == .address1,
-                                isValid: .constant(true),
-                                theme: theme
+                                isValid: .constant(true)
                             )
                         )
                     TextField("Apartment, Suite, etc.", text: $viewModel.address2)
@@ -97,8 +93,7 @@ struct ShippingAddressForm: View {
                         .textFieldStyle(
                             ThemeTextFieldStyle(
                                 isFocused: $focusedField.wrappedValue == .address2,
-                                isValid: .constant(true),
-                                theme: theme
+                                isValid: .constant(true)
                             )
                         )
                     TextField("City", text: $viewModel.city)
@@ -107,8 +102,7 @@ struct ShippingAddressForm: View {
                         .textFieldStyle(
                             ThemeTextFieldStyle(
                                 isFocused: $focusedField.wrappedValue == .city,
-                                isValid: .constant(true),
-                                theme: theme
+                                isValid: .constant(true)
                             )
                         )
                     HStack {
@@ -118,8 +112,7 @@ struct ShippingAddressForm: View {
                             .textFieldStyle(
                                 ThemeTextFieldStyle(
                                     isFocused: $focusedField.wrappedValue == .state,
-                                    isValid: .constant(true),
-                                    theme: theme
+                                    isValid: .constant(true)
                                 )
                             )
                         TextField("ZIP", text: $viewModel.zip)
@@ -128,8 +121,7 @@ struct ShippingAddressForm: View {
                             .textFieldStyle(
                                 ThemeTextFieldStyle(
                                     isFocused: $focusedField.wrappedValue == .zip,
-                                    isValid: .constant(true),
-                                    theme: theme
+                                    isValid: .constant(true)
                                 )
                             )
                     }
@@ -139,8 +131,7 @@ struct ShippingAddressForm: View {
                         .textFieldStyle(
                             ThemeTextFieldStyle(
                                 isFocused: $focusedField.wrappedValue == .phone,
-                                isValid: .constant(true),
-                                theme: theme
+                                isValid: .constant(true)
                             )
                         )
                 }
@@ -148,7 +139,7 @@ struct ShippingAddressForm: View {
             Button(action: {}) {
                 Text("Continue")
             }
-            .buttonStyle(PrimaryButtonStyle(theme: .round, isLoading: false, isDisabled: false, foregroundColor: .white, backgroundColor: .blue))
+            .buttonStyle(PrimaryButtonStyle(isLoading: false))
         }
     }
 }

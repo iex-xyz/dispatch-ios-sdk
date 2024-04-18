@@ -30,7 +30,7 @@ class CheckoutCoordinator: BaseCoordinator {
         }
         .store(in: &cancellables)
 
-        let viewController = CheckoutViewController(viewModel: viewModel)
+        let viewController = UIHostingController<CheckoutView>.init(rootView: .init(viewModel: viewModel))
         router.setRootModule(viewController)
         router.presentSelf(completion: nil)
     }
@@ -49,9 +49,7 @@ class CheckoutCoordinator: BaseCoordinator {
     
     func showSecureCheckout(for checkout: Checkout) {
         let viewController = UIHostingController(
-            rootView: SecureCheckoutOverview(
-                theme: checkout.theme
-            )
+            rootView: SecureCheckoutOverview()
         )
         if let sheet = viewController.sheetPresentationController {
             sheet.detents = [.medium()]

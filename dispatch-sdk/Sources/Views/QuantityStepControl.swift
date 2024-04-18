@@ -1,9 +1,10 @@
 import SwiftUI
 
 internal struct QuantityStepControl : View {
+    @Environment(\.theme) var theme
+
     @Binding var value: Int
     let maxQuantity: Int
-    let theme: Theme
     var step = 1
 
     private let impactGenerator = UIImpactFeedbackGenerator(style: .light)
@@ -41,33 +42,44 @@ internal struct QuantityStepControl : View {
                 switch theme.inputStyle {
                 case .soft:
                     RoundedRectangle(cornerRadius: 4)
-                        .stroke(Color(hex: "#E8E8E8"), lineWidth: 2)
+                        .stroke(Color.borderGray, lineWidth: 2)
                 case .sharp:
                     RoundedRectangle(cornerRadius: 0)
-                        .stroke(Color(hex: "#E8E8E8"), lineWidth: 2)
+                        .stroke(Color.borderGray, lineWidth: 2)
                 case .round:
                     Capsule()
-                        .stroke(Color(hex: "#E8E8E8"), lineWidth: 2)
+                        .stroke(Color.borderGray, lineWidth: 2)
                 }
             }
         )
+        .preferredColorScheme(theme.mode == .dark ? .dark : .light)
     }
 }
 
 
-struct QuantityStepControl_Preview: PreviewProvider {
-    static let round = Theme.round
-    static let soft = Theme.soft
-    static let hard = Theme.sharp
+#Preview {
+    
+    @State var quantity: Int = 3
 
-    static var previews: some View {
+    return VStack {
         VStack {
-            QuantityStepControl(value: .constant(3), maxQuantity: 10, theme: soft)
-            QuantityStepControl(value: .constant(3), maxQuantity: 10, theme: hard)
-            QuantityStepControl(value: .constant(3), maxQuantity: 10, theme: round)
+            QuantityStepControl(value: $quantity, maxQuantity: 10)
+                .environment(\.theme, .soft)
+            QuantityStepControl(value: $quantity, maxQuantity: 10)
+                .environment(\.theme, .sharp)
+            QuantityStepControl(value: $quantity, maxQuantity: 10)
+                .environment(\.theme, .round)
         }
-        .padding()
-        .background(Color.black)
-        .previewDevice("iPhone 12")
+        VStack {
+            QuantityStepControl(value: $quantity, maxQuantity: 10)
+                .environment(\.theme, .soft.darkMode())
+            QuantityStepControl(value: $quantity, maxQuantity: 10)
+                .environment(\.theme, .sharp.darkMode())
+            QuantityStepControl(value: $quantity, maxQuantity: 10)
+                .environment(\.theme, .round.darkMode())
+        }
     }
+    .padding()
+    .background(Color.dispatchLightGray)
+    .previewDevice("iPhone 12")
 }

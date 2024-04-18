@@ -2,9 +2,9 @@ import Foundation
 
 class GraphQLClient {
     private let networkService: NetworkService
-    private var environment: Environment
+    private var environment: AppEnvironment
     
-    init(networkService: NetworkService, environment: Environment) {
+    init(networkService: NetworkService, environment: AppEnvironment) {
         self.networkService = networkService
         self.environment = environment
     }

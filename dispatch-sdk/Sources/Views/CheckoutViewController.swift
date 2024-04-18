@@ -20,21 +20,18 @@ struct CheckoutView: View {
             }
             if let productViewModel = viewModel.productViewModel {
                 ProductOverviewDetailsCell(product: productViewModel.product)
-                ForEach(Array(productViewModel.selectedVariantMap.values), id: \.attribute.id) { viewModel in
-                    VariantPreviewButton(
-                        theme: .round,
-                        viewModel: viewModel
-                    ) {
-                        self.viewModel.onAttributeTapped(viewModel.attribute)
-                    }
-                    
-                    ForEach(viewModel.variations) { variation in
-                        Button(action: {
-                            viewModel.onVariationTapped(variation)
-                        }) {
-                            Text(viewModel.title(for: variation))
-                        }
-                        .disabled(variation.quantityAvailable == nil || variation.quantityAvailable == 0)
+                if
+                    let checkout = viewModel.checkout,
+                        let selectedVariant = viewModel.selectedVariant
+                {
+                    ForEach(Array(checkout.product.attributes.values), id: \.id) { attribute in
+                        LightVariantPreviewButton(
+                            title: attribute.title,
+                            selectedValue: selectedVariant.attributes?[attribute.id] ?? "None",
+                            onTap: {
+                                viewModel.onAttributeTapped(attribute)
+                            }
+                        )
                     }
                 }
                 
@@ -43,8 +40,15 @@ struct CheckoutView: View {
             }
             Spacer()
         }
-        .preferredColorScheme(.light)
-        .background(.white)
+        .preferredColorScheme(
+            (viewModel.checkout?.theme ?? Theme.default).mode == .dark ? .dark : .light
+        )
+        .background(Color(UIColor.systemBackground))
+//        .environment(\.theme, viewModel.checkout?.theme ?? Theme.default)
+        .environment(\.theme, .mock(mode: .dark))
+        // TODO: This should come from the Theme
+        // once we have primary/background color decoding back in
+        .tint(.dispatchBlue)
         .onChange(of: viewModel.checkout?.product) { value in
             mediaViewModel.product = value
         }

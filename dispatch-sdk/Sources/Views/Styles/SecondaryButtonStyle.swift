@@ -1,11 +1,8 @@
 import SwiftUI
 
 struct SecondaryButtonStyle: ButtonStyle {
-    let theme: Theme
-    
-    init(theme: Theme) {
-        self.theme = theme
-    }
+    @Environment(\.theme) var theme
+
     
     public func makeBody(configuration: Configuration) -> some View {
         HStack(alignment: .firstTextBaseline) {
@@ -19,43 +16,35 @@ struct SecondaryButtonStyle: ButtonStyle {
 
 
 
-struct SecondaryButtonStyle_Preview: PreviewProvider {
-    static let round = Theme.round
-    static let soft = Theme.soft
-    static let sharp = Theme.sharp
-
-    static var previews: some View {
-        VStack {
-            VStack(spacing: 24) {
-                Button(action: {}) {
-                    Text("Continue")
-                }
-                .buttonStyle(
-                    SecondaryButtonStyle(
-                        theme: soft
-                    )
-                )
-                Button(action: {}) {
-                    Text("Continue")
-                }
-                .buttonStyle(
-                    SecondaryButtonStyle(
-                        theme: sharp
-                    )
-                )
-                Button(action: {}) {
-                    Text("Continue to accept the terns of service on a multiline label")
-                }
-                .buttonStyle(
-                    SecondaryButtonStyle(
-                        theme: round
-                    )
-                )
+#Preview {
+    VStack {
+        VStack(spacing: 24) {
+            Button(action: {}) {
+                Text("Continue")
             }
-            .frame(maxWidth: .infinity)
-            .padding()
+            .buttonStyle(
+                SecondaryButtonStyle()
+            )
+            .environment(\.theme, .soft)
+            Button(action: {}) {
+                Text("Continue")
+            }
+            .buttonStyle(
+                SecondaryButtonStyle()
+            )
+            .environment(\.theme, .sharp)
+            
+            Button(action: {}) {
+                Text("Continue to accept the terns of service on a multiline label")
+            }
+            .buttonStyle(
+                SecondaryButtonStyle()
+            )
+            .environment(\.theme, .round)
         }
-        .previewDevice("iPhone 12")
-        
+        .frame(maxWidth: .infinity)
+        .padding()
     }
+    .previewDevice("iPhone 12")
+    
 }

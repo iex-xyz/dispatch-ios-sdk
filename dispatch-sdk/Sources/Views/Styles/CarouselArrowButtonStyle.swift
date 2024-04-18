@@ -2,7 +2,8 @@ import SwiftUI
 
 
 struct CarouselArrowButtonStyle: ButtonStyle {
-    let theme: Theme
+    @Environment(\.theme) var theme
+
     func makeBody(configuration: Configuration) -> some View {
         configuration.label
             .padding(8)
@@ -30,12 +31,12 @@ struct CarouselArrowButtonStyle: ButtonStyle {
             }) {
                 Image(systemName: "chevron.left")
             }
-            .buttonStyle(CarouselArrowButtonStyle(theme: .round))
+            .buttonStyle(CarouselArrowButtonStyle())
             Button(action: {
             }) {
                 Image(systemName: "chevron.right")
             }
-            .buttonStyle(CarouselArrowButtonStyle(theme: .round))
+            .buttonStyle(CarouselArrowButtonStyle())
         }
         .preferredColorScheme(.light)
         HStack {
@@ -43,12 +44,12 @@ struct CarouselArrowButtonStyle: ButtonStyle {
             }) {
                 Image(systemName: "chevron.left")
             }
-            .buttonStyle(CarouselArrowButtonStyle(theme: .round))
+            .buttonStyle(CarouselArrowButtonStyle())
             Button(action: {
             }) {
                 Image(systemName: "chevron.right")
             }
-            .buttonStyle(CarouselArrowButtonStyle(theme: .round))
+            .buttonStyle(CarouselArrowButtonStyle())
         }
         .preferredColorScheme(.dark)
     }
