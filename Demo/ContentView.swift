@@ -1,23 +1,20 @@
-//
-//  ContentView.swift
-//  Demo
-//
-//  Created by Stephen Silber on 4/12/24.
-//
-
 import SwiftUI
-import Dispatch
+import DispatchSDK
 
-struct ContentView: UIViewControllerRepresentable {
-
-    func makeUIViewController(context: Context) -> some UIViewController {
-        let viewController = UIViewController(nibName: nil, bundle: nil)
-        viewController.view.backgroundColor = .red
-        return UINavigationController(rootViewController: viewController)
-    }
-    
-    func updateUIViewController(_ uiViewController: UIViewControllerType, context: Context) {
-        //
+struct ContentView: View {
+    var body: some View {
+        ScrollView {
+            VStack {
+                Spacer()
+                Button(action: {
+                    DispatchSDK.shared.present()
+                }) {
+                    Text("Buy Now")
+                }
+                .buttonStyle(BorderedProminentButtonStyle())
+                Spacer()
+            }
+        }
     }
 }
 
