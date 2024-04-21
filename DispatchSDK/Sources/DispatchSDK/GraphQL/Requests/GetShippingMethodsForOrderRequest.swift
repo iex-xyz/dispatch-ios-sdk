@@ -20,6 +20,9 @@ struct GetShippingMethodsForOrderRequest: GraphQLRequest {
                 id
                 title
                 handle
+                price
+                phoneRequired
+                estimatedTimeInTransit
                }
             }
          }

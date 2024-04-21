@@ -9,17 +9,20 @@ struct ShippingAddressFormContainer: View {
         VStack {
             ScrollView {
                 ShippingAddressForm(viewModel: viewModel)
+                    .padding()
             }
             VStack(spacing: 32) {
-                Button(action: {}) {
+                Button(action: {
+                    viewModel.onContinueButtonTapped()
+                }) {
                     Text("Continue")
                 }
-                .buttonStyle(PrimaryButtonStyle(isLoading: false))
+                .buttonStyle(PrimaryButtonStyle(isLoading: viewModel.isUpdatingOrder))
                 FooterView()
             }
+            .padding()
         }
-        .padding()
-        .background(Color(UIColor.systemBackground))
+        .background(theme.backgroundColor)
         .colorScheme(theme.colorScheme)
     }
 }
@@ -102,13 +105,22 @@ struct ShippingAddressForm: View {
                     EmptyView()
                 case .loading:
                     ProgressView()
-                case .complete(let array):
-                    VStack {
-                        ForEach(array, id: \.street) { result in
-                            Text(result.street)
+                case .complete(let results):
+                    VStack(spacing: 8) {
+                        ForEach(results.prefix(3)) { result in
+                            Button(action: {
+                                withAnimation(.interactiveSpring) {
+                                    self.focusedField = .phone
+                                    self.viewModel.onAddressLookupRowTapped(address: result)
+                                }
+                            }) {
+                                ShippingAddressRow(address: result)
+                            }
                         }
                     }
-                case .failed(let error):
+                    .padding()
+                    .overlay(RoundedRectangle(cornerRadius: 4).stroke(Colors.borderGray, lineWidth: 2))
+                case .failed(_):
                     EmptyView()
                 }
             }
@@ -157,7 +169,7 @@ struct ShippingAddressForm: View {
                 .textFieldStyle(
                     ThemeTextFieldStyle(
                         isFocused: $focusedField.wrappedValue == .phone,
-                        isValid: !viewModel.isPhoneDirty || viewModel.isPhoneValid
+                        isValid: !viewModel.isPhoneDirty || viewModel.isPhoneValid || $focusedField.wrappedValue == .phone
                     )
                 )
         }
@@ -165,7 +177,14 @@ struct ShippingAddressForm: View {
 }
 
 #Preview {
-    let viewModel: ShippingAddressViewModel = .init(addressLookupService: MockAddressLookupService())
+    let viewModel: ShippingAddressViewModel = .init(
+        addressLookupService: MockAddressLookupService(),
+        apiClient: .init(
+            networkService: RealNetworkService(),
+            environment: .staging
+        ), 
+        orderId: UUID().uuidString
+    )
     @Preference(\.theme) var theme
     return ZStack {
         ShippingAddressFormContainer(

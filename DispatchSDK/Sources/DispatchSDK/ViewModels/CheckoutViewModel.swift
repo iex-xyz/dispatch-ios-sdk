@@ -10,8 +10,11 @@ internal class CheckoutViewModel: ObservableObject {
     }
     
     
+    let _onMorePaymentMethodsButtonTapped = PassthroughSubject<Checkout, Never>()
     let _onSecureCheckoutButtonTapped = PassthroughSubject<Checkout, Never>()
     let _onAttributeTapped = PassthroughSubject<(AttributeViewModel), Never>()
+    let _onLockButtonTapped = PassthroughSubject<Checkout, Never>()
+    let _onPaymentCTATapped = PassthroughSubject<(Checkout, PaymentType), Never>()
 
     @Published private(set) var state: State = .idle
 
@@ -24,7 +27,7 @@ internal class CheckoutViewModel: ObservableObject {
             }
             guard let checkout else { return }
             self.selectedVariant = checkout.product.variations.first
-            checkout.product.attributes.values.forEach { attribute in
+            checkout.product.attributes?.values.forEach { attribute in
                 self.selectedVariantMap[attribute.id] = .init(
                     attribute: attribute,
                     variations: checkout.product.variations,
@@ -37,6 +40,7 @@ internal class CheckoutViewModel: ObservableObject {
     @Published var selectedVariantMap: [String: AttributeViewModel] = [:]
     @Published var selectedAt: Attribute? = nil
     @Published var selectedVariant: Variation? = nil
+    @Published var selectedPaymentMethod: PaymentType = .creditCard
 
     @Published var currentQuantity: Int = 1
     
@@ -61,7 +65,8 @@ internal class CheckoutViewModel: ObservableObject {
         Task {
             // Checkout
 //            await fetchDistribution(for: "65e6289c71acbac4d940c8ef")
-            await fetchDistribution(for: "652ef22e5599070b1b8b9986")
+//            await fetchDistribution(for: "652ef22e5599070b1b8b9986")
+            await fetchDistribution(for: "65df6f3a4ae12e4cec1d3eb2")
 //            await fetchDistribution(for: "661e8c14116bdd2bfe95eb29")
             // Content
 //            await fetchDistribution(for: "64dabb5fa62014aafefbe89e")
@@ -96,9 +101,24 @@ internal class CheckoutViewModel: ObservableObject {
         selectedVariantMap[attributeId]?.onVariationTapped(variation)
     }
     
+    func onPaymentCTATapped() {
+        guard let checkout else { return }
+        _onPaymentCTATapped.send((checkout, .creditCard))
+    }
+    
     private func updateCheckout(_ checkout: Checkout) {
         self.checkout = checkout
         self.productViewModel = .init(product: checkout.product)
+    }
+    
+    func onLockButtonTapped() {
+        guard let checkout else { return }
+        _onLockButtonTapped.send(checkout)
+    }
+    
+    func onMorePaymentMethodsButtonTapped() {
+        guard let checkout else { return }
+        _onMorePaymentMethodsButtonTapped.send(checkout)
     }
     
     func onSecureCheckoutButtonTapped() {

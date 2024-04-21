@@ -1,11 +1,11 @@
 import Foundation
 
-public struct ShippingMethod: Codable {
+struct ShippingMethod: Codable, Identifiable {
+    let id: String
     let estimatedTimeInTransit: [Float]?
     let handle: String
-    let id: String
     let phoneRequired: Bool
-    let price: Float
+    let price: Int
     let title: String
     
     init(
@@ -13,7 +13,7 @@ public struct ShippingMethod: Codable {
         handle: String,
         id: String,
         phoneRequired: Bool,
-        price: Float,
+        price: Int,
         title: String
     ) {
         self.estimatedTimeInTransit = estimatedTimeInTransit
@@ -34,19 +34,19 @@ public struct ShippingMethod: Codable {
     }
 
     // Custom init from decoder if needed, especially for handling nullable arrays or transforming units
-    public init(from decoder: Decoder) throws {
+    init(from decoder: Decoder) throws {
         let container = try decoder.container(keyedBy: CodingKeys.self)
         self.handle = try container.decode(String.self, forKey: .handle)
         self.id = try container.decode(String.self, forKey: .id)
         self.phoneRequired = try container.decode(Bool.self, forKey: .phoneRequired)
-        self.price = try container.decode(Float.self, forKey: .price)
+        self.price = try container.decode(Int.self, forKey: .price)
         self.title = try container.decode(String.self, forKey: .title)
         // Handle optional array of Floats
         self.estimatedTimeInTransit = try container.decodeIfPresent([Float].self, forKey: .estimatedTimeInTransit)
     }
 
     // Encode function is standard unless specific custom behavior is needed
-    public func encode(to encoder: Encoder) throws {
+    func encode(to encoder: Encoder) throws {
         var container = encoder.container(keyedBy: CodingKeys.self)
         try container.encode(handle, forKey: .handle)
         try container.encode(id, forKey: .id)
@@ -60,11 +60,11 @@ public struct ShippingMethod: Codable {
 extension ShippingMethod {
     static func random(
         estimatedTimeInTransit: [Float] = [],
-        handle: String = "",
+        handle: String = "handle",
         id: String = UUID().uuidString,
         phoneRequired: Bool = false,
-        price: Float = 0,
-        title: String = ""
+        price: Int = 0,
+        title: String = "title"
     ) -> Self {
         ShippingMethod(
             estimatedTimeInTransit: estimatedTimeInTransit,

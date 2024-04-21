@@ -13,6 +13,7 @@ public struct VariantPickerCell: View {
     public var body: some View {
         ZStack(alignment: .topTrailing) {
             Text(text)
+                .foregroundStyle(.primary)
                 .padding(.horizontal)
                 .padding(.vertical, 10)
                 .frame(minHeight: 40)

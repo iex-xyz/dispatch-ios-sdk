@@ -31,7 +31,7 @@ struct ThemeTextFieldStyle: TextFieldStyle {
                 configuration
                     .padding(.horizontal, 16)
                     .foregroundStyle(.primary)
-                    .tint(.primary)
+                    .tint(theme.primaryColor)
                     .frame(height: 44)
                     .overlay(
                         RoundedRectangle(cornerRadius: cornerRadius(for: theme.inputStyle), style: .continuous)

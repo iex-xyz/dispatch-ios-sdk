@@ -24,3 +24,25 @@ class RealNetworkService: NetworkService {
         return data
     }
 }
+//
+//class MockNetworkService: NetworkService {
+//    func performRequest(_ urlRequest: URLRequest) async throws -> Data {
+//        switch urlRequest.url?.absoluteString {
+//        case "https://checkout-api-staging.dispatch.co/graphql":
+//        default:
+//            break
+//        }
+//
+//        let (data, response) = try await URLSession.shared.data(for: urlRequest)
+//        
+//        guard let httpResponse = response as? HTTPURLResponse else {
+//            throw NetworkError.invalidResponse
+//        }
+//        
+//        guard (200...299).contains(httpResponse.statusCode) else {
+//            throw NetworkError.serverError(statusCode: httpResponse.statusCode)
+//        }
+//        
+//        return data
+//    }
+//}

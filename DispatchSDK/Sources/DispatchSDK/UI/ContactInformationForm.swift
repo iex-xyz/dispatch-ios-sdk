@@ -4,6 +4,11 @@ struct ContactInformationForm: View {
     @Preference(\.theme) var theme
     @State var isCheckboxChecked: Bool = false
     @FocusState var isFocused: Bool
+    @ObservedObject var viewModel: InitiateCreditCardCheckoutViewModel
+    
+    init(viewModel: InitiateCreditCardCheckoutViewModel) {
+        self.viewModel = viewModel
+    }
     
     var body: some View {
         VStack(alignment: .leading, spacing: 24) {
@@ -21,7 +26,11 @@ struct ContactInformationForm: View {
             VStack(alignment: .leading, spacing: 12) {
                 Text("Please enter your email to continue.")
                     .font(.footnote)
-                TextField("your@email.com", text: .constant(""))
+                TextField("", text: $viewModel.email)
+                    .tint(Colors.borderGray)
+                    .textInputAutocapitalization(.never)
+                    .keyboardType(.emailAddress)
+                    .textContentType(.emailAddress)
                     .focused($isFocused)
                     .textFieldStyle(
                         ThemeTextFieldStyle(
@@ -31,16 +40,16 @@ struct ContactInformationForm: View {
                     )
             }
             
-            Toggle(isOn: $isCheckboxChecked, label: {
-                Text("Allow |merchantName| to use this email address for marketing and newsletters.")
+            Toggle(isOn: $viewModel.hasAgreedToTerms, label: {
+                Text("Allow \(viewModel.checkout.merchantName) to use this email address for marketing and newsletters.")
                     .font(.caption)
             })
             .toggleStyle(
                 CheckboxToggleStyle(isValid: .constant(true))
             )
-            
+            Spacer()
             Button(action: {
-                
+                viewModel.onContinueButtonTapped()
             }) {
                 Text("Continue")
             }
@@ -52,6 +61,8 @@ struct ContactInformationForm: View {
                 )
             )
         }
+        .padding()
+        .background(Color(UIColor.systemBackground))
         .colorScheme(theme.colorScheme)
     }
 }
@@ -64,7 +75,16 @@ struct ContactInformationForm_Preview: PreviewProvider {
         @State var text: String = ""
         VStack {
             Spacer()
-            ContactInformationForm()
+            ContactInformationForm(
+                viewModel: .init(
+                    checkout: .mock(),
+                    variantId: "fake",
+                    apiClient: GraphQLClient(
+                        networkService: RealNetworkService(),
+                        environment: .staging
+                    )
+                )
+            )
         }
         .padding()
         .previewDevice("iPhone 12")

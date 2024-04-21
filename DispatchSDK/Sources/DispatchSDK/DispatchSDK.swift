@@ -8,7 +8,11 @@ public class DispatchSDK {
     
     private func makeCoordinator() -> Coordinator {
         return MainCoordinator(
-            router: RouterImp(rootController: UINavigationController())
+            router: RouterImp(rootController: UINavigationController()),
+            apiClient: GraphQLClient(
+                networkService: RealNetworkService(),
+                environment: .staging
+            )
         )
     }
     

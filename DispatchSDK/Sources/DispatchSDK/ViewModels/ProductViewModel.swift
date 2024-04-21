@@ -30,7 +30,7 @@ internal class ProductViewModel: ObservableObject {
         product: Product
     ) {
         self.product = product
-        product.attributes.values.forEach { attribute in
+        product.attributes?.values.forEach { attribute in
             if selectedVariantMap[attribute.id] == nil {
                 selectedVariantMap[attribute.id] = AttributeViewModel(
                     attribute: attribute,

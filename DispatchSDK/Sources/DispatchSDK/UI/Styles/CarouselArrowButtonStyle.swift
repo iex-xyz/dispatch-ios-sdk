@@ -10,11 +10,11 @@ struct CarouselArrowButtonStyle: ButtonStyle {
             .foregroundStyle(Color.primary)
             .background(
                 Circle()
-                    .fill(Color(UIColor.systemBackground))
+                    .fill(theme.backgroundColor)
             )
             .overlay(
                 Circle()
-                    .stroke(Color(hex: "#E8E8E8"))
+                    .stroke(Colors.borderGray)
             )
             .padding(8)
             .scaleEffect(configuration.isPressed ? 0.975 : 1)

@@ -10,12 +10,15 @@ struct ShippingMethodCell: View {
             VStack(alignment: .leading) {
                 Text(shippingMethod.title)
                     .font(.headline)
+                    .foregroundStyle(.primary)
                 Text(shippingMethod.handle)
                     .font(.subheadline)
+                    .foregroundStyle(.primary)
             }
             Spacer()
             Text("$\(shippingMethod.price)")
                 .font(.subheadline.bold())
+                .foregroundStyle(.primary)
         }
         .padding()
         .background(.white.opacity(0.15))
@@ -26,6 +29,34 @@ struct ShippingMethodCell: View {
         .clipShape(
             RoundedRectangle(cornerRadius: 4)
         )
+    }
+    
+    struct SkeletonView: View {
+        var body: some View {
+            HStack {
+                VStack {
+                    Text("#############")
+                        .redacted(reason: .placeholder)
+                        .font(.headline)
+                    Text("#############")
+                        .redacted(reason: .placeholder)
+                        .font(.subheadline.bold())
+                }
+                Spacer()
+                Text("########")
+                    .redacted(reason: .placeholder)
+                    .font(.subheadline.bold())
+            }
+            .padding()
+            .background(.white.opacity(0.15))
+            .overlay(
+                RoundedRectangle(cornerRadius: 4)
+                    .stroke(Color(hex: "#E8E8E8"))
+            )
+            .clipShape(
+                RoundedRectangle(cornerRadius: 4)
+            )
+        }
     }
 }
 

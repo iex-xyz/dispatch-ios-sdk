@@ -9,7 +9,7 @@ public struct Product: Codable, Equatable {
     public let pdpUrl: String
     public let baseQuantity: Int
     public let currencyCode: String
-    public let attributes: [String: Attribute]
+    public let attributes: [String: Attribute]?
     public let variations: [Variation]
     public let salesEnabled: Bool
     public let updatedAt: String
@@ -73,7 +73,7 @@ public struct Product: Codable, Equatable {
         pdpUrl = try container.decode(String.self, forKey: .pdpUrl)
         baseQuantity = try container.decode(Int.self, forKey: .baseQuantity)
         currencyCode = try container.decode(String.self, forKey: .currencyCode)
-        attributes = try container.decode([String: Attribute].self, forKey: .attributes)
+        attributes = try container.decodeIfPresent([String: Attribute].self, forKey: .attributes)
         variations = try container.decode([Variation].self, forKey: .variations)
         salesEnabled = try container.decode(Bool.self, forKey: .salesEnabled)
         updatedAt = try container.decode(String.self, forKey: .updatedAt)

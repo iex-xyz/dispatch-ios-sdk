@@ -18,6 +18,7 @@ class ShippingAddressViewModel: ObservableObject {
         }
     }
         
+    let _onOrderUpdated = PassthroughSubject<String, Never>()
 
     @Published var addressLookupState: AddressLookupState = .idle
 
@@ -46,12 +47,31 @@ class ShippingAddressViewModel: ObservableObject {
     @Published var isZipDirty = false
     @Published var isPhoneDirty = false
     
+    let orderId: String
+    let apiClient: GraphQLClient
+    
+    @Published var isUpdatingOrder: Bool = false
+    
     private var cancellables = Set<AnyCancellable>()
     private let addressLookupService: AddressLookupService
     
-    init(addressLookupService: AddressLookupService) {
+    init(
+        addressLookupService: AddressLookupService,
+        apiClient: GraphQLClient,
+        orderId: String
+    ) {
         self.addressLookupService = addressLookupService
+        self.apiClient = apiClient
+        self.orderId = orderId
         setupValidation()
+    }
+    
+    func onAddressLookupRowTapped(address: AddressLookupResult) {
+        self.address1 = address.address1
+        self.city = address.city
+        self.state = address.state
+        self.zip = address.postalCode
+        self.addressLookupState = .idle
     }
 
     private func setupValidation() {
@@ -166,7 +186,48 @@ class ShippingAddressViewModel: ObservableObject {
             }
         }
     }
+    
+    func onContinueButtonTapped() {
+        // TODO: Form validation
+        Task {
+            await updateOrderAddress()
+        }
+    }
 
+    private func updateOrderAddress() async {
+        self.isUpdatingOrder = true
+        Task { [weak self] in
+            guard let self else { return }
+            do {
+                let request = UpdateOrderShippingRequest(
+                    params: .init(
+                        orderId: self.orderId,
+                        firstName: self.firstName,
+                        lastName: self.lastName,
+                        address1: self.address1,
+                        address2: self.address2,
+                        city: self.city,
+                        state: self.state,
+                        zip: self.zip,
+                        phoneNumber: self.phone,
+                        country: "US" // TODO: Fix
+                    )
+                )
+                
+                let response = try await apiClient.performOperation(request)
+                
+                DispatchQueue.main.async {
+                    self.isUpdatingOrder = false
+                    self._onOrderUpdated.send(self.orderId)
+                }
+            } catch {
+                DispatchQueue.main.async {
+                    self.isUpdatingOrder = false
+                }
+                print("Error updating order address: \(error)")
+            }
+        }
+    }
 
 }
 

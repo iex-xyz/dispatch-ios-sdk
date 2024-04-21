@@ -10,12 +10,18 @@ struct SecureCheckoutOverview: View {
                     .fill()
                     .frame(width: 32, height: 32)
                 Spacer()
-                Icons.close
+                Button(action: {
+                    dismiss()
+                }) {
+                    Icons.close
+                }
             }
             Text("Secure Checkout")
                 .font(.title3.bold())
+                .foregroundStyle(.primary)
             Text("Nike is selling across the web thanks to Dispatch. All orders will be handled by Nike who is responsible for:")
-            
+                .foregroundStyle(.primary)
+
             Button(action: {
                 theme = theme.mode == .dark ? .mock(mode: .light) : .mock(mode: .dark)
                 
@@ -33,8 +39,9 @@ struct SecureCheckoutOverview: View {
             }
             .buttonStyle(PrimaryButtonStyle())
         }
+        .foregroundStyle(.primary)
         .padding()
-        .background(Color(uiColor: UIColor.systemBackground))
+        .background(theme.backgroundColor)
         .colorScheme(theme.colorScheme)
     }
 }

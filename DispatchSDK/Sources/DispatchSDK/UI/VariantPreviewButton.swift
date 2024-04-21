@@ -6,7 +6,6 @@ internal struct LightVariantPreviewButton: View {
     let title: String
     let selectedValue: String
     let onTap: () -> Void
-
     
     internal var body: some View {
         ZStack(alignment: .topLeading) {
@@ -14,7 +13,7 @@ internal struct LightVariantPreviewButton: View {
                 onTap()
             }) {
                 RoundedRectangle(cornerRadius: 4)
-                    .stroke(.primary.opacity(0.15), lineWidth: 2)
+                    .stroke(Colors.borderGray, lineWidth: 2)
                     .overlay(
                         HStack {
                             Text(selectedValue)
@@ -29,9 +28,9 @@ internal struct LightVariantPreviewButton: View {
             Text("Select \(title)")
                 .font(.footnote)
                 .fontWeight(.medium)
-                .foregroundStyle(Color(UIColor.systemBackground))
+                .foregroundStyle(.primary)
                 .padding(.horizontal, 8)
-                .background(.black)
+                .background(theme.backgroundColor)
                 .padding(.leading, 8)
         }
         .frame(height: 52)
@@ -39,42 +38,42 @@ internal struct LightVariantPreviewButton: View {
     }
 }
 
-
-internal struct VariantPreviewButton: View {
-    @Preference(\.theme) var theme
-    @ObservedObject var viewModel: AttributeViewModel
-    let onTap: () -> Void
-
-    
-    internal var body: some View {
-        ZStack(alignment: .topLeading) {
-            Button(action: {
-                onTap()
-            }) {
-                RoundedRectangle(cornerRadius: 4)
-                    .stroke(.primary.opacity(0.15), lineWidth: 2)
-                    .overlay(
-                        HStack {
-                            Text(viewModel.selectedValueText)
-                            Spacer()
-                            Image(systemName: "chevron.up.chevron.down")
-                        }
-                            .padding(.horizontal)
-                            .foregroundStyle(.primary)
-                    )
-            }
-            .padding(.top, 8)
-            Text("Select \(viewModel.attribute.title)")
-                .font(.footnote)
-                .fontWeight(.medium)
-                .foregroundStyle(Color(UIColor.systemBackground))
-                .padding(.horizontal, 8)
-                .background(.black)
-                .padding(.leading, 8)
-        }
-        .frame(height: 52)
-    }
-}
+//
+//internal struct VariantPreviewButton: View {
+//    @Preference(\.theme) var theme
+//    @ObservedObject var viewModel: AttributeViewModel
+//    let onTap: () -> Void
+//
+//    
+//    internal var body: some View {
+//        ZStack(alignment: .topLeading) {
+//            Button(action: {
+//                onTap()
+//            }) {
+//                RoundedRectangle(cornerRadius: 4)
+//                    .stroke(.primary.opacity(0.15), lineWidth: 2)
+//                    .overlay(
+//                        HStack {
+//                            Text(viewModel.selectedValueText)
+//                            Spacer()
+//                            Image(systemName: "chevron.up.chevron.down")
+//                        }
+//                            .padding(.horizontal)
+//                            .foregroundStyle(.primary)
+//                    )
+//            }
+//            .padding(.top, 8)
+//            Text("Select \(viewModel.attribute.title)")
+//                .font(.footnote)
+//                .fontWeight(.medium)
+//                .foregroundStyle(Color(UIColor.systemBackground))
+//                .padding(.horizontal, 8)
+//                .background(.black)
+//                .padding(.leading, 8)
+//        }
+//        .frame(height: 52)
+//    }
+//}
 
 struct VariantPreviewButton_Previews: PreviewProvider {
     static var previews: some View {

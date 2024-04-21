@@ -10,7 +10,9 @@ struct CheckoutView: View {
 
     var body: some View {
         VStack {
-            CheckoutHeader(logo: nil)
+            CheckoutHeader(logo: nil) {
+                viewModel.onLockButtonTapped()
+            }
             ScrollView {
                 VStack {
                     MediaCarouselView(viewModel: mediaViewModel)
@@ -20,9 +22,10 @@ struct CheckoutView: View {
                             ProductOverviewDetailsCell(product: productViewModel.product)
                             if
                                 let checkout = viewModel.checkout,
-                                let selectedVariant = viewModel.selectedVariant
+                                let selectedVariant = viewModel.selectedVariant,
+                                let attributes = checkout.product.attributes
                             {
-                                ForEach(Array(checkout.product.attributes.values), id: \.id) { attribute in
+                                ForEach(Array(attributes.values), id: \.id) { attribute in
                                     LightVariantPreviewButton(
                                         title: attribute.title,
                                         selectedValue: selectedVariant.attributes?[attribute.id] ?? "None",
@@ -41,12 +44,14 @@ struct CheckoutView: View {
                     .padding()
                 }
             }
-            VStack {
-                PayButton(ctaText: "Buy with", paymentType: .creditCard)
+            VStack(spacing: 20) {
+                PayButton(ctaText: "Buy with", paymentType: viewModel.selectedPaymentMethod) {
+                    viewModel.onPaymentCTATapped()
+                }
                 Button(action: {
-                    
+                    viewModel.onMorePaymentMethodsButtonTapped()
                 }) {
-                    Text("More payment options")
+                    Text("More payment options ") + Text(Image(systemName: "arrow.right"))
                 }
                 .buttonStyle(SecondaryButtonStyle())
             }
@@ -59,9 +64,9 @@ struct CheckoutView: View {
         .tint(.dispatchBlue)
         .onChange(of: viewModel.checkout) { value in
             mediaViewModel.product = value?.product
-            if let theme = value?.theme {
-                self.theme = theme
-            }
+//            if let theme = value?.theme {
+//                self.theme = theme
+//            }
         }
         .colorScheme(theme.colorScheme)
     }

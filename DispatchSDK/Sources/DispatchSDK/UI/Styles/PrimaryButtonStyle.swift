@@ -10,15 +10,14 @@ struct PrimaryButtonStyle: ButtonStyle {
     
     init(
         isLoading: Bool = false,
-        foregroundColor: Color = .primary,
+        foregroundColor: Color = .white,
         backgroundColor: Color? = nil,
         isFullWidth: Bool = true
     ) {
         self.isLoading = isLoading
         self.foregroundColor = foregroundColor
-        //        self.backgroundColor = backgroundColor ?? .clear
         self.isFullWidth = isFullWidth
-        self.backgroundColor = theme.mode == .dark ? .black : .dispatchBlue
+        self.backgroundColor = theme.mode == .dark ? .white : .dispatchBlue
     }
 
     func makeBody(configuration: Configuration) -> some View {
@@ -46,8 +45,8 @@ struct PrimaryButtonStyle: ButtonStyle {
         .animation(.interactiveSpring, value: isLoading)
         .colorScheme(theme.colorScheme)
         .onChange(of: theme) { newValue in
-            self.foregroundColor = .primary
-            self.backgroundColor = theme.mode == .dark ? .black : .dispatchBlue
+            self.foregroundColor = .white
+            self.backgroundColor = .dispatchBlue
         }
     }
     

@@ -8,9 +8,9 @@ struct ComponentSheet: View {
             VStack {
                 ForEach(PaymentType.allCases, id: \.rawValue) { paymentType in
                     VStack {
-                        PayButton(ctaText: "Continue with", paymentType: paymentType)
-                        PayButton(ctaText: "Pay with", paymentType: paymentType)
-                        PayButton(ctaText: "Donate with", paymentType: paymentType)
+                        PayButton(ctaText: "Continue with", paymentType: paymentType) {}
+                        PayButton(ctaText: "Pay with", paymentType: paymentType) {}
+                        PayButton(ctaText: "Donate with", paymentType: paymentType) {}
                     }
                 }
             }

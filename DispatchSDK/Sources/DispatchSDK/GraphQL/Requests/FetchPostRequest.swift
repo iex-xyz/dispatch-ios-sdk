@@ -1,35 +1,37 @@
 import Foundation
 
-struct FetchPostRequest: GraphQLRequest {
-    typealias Output = Post
-    typealias Input = IDInput
+struct InitiateOrderRequest: GraphQLRequest {
+    typealias Output = InitiateOrder
+    typealias Input = OrderInput
+    
+    struct Response: Codable {
+        let initiateOrder: InitiateOrder
+    }
+    
+    struct OrderInput: Encodable {
+        let email: String
+        let productId: String
+        let variantId: String
+    }
 
     var operationString: String {
         """
-        query Post($id: ID!) {
-          post(id: $id) {
-            id
-            title
-            body
+        query {
+            initiateOrder(
+              emailAddress: \"\(input.email)\",
+              productId: \"\(input.productId)\",
+              variantId: \"\(input.variantId)\"
+            ) {
+                id
+                status
           }
         }
         """
     }
 
-    var input: IDInput
+    var input: Input
 
-    init(id: String) {
-        self.input = IDInput(id: id)
+    init(email: String, productId: String, variantId: String) {
+        self.input = .init(email: email, productId: productId, variantId: variantId)
     }
 }
-
-struct IDInput: Encodable {
-    let id: String
-}
-
-struct Post: Decodable {
-    let id: String
-    let title: String
-    let body: String
-}
-
