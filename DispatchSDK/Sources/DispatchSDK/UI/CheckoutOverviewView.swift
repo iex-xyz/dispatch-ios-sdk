@@ -25,15 +25,17 @@ struct CheckoutOverviewView: View {
             Divider()
             ScrollView {
                 VStack {
-                    CheckoutOverviewDetailRow(title: "Variant") {
-                        Text("Variant detail will end up going here")
-                            .multilineTextAlignment(.trailing)
-                            .lineLimit(3)
-                            .foregroundStyle(.primary)
-                    } handler: {
-                        viewModel.onVariantButtonTapped()
+                    if let variant = viewModel.variant {
+                        CheckoutOverviewDetailRow(title: "Variant") {
+                            Text("Variant detail will end up going here")
+                                .multilineTextAlignment(.trailing)
+                                .lineLimit(3)
+                                .foregroundStyle(.primary)
+                        } handler: {
+                            viewModel.onVariantButtonTapped()
+                        }
+                        Divider()
                     }
-                    Divider()
                     CheckoutOverviewDetailRow(title: "Email") {
                         Text(viewModel.email)
                             .multilineTextAlignment(.trailing)

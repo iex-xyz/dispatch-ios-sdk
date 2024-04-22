@@ -6,7 +6,7 @@ class CheckoutOverviewViewModel: ObservableObject {
     let checkout: Checkout
     let orderId: String
     let email: String
-    let variant: Variation
+    let variant: Variation?
     let phone: String
     let shippingAddress: Address // TODO: Model address
     let billingAddress: Address? // TODO: Model address
@@ -24,11 +24,13 @@ class CheckoutOverviewViewModel: ObservableObject {
     let _onEmailTapped = PassthroughSubject<(String), Never>()
     let _onPhoneTapped = PassthroughSubject<(String), Never>()
 
+    let _onOrderComplete = PassthroughSubject<(Void), Never>()
+
     init(
         checkout: Checkout,
         orderId: String,
         email: String,
-        variant: Variation,
+        variant: Variation?,
         phone: String,
         shippingAddress: [String : String],
         billingAddress: [String : String]?,

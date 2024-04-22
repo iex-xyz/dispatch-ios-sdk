@@ -115,9 +115,34 @@ class CreditCardCoordinator: BaseCoordinator {
         router.push(viewController)
     }
     
-    // TODO:
     private func showOrderPreview(for orderId: String) {
+        // TODO: Where do we store all of this data while we go through the flow?
+        let viewModel = CheckoutOverviewViewModel(
+            checkout: viewModel.checkout,
+            orderId: orderId,
+            email: viewModel.email,
+            variant: nil,
+            phone: "",
+            shippingAddress: [:],
+            billingAddress: nil,
+            shippingMethod: .random(),
+            subtotal: "$subtotal",
+            tax: "$tax",
+            delivery: "$delivery"
+        )
         
+        let viewController = UIHostingController<CheckoutOverviewView>(
+            rootView: CheckoutOverviewView(viewModel: viewModel)
+        )
+        
+        viewModel
+            ._onOrderComplete
+            .sink { [weak self] in
+                self?.navigateToOrderCompleteCoordinator()
+            }
+            .store(in: &cancellables)
+        
+        router.push(viewController)
     }
     
     // TODO:
@@ -125,5 +150,22 @@ class CreditCardCoordinator: BaseCoordinator {
     
     private func showTermsOfSale(for checkout: Checkout) {
         
+    }
+    
+    private func navigateToOrderCompleteCoordinator() {
+        let viewModel = CheckoutSuccessViewModel(
+            checkout: viewModel.checkout,
+            orderNumber: orderId,
+            shippingAddress: "mock address",
+            payment: "4242 [MOCK]"
+        )
+        let coordinator = CheckoutSuccessCoordinator(
+            router: router,
+            apiClient: apiClient,
+            viewModel: viewModel
+        )
+        
+        addDependency(coordinator)
+        coordinator.start()
     }
 }

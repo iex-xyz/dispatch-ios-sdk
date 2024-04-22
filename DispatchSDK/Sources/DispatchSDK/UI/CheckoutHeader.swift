@@ -7,13 +7,7 @@ internal struct CheckoutHeader: View {
     
     var body: some View {
         ZStack {
-            if let logo {
-                logo
-            } else {
-                Text("TODO: SVG")
-                    .font(.caption.bold())
-                    .padding(8)
-            }
+            AsyncSVGView(url: URL(string: "https://bevelpr.com/images/bevel-logo-dark.svg")!)
             HStack {
                 Button(action: {
                     withAnimation(.interactiveSpring) {
