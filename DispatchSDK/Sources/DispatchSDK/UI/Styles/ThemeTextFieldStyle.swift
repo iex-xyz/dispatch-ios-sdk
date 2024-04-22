@@ -11,6 +11,19 @@ fileprivate extension Theme {
     }
 }
 
+extension View {
+    func placeholder<Content: View>(
+        when shouldShow: Bool,
+        alignment: Alignment = .leading,
+        @ViewBuilder placeholder: () -> Content) -> some View {
+
+        ZStack(alignment: alignment) {
+            placeholder().opacity(shouldShow ? 1 : 0)
+            self
+        }
+    }
+}
+
 struct ThemeTextFieldStyle: TextFieldStyle {
     @Preference(\.theme) var theme
 
@@ -24,22 +37,26 @@ struct ThemeTextFieldStyle: TextFieldStyle {
             VStack(alignment: .leading) {
                 if let labelText {
                     Text(labelText)
-                        .foregroundStyle(isValid ? .primary : Color.dispatchRed)
+//                        .foregroundStyle(isValid ? .primary : Color.dispatchRed)
                         .font(.footnote)
                         .frame(alignment: .leading)
                 }
                 configuration
                     .padding(.horizontal, 16)
                     .foregroundStyle(.primary)
-                    .tint(theme.primaryColor)
                     .frame(height: 44)
                     .overlay(
                         RoundedRectangle(cornerRadius: cornerRadius(for: theme.inputStyle), style: .continuous)
                             .stroke(borderColor, lineWidth: 2)
                     )
                     .background(
-                        RoundedRectangle(cornerRadius: cornerRadius(for: theme.inputStyle), style: .continuous)
-                            .fill(Color(hex: "#FAFAFA"))
+                        RoundedRectangle(
+                            cornerRadius: cornerRadius(for: theme.inputStyle),
+                            style: .continuous
+                        )
+                        .fill(
+                            Colors.controlBackground
+                        )
                     )
             }
             
@@ -74,15 +91,16 @@ struct ThemeTextFieldStyle: TextFieldStyle {
                 }
             }
         }
+        .colorScheme(theme.colorScheme)
     }
     
     private var borderColor: Color {
         if !isValid {
             return .red
         } else if isFocused {
-            return .blue
+            return Color.dispatchBlue
         } else {
-            return Color(hex: "#E8E8E8")
+            return Colors.borderGray
         }
     }
     

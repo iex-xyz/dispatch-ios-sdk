@@ -90,17 +90,44 @@ extension Character {
     }
 }
 
+
+class PaddedTextField: UITextField {
+    var textPadding = UIEdgeInsets(top: 12, left: 16, bottom: 12, right: 16)
+
+    override func textRect(forBounds bounds: CGRect) -> CGRect {
+        return bounds.inset(by: textPadding)
+    }
+
+    override func placeholderRect(forBounds bounds: CGRect) -> CGRect {
+        return bounds.inset(by: textPadding)
+    }
+
+    override func editingRect(forBounds bounds: CGRect) -> CGRect {
+        return bounds.inset(by: textPadding)
+    }
+}
+
+
 struct CreditCardTextField: UIViewRepresentable {
+    @Preference(\.theme) var theme
     @Binding var text: String
     
     func makeUIView(context: Context) -> UITextField {
-        let textField = UITextField()
+        let textField = PaddedTextField()
         textField.keyboardType = .numberPad
         textField.delegate = context.coordinator
-        textField.borderStyle = .line
-        
-        if textField.text != text {
-            textField.text = text
+        textField.layer.borderWidth = 2
+        textField.layer.borderColor = Colors.borderGray.cgColor
+        textField.backgroundColor = UIColor(Colors.controlBackground)
+        textField.keyboardType = .numberPad
+        textField.textContentType = .creditCardNumber
+        switch theme.inputStyle {
+        case .round:
+            textField.layer.cornerRadius = 24
+        case .sharp:
+            textField.layer.cornerRadius = 0
+        case .soft:
+            textField.layer.cornerRadius = 4
         }
 
         return textField
@@ -134,6 +161,14 @@ struct CreditCardTextField: UIViewRepresentable {
             parent.text = formattedText // Update the SwiftUI state
             
             return false // We've handled the text input manually
+        }
+        
+        func textFieldDidBeginEditing(_ textField: UITextField) {
+            textField.layer.borderColor = Color.dispatchBlue.cgColor
+        }
+        
+        func textFieldDidEndEditing(_ textField: UITextField) {
+            textField.layer.borderColor = Colors.borderGray.cgColor
         }
     }
 }

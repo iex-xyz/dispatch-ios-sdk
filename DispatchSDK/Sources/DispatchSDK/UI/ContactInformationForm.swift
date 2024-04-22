@@ -26,18 +26,24 @@ struct ContactInformationForm: View {
             VStack(alignment: .leading, spacing: 12) {
                 Text("Please enter your email to continue.")
                     .font(.footnote)
-                TextField("", text: $viewModel.email)
-                    .tint(Colors.borderGray)
-                    .textInputAutocapitalization(.never)
-                    .keyboardType(.emailAddress)
-                    .textContentType(.emailAddress)
-                    .focused($isFocused)
-                    .textFieldStyle(
-                        ThemeTextFieldStyle(
-                            isFocused: isFocused,
-                            isValid: true
-                        )
+                TextField(
+                    "",
+                    text: $viewModel.email,
+                    prompt: Text("your@email.com")
+                        .foregroundColor(Colors.placeholderColor)
+                )
+                .foregroundStyle(.primary)
+                .tint(Color.primary)
+                .textInputAutocapitalization(.never)
+                .keyboardType(.emailAddress)
+                .textContentType(.emailAddress)
+                .focused($isFocused)
+                .textFieldStyle(
+                    ThemeTextFieldStyle(
+                        isFocused: isFocused,
+                        isValid: true
                     )
+                )
             }
             
             Toggle(isOn: $viewModel.hasAgreedToTerms, label: {
@@ -55,14 +61,12 @@ struct ContactInformationForm: View {
             }
             .buttonStyle(
                 PrimaryButtonStyle(
-                    isLoading: false,
-                    foregroundColor: .white,
-                    backgroundColor: .blue
+                    isLoading: viewModel.orderState.shouldShowSpinner
                 )
             )
         }
         .padding()
-        .background(Color(UIColor.systemBackground))
+        .background(theme.backgroundColor)
         .colorScheme(theme.colorScheme)
     }
 }

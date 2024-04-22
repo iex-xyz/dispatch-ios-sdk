@@ -39,5 +39,14 @@ struct Colors {
             return .dispatchLightBackground
         }
     }
+    
+    static var placeholderColor: Color {
+        switch theme.mode {
+        case .dark:
+            return .white.opacity(0.24)
+        case .light:
+            return .black.opacity(0.24)
+        }
+    }
 
 }

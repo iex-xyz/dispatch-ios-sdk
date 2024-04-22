@@ -105,6 +105,8 @@ struct ShippingAddressForm: View {
                     EmptyView()
                 case .loading:
                     ProgressView()
+                        .progressViewStyle(StrokedCircularProgressViewStyle())
+                        .padding()
                 case .complete(let results):
                     VStack(spacing: 8) {
                         ForEach(results.prefix(3)) { result in
@@ -116,6 +118,8 @@ struct ShippingAddressForm: View {
                             }) {
                                 ShippingAddressRow(address: result)
                             }
+                            .foregroundStyle(.primary)
+                            
                         }
                     }
                     .padding()

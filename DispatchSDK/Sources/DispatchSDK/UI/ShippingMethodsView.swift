@@ -1,6 +1,7 @@
 import SwiftUI
 
 struct ShippingMethodsView: View {
+    @Preference(\.theme) var theme
     @ObservedObject var viewModel: ShippingMethodViewModel
     
     init(viewModel: ShippingMethodViewModel) {
@@ -33,6 +34,8 @@ struct ShippingMethodsView: View {
             }
             .padding()
         }
+        .background(theme.backgroundColor)
+        .colorScheme(theme.colorScheme)
         .onAppear {
             viewModel.onAppear()
         }

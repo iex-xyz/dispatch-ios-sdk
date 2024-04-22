@@ -15,10 +15,10 @@ struct CheckboxToggleStyle: ToggleStyle {
                 }
                 .overlay {
                     RoundedRectangle(cornerRadius: 4)
-                        .stroke(isValid ? .blue : .red)
+                        .stroke(isValid ? Color.dispatchBlue : Color.dispatchRed)
                 }
-                .foregroundStyle(configuration.isOn ? .white : .blue)
-                .background(configuration.isOn ? .blue : .white)
+                .foregroundStyle(configuration.isOn ? .white : Color.dispatchBlue)
+                .background(configuration.isOn ? Color.dispatchBlue : .white)
                 .clipShape(RoundedRectangle(cornerRadius: 4))
                 .frame(width: 16, height: 16)
                 .padding(.top, 2)

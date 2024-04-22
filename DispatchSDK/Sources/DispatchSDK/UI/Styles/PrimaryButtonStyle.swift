@@ -3,7 +3,7 @@ import SwiftUI
 struct PrimaryButtonStyle: ButtonStyle {
     @Preference(\.theme) var theme
     @Environment(\.isEnabled) var isEnabled
-    @State var isLoading: Bool
+    var isLoading: Bool
     @State var foregroundColor: Color
     @State var backgroundColor: Color = .dispatchBlue
     var isFullWidth: Bool
@@ -79,7 +79,7 @@ struct PrimaryButtonStyle_Preview: PreviewProvider {
                 .buttonStyle(
                     PrimaryButtonStyle(
                         isLoading: false,
-                        backgroundColor: .blue,
+                        backgroundColor: Color.dispatchBlue,
                         isFullWidth: true
                     )
                 )
@@ -91,7 +91,7 @@ struct PrimaryButtonStyle_Preview: PreviewProvider {
                     PrimaryButtonStyle(
                         isLoading: true,
                         foregroundColor: .white,
-                        backgroundColor: .blue,
+                        backgroundColor: Color.dispatchBlue,
                         isFullWidth: true
                     )
                 )
@@ -103,7 +103,7 @@ struct PrimaryButtonStyle_Preview: PreviewProvider {
                     PrimaryButtonStyle(
                         isLoading: false,
                         foregroundColor: .white,
-                        backgroundColor: .blue,
+                        backgroundColor: Color.dispatchBlue,
                         isFullWidth: true
                     )
                 )
@@ -119,7 +119,7 @@ struct PrimaryButtonStyle_Preview: PreviewProvider {
                     PrimaryButtonStyle(
                         isLoading: false,
                         foregroundColor: .white,
-                        backgroundColor: .blue
+                        backgroundColor: Color.dispatchBlue
                     )
                 )
                 .environment(\.theme, round)
@@ -130,7 +130,7 @@ struct PrimaryButtonStyle_Preview: PreviewProvider {
                     PrimaryButtonStyle(
                         isLoading: true,
                         foregroundColor: .white,
-                        backgroundColor: .blue
+                        backgroundColor: Color.dispatchBlue
                     )
                 )
                 .environment(\.theme, round)
@@ -141,7 +141,7 @@ struct PrimaryButtonStyle_Preview: PreviewProvider {
                     PrimaryButtonStyle(
                         isLoading: false,
                         foregroundColor: .white,
-                        backgroundColor: .blue
+                        backgroundColor: Color.dispatchBlue
                     )
                 )
                 .environment(\.theme, round)
@@ -156,7 +156,7 @@ struct PrimaryButtonStyle_Preview: PreviewProvider {
                     PrimaryButtonStyle(
                         isLoading: false,
                         foregroundColor: .white,
-                        backgroundColor: .blue
+                        backgroundColor: Color.dispatchBlue
                     )
                 )
                 .environment(\.theme, sharp)
@@ -167,7 +167,7 @@ struct PrimaryButtonStyle_Preview: PreviewProvider {
                     PrimaryButtonStyle(
                         isLoading: true,
                         foregroundColor: .white,
-                        backgroundColor: .blue
+                        backgroundColor: Color.dispatchBlue
                     )
                 )
                 .environment(\.theme, sharp)
@@ -178,7 +178,7 @@ struct PrimaryButtonStyle_Preview: PreviewProvider {
                     PrimaryButtonStyle(
                         isLoading: false,
                         foregroundColor: .white,
-                        backgroundColor: .blue
+                        backgroundColor: Color.dispatchBlue
                     )
                 )
                 .environment(\.theme, sharp)

@@ -30,7 +30,7 @@ class CreditCardValidator {
 class CreditCardInputViewModel: ShippingAddressViewModel {
     @Published var cardNumber: String = ""
     @Published var cardType: CreditCardType?
-    @Published var expirationDate: Date = .now
+    @Published var expirationDate: String = ""
     @Published var securityCode: String = ""
 
     @Published var billingAddressMatchesShipping: Bool = true

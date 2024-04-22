@@ -21,26 +21,31 @@ struct CreditCardForm: View {
     var body: some View {
         VStack {
             ScrollView {
-                
-                
-                VStack {
-                    CreditCardTextField(text: $viewModel.cardNumber)
-                        .textContentType(.creditCardNumber)
-                        .focused($focusedField, equals: .cardNumber)
-                        .textFieldStyle(
-                            ThemeTextFieldStyle(
-                                isFocused: $focusedField.wrappedValue == .cardNumber,
-                                isValid: !viewModel.isCardNumberDirty || viewModel.isCardNumberValid || $focusedField.wrappedValue == .cardNumber
+                VStack(spacing: 16) {
+                    VStack(alignment: .leading, spacing: 8) {
+                        Text("Card Number")
+                            .foregroundStyle(.primary)
+                            .font(.footnote)
+                            .frame(alignment: .leading)
+
+                        CreditCardTextField(text: $viewModel.cardNumber)
+                            .textContentType(.creditCardNumber)
+                            .focused($focusedField, equals: .cardNumber)
+                            .textFieldStyle(
+                                ThemeTextFieldStyle(
+                                    isFocused: $focusedField.wrappedValue == .cardNumber,
+                                    isValid: !viewModel.isCardNumberDirty || viewModel.isCardNumberValid || $focusedField.wrappedValue == .cardNumber
+                                )
                             )
-                        )
+                    }
                     HStack {
-                        TextField("Expiry", text: $viewModel.cardNumber)
+                        TextField("MM/YY", text: $viewModel.expirationDate)
                             .focused($focusedField, equals: .expiry)
                             .textFieldStyle(
                                 ThemeTextFieldStyle(
                                     isFocused: $focusedField.wrappedValue == .expiry,
                                     isValid: !viewModel.isExpirationDateDirty || viewModel.isExpirationDateValid || $focusedField.wrappedValue == .expiry,
-                                    labelText: "Expiry"
+                                    labelText: "MM/YY"
 
                                 )
                             )
@@ -52,19 +57,32 @@ struct CreditCardForm: View {
                                 ThemeTextFieldStyle(
                                     isFocused: $focusedField.wrappedValue == .securityCode,
                                     isValid: !viewModel.isSecurityCodeDirty || viewModel.isSecurityCodeValid || $focusedField.wrappedValue == .securityCode,
-                                    labelText: "Security Code"
+                                    labelText: "CVC"
                                 )
                             )
                             .keyboardType(.numberPad)
                     }
                     
-                    Toggle("Same as Shipping", isOn: $viewModel.billingAddressMatchesShipping)
-                        .padding()
-                    
+                    VStack(alignment: .leading, spacing: 8) {
+                        Text("Billing Address")
+                            .foregroundStyle(.primary)
+                            .font(.footnote)
+                            .frame(alignment: .leading)
+                        Toggle("Same as Shipping", isOn: $viewModel.billingAddressMatchesShipping)
+                            .padding(.horizontal, 16)
+                            .padding(.vertical, 12)
+                            .background(Colors.controlBackground)
+                            .overlay(
+                                RoundedRectangle(cornerRadius: 4)
+                                    .stroke(Colors.borderGray, lineWidth: 2)
+                            )
+                    }
+
                     if !viewModel.billingAddressMatchesShipping {
                         ShippingAddressForm(viewModel: viewModel)
                     }
                 }
+                .padding()
             }
             VStack(spacing: 32) {
                 Button(action: {}) {
@@ -73,9 +91,9 @@ struct CreditCardForm: View {
                 .buttonStyle(PrimaryButtonStyle(isLoading: false))
                 FooterView()
             }
+            .padding()
         }
-        .padding()
-        .background(Color(UIColor.systemBackground))
+        .background(theme.backgroundColor)
         .colorScheme(theme.colorScheme)
     }
 }

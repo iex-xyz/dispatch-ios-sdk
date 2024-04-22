@@ -21,10 +21,10 @@ struct ShippingMethodCell: View {
                 .foregroundStyle(.primary)
         }
         .padding()
-        .background(.white.opacity(0.15))
+        .background(Colors.controlBackground)
         .overlay(
             RoundedRectangle(cornerRadius: 4)
-                .stroke(Color(hex: "#E8E8E8"))
+                .stroke(Colors.borderGray)
         )
         .clipShape(
             RoundedRectangle(cornerRadius: 4)

@@ -8,6 +8,14 @@ class InitiateCreditCardCheckoutViewModel: ObservableObject {
         case loading
         case loaded(InitiateOrder)
         case error(Error)
+        
+        var shouldShowSpinner: Bool {
+            if case .loading = self {
+                return true
+            } else {
+                return false
+            }
+        }
     }
 
     let checkout: Checkout
