@@ -2,6 +2,7 @@ import SwiftUI
 
 struct ContactInformationForm: View {
     @Preference(\.theme) var theme
+    @Environment(\.dismiss) var dismiss
     @State var isCheckboxChecked: Bool = false
     @FocusState var isFocused: Bool
     @ObservedObject var viewModel: InitiateCreditCardCheckoutViewModel
@@ -17,7 +18,7 @@ struct ContactInformationForm: View {
                     .font(.title3.bold())
                 Spacer()
                 Button(action: {
-                    
+                    dismiss()
                 }) {
                     Icons.close
                 }
