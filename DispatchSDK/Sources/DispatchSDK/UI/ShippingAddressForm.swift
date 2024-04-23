@@ -167,15 +167,8 @@ struct ShippingAddressForm: View {
                         )
                     )
             }
-            TextField("Phone", text: $viewModel.phone)
-                .textContentType(.telephoneNumber)
+            PhoneNumberTextField(text: $viewModel.phone)
                 .focused($focusedField, equals: .phone)
-                .textFieldStyle(
-                    ThemeTextFieldStyle(
-                        isFocused: $focusedField.wrappedValue == .phone,
-                        isValid: !viewModel.isPhoneDirty || viewModel.isPhoneValid || $focusedField.wrappedValue == .phone
-                    )
-                )
         }
     }
 }

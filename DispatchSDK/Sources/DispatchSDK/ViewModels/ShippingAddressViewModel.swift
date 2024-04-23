@@ -148,8 +148,7 @@ class ShippingAddressViewModel: ObservableObject {
         $phone
             .dropFirst()
             .map { phone in
-                let phoneRegex = "^\\d{3}-\\d{3}-\\d{4}$"
-                return NSPredicate(format: "SELF MATCHES %@", phoneRegex).evaluate(with: phone)
+                PhoneNumberValidator.validatePhoneNumber(phone)
             }
             .assign(to: &$isPhoneValid)
 
@@ -188,6 +187,7 @@ class ShippingAddressViewModel: ObservableObject {
     }
     
     func onContinueButtonTapped() {
+        guard !isUpdatingOrder else { return }
         // TODO: Form validation
         Task {
             await updateOrderAddress()

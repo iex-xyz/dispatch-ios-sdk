@@ -1,0 +1,24 @@
+{
+  "configurations" : [
+    {
+      "id" : "8C3CC8D0-4D8F-4961-A7A4-19537ADAFFF5",
+      "name" : "Configuration 1",
+      "options" : {
+
+      }
+    }
+  ],
+  "defaultOptions" : {
+
+  },
+  "testTargets" : [
+    {
+      "target" : {
+        "containerPath" : "container:",
+        "identifier" : "DispatchSDKTests",
+        "name" : "DispatchSDKTests"
+      }
+    }
+  ],
+  "version" : 1
+}

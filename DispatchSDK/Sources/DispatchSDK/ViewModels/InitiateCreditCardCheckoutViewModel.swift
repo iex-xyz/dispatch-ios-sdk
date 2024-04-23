@@ -25,6 +25,7 @@ class InitiateCreditCardCheckoutViewModel: ObservableObject {
     @Published var email: String = ""
     @Published var orderState: State = .idle
     
+    @Published var isEmailDirty: Bool = false
     @Published var isEmailValid: Bool = false
 
     let _onOrderInitiated = PassthroughSubject<InitiateOrder, Never>()
@@ -35,12 +36,32 @@ class InitiateCreditCardCheckoutViewModel: ObservableObject {
         self.checkout = checkout
         self.variantId = variantId ?? ""
         self.apiClient = apiClient
+        
+        setupValidation()
     }
 
     
     func onContinueButtonTapped() {
-//        guard hasAgreedToTerms, isEmailValid else { return }
+        guard isEmailValid else { return }
         initiateOrder()
+    }
+    
+    private func setupValidation() {
+        $email
+            .dropFirst()
+            .map { _ in true }
+            .assign(to: &$isEmailDirty)
+
+        $email
+            .map {
+                do {
+                    return try EmailValidator.validateEmail($0)
+                } catch {
+                    print("Unable to validate email", error)
+                    return false
+                }
+            }
+            .assign(to: &$isEmailValid)
     }
     
     private func initiateOrder() {

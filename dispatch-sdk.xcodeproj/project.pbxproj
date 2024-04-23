@@ -8,7 +8,6 @@
 
 /* Begin PBXBuildFile section */
 		DC57222F2BD22C5C00DAF78C /* DispatchSDK in Frameworks */ = {isa = PBXBuildFile; productRef = DC57222E2BD22C5C00DAF78C /* DispatchSDK */; };
-		DC7BA92E2BC9E307003AF015 /* dispatch_sdkTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = DC7BA92D2BC9E307003AF015 /* dispatch_sdkTests.swift */; };
 		DC7BA93F2BC9E352003AF015 /* DemoApp.swift in Sources */ = {isa = PBXBuildFile; fileRef = DC7BA93E2BC9E352003AF015 /* DemoApp.swift */; };
 		DC7BA9412BC9E352003AF015 /* ContentView.swift in Sources */ = {isa = PBXBuildFile; fileRef = DC7BA9402BC9E352003AF015 /* ContentView.swift */; };
 		DC7BA9432BC9E354003AF015 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = DC7BA9422BC9E354003AF015 /* Assets.xcassets */; };
@@ -18,8 +17,6 @@
 /* Begin PBXFileReference section */
 		DC3C49822BCF9B1600E4C76E /* Demo.entitlements */ = {isa = PBXFileReference; lastKnownFileType = text.plist.entitlements; path = Demo.entitlements; sourceTree = "<group>"; };
 		DC52A2572BD22B84006FAA6A /* DispatchSDK */ = {isa = PBXFileReference; lastKnownFileType = wrapper; path = DispatchSDK; sourceTree = "<group>"; };
-		DC7BA9282BC9E307003AF015 /* dispatch-sdkTests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = "dispatch-sdkTests.xctest"; sourceTree = BUILT_PRODUCTS_DIR; };
-		DC7BA92D2BC9E307003AF015 /* dispatch_sdkTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = dispatch_sdkTests.swift; sourceTree = "<group>"; };
 		DC7BA93C2BC9E352003AF015 /* Demo.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = Demo.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		DC7BA93E2BC9E352003AF015 /* DemoApp.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DemoApp.swift; sourceTree = "<group>"; };
 		DC7BA9402BC9E352003AF015 /* ContentView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ContentView.swift; sourceTree = "<group>"; };
@@ -29,13 +26,6 @@
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
-		DC7BA9252BC9E307003AF015 /* Frameworks */ = {
-			isa = PBXFrameworksBuildPhase;
-			buildActionMask = 2147483647;
-			files = (
-			);
-			runOnlyForDeploymentPostprocessing = 0;
-		};
 		DC7BA9392BC9E352003AF015 /* Frameworks */ = {
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
@@ -51,7 +41,6 @@
 			isa = PBXGroup;
 			children = (
 				DC52A2572BD22B84006FAA6A /* DispatchSDK */,
-				DC7BA92C2BC9E307003AF015 /* dispatch-sdkTests */,
 				DC7BA93D2BC9E352003AF015 /* Demo */,
 				DC7BA91F2BC9E307003AF015 /* Products */,
 				DC7BA94A2BC9E36C003AF015 /* Frameworks */,
@@ -61,18 +50,9 @@
 		DC7BA91F2BC9E307003AF015 /* Products */ = {
 			isa = PBXGroup;
 			children = (
-				DC7BA9282BC9E307003AF015 /* dispatch-sdkTests.xctest */,
 				DC7BA93C2BC9E352003AF015 /* Demo.app */,
 			);
 			name = Products;
-			sourceTree = "<group>";
-		};
-		DC7BA92C2BC9E307003AF015 /* dispatch-sdkTests */ = {
-			isa = PBXGroup;
-			children = (
-				DC7BA92D2BC9E307003AF015 /* dispatch_sdkTests.swift */,
-			);
-			path = "dispatch-sdkTests";
 			sourceTree = "<group>";
 		};
 		DC7BA93D2BC9E352003AF015 /* Demo */ = {
@@ -106,23 +86,6 @@
 /* End PBXGroup section */
 
 /* Begin PBXNativeTarget section */
-		DC7BA9272BC9E307003AF015 /* dispatch-sdkTests */ = {
-			isa = PBXNativeTarget;
-			buildConfigurationList = DC7BA9352BC9E307003AF015 /* Build configuration list for PBXNativeTarget "dispatch-sdkTests" */;
-			buildPhases = (
-				DC7BA9242BC9E307003AF015 /* Sources */,
-				DC7BA9252BC9E307003AF015 /* Frameworks */,
-				DC7BA9262BC9E307003AF015 /* Resources */,
-			);
-			buildRules = (
-			);
-			dependencies = (
-			);
-			name = "dispatch-sdkTests";
-			productName = "dispatch-sdkTests";
-			productReference = DC7BA9282BC9E307003AF015 /* dispatch-sdkTests.xctest */;
-			productType = "com.apple.product-type.bundle.unit-test";
-		};
 		DC7BA93B2BC9E352003AF015 /* Demo */ = {
 			isa = PBXNativeTarget;
 			buildConfigurationList = DC7BA9472BC9E354003AF015 /* Build configuration list for PBXNativeTarget "Demo" */;
@@ -153,9 +116,6 @@
 				LastSwiftUpdateCheck = 1530;
 				LastUpgradeCheck = 1530;
 				TargetAttributes = {
-					DC7BA9272BC9E307003AF015 = {
-						CreatedOnToolsVersion = 15.3;
-					};
 					DC7BA93B2BC9E352003AF015 = {
 						CreatedOnToolsVersion = 15.3;
 					};
@@ -177,19 +137,11 @@
 			projectRoot = "";
 			targets = (
 				DC7BA93B2BC9E352003AF015 /* Demo */,
-				DC7BA9272BC9E307003AF015 /* dispatch-sdkTests */,
 			);
 		};
 /* End PBXProject section */
 
 /* Begin PBXResourcesBuildPhase section */
-		DC7BA9262BC9E307003AF015 /* Resources */ = {
-			isa = PBXResourcesBuildPhase;
-			buildActionMask = 2147483647;
-			files = (
-			);
-			runOnlyForDeploymentPostprocessing = 0;
-		};
 		DC7BA93A2BC9E352003AF015 /* Resources */ = {
 			isa = PBXResourcesBuildPhase;
 			buildActionMask = 2147483647;
@@ -202,14 +154,6 @@
 /* End PBXResourcesBuildPhase section */
 
 /* Begin PBXSourcesBuildPhase section */
-		DC7BA9242BC9E307003AF015 /* Sources */ = {
-			isa = PBXSourcesBuildPhase;
-			buildActionMask = 2147483647;
-			files = (
-				DC7BA92E2BC9E307003AF015 /* dispatch_sdkTests.swift in Sources */,
-			);
-			runOnlyForDeploymentPostprocessing = 0;
-		};
 		DC7BA9382BC9E352003AF015 /* Sources */ = {
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
@@ -347,48 +291,6 @@
 			};
 			name = Release;
 		};
-		DC7BA9362BC9E307003AF015 /* Debug */ = {
-			isa = XCBuildConfiguration;
-			buildSettings = {
-				CODE_SIGN_STYLE = Automatic;
-				CURRENT_PROJECT_VERSION = 1;
-				DEVELOPMENT_TEAM = 9HD9C249B7;
-				GENERATE_INFOPLIST_FILE = YES;
-				IPHONEOS_DEPLOYMENT_TARGET = 15.0;
-				MARKETING_VERSION = 1.0;
-				PRODUCT_BUNDLE_IDENTIFIER = "com.onpursuit.dispatch-sdkTests";
-				PRODUCT_NAME = "$(TARGET_NAME)";
-				SUPPORTED_PLATFORMS = "iphoneos iphonesimulator";
-				SUPPORTS_MACCATALYST = NO;
-				SUPPORTS_MAC_DESIGNED_FOR_IPHONE_IPAD = NO;
-				SUPPORTS_XR_DESIGNED_FOR_IPHONE_IPAD = NO;
-				SWIFT_EMIT_LOC_STRINGS = NO;
-				SWIFT_VERSION = 5.0;
-				TARGETED_DEVICE_FAMILY = 1;
-			};
-			name = Debug;
-		};
-		DC7BA9372BC9E307003AF015 /* Release */ = {
-			isa = XCBuildConfiguration;
-			buildSettings = {
-				CODE_SIGN_STYLE = Automatic;
-				CURRENT_PROJECT_VERSION = 1;
-				DEVELOPMENT_TEAM = 9HD9C249B7;
-				GENERATE_INFOPLIST_FILE = YES;
-				IPHONEOS_DEPLOYMENT_TARGET = 15.0;
-				MARKETING_VERSION = 1.0;
-				PRODUCT_BUNDLE_IDENTIFIER = "com.onpursuit.dispatch-sdkTests";
-				PRODUCT_NAME = "$(TARGET_NAME)";
-				SUPPORTED_PLATFORMS = "iphoneos iphonesimulator";
-				SUPPORTS_MACCATALYST = NO;
-				SUPPORTS_MAC_DESIGNED_FOR_IPHONE_IPAD = NO;
-				SUPPORTS_XR_DESIGNED_FOR_IPHONE_IPAD = NO;
-				SWIFT_EMIT_LOC_STRINGS = NO;
-				SWIFT_VERSION = 5.0;
-				TARGETED_DEVICE_FAMILY = 1;
-			};
-			name = Release;
-		};
 		DC7BA9482BC9E354003AF015 /* Debug */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
@@ -473,15 +375,6 @@
 			buildConfigurations = (
 				DC7BA9302BC9E307003AF015 /* Debug */,
 				DC7BA9312BC9E307003AF015 /* Release */,
-			);
-			defaultConfigurationIsVisible = 0;
-			defaultConfigurationName = Release;
-		};
-		DC7BA9352BC9E307003AF015 /* Build configuration list for PBXNativeTarget "dispatch-sdkTests" */ = {
-			isa = XCConfigurationList;
-			buildConfigurations = (
-				DC7BA9362BC9E307003AF015 /* Debug */,
-				DC7BA9372BC9E307003AF015 /* Release */,
 			);
 			defaultConfigurationIsVisible = 0;
 			defaultConfigurationName = Release;

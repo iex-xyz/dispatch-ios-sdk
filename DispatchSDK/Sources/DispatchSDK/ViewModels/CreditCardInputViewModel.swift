@@ -1,31 +1,6 @@
 import Combine
 import SwiftUI
 
-class CreditCardValidator {
-    static func validateCardNumber(_ number: String) -> Bool {
-        // Implement validation logic
-        return number.count >= 16 // Simplistic example
-    }
-
-    static func detectCardType(from number: String) -> CreditCardType? {
-        // Simplistic detection logic
-        if number.starts(with: "4") {
-            return .visa
-        } else if number.starts(with: "5") {
-            return .masterCard
-        }
-        // Add more detection rules
-        return nil
-    }
-    
-    static func validateSecurityCode(_ code: String) -> Bool {
-        return code.count == 3 || code.count == 4
-    }
-    
-    static func isDateValid(_ date: Date) -> Bool {
-        return date > Date() // The date should be in the future
-    }
-}
 
 class CreditCardInputViewModel: ShippingAddressViewModel {
     @Published var cardNumber: String = ""
@@ -91,7 +66,8 @@ class CreditCardInputViewModel: ShippingAddressViewModel {
         $securityCode
             .dropFirst()
             .map { code in
-                CreditCardValidator.validateSecurityCode(code)
+                guard let cardType = self.cardType else { return false }
+                return CreditCardValidator.validateSecurityCode(code, cardType: cardType)
             }
             .sink { [weak self] isValid in
                 self?.isSecurityCodeValid = isValid

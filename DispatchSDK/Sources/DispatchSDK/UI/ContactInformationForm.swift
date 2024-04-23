@@ -32,6 +32,7 @@ struct ContactInformationForm: View {
                     prompt: Text("your@email.com")
                         .foregroundColor(Colors.placeholderColor)
                 )
+                .autocorrectionDisabled()
                 .foregroundStyle(.primary)
                 .tint(Color.primary)
                 .textInputAutocapitalization(.never)
@@ -41,7 +42,7 @@ struct ContactInformationForm: View {
                 .textFieldStyle(
                     ThemeTextFieldStyle(
                         isFocused: isFocused,
-                        isValid: true
+                        isValid: isFocused || viewModel.isEmailValid || !viewModel.isEmailDirty
                     )
                 )
             }
