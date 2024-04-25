@@ -25,10 +25,6 @@ internal struct ProductOverviewDetailsCell: View {
     var body: some View {
         VStack(alignment: .leading, spacing: 16) {
             VStack(alignment: .leading) {
-                Text("3,662 viewed in the last 7 days")
-                    .lineLimit(1)
-                    .font(.caption)
-                    .foregroundStyle(Color.dispatchOrange)
                 Text(product.name)
                     .foregroundStyle(.primary)
                     .font(.title3.bold())

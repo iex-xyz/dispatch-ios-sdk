@@ -12,7 +12,7 @@ internal struct QuantityStepControl : View {
     internal var body: some View {
         HStack {
             Button(action: {
-                if value > 0 {
+                if value > 1 {
                     value -= step
                     impactGenerator.impactOccurred()
                 }

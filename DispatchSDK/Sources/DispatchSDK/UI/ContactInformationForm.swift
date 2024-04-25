@@ -13,16 +13,9 @@ struct ContactInformationForm: View {
     
     var body: some View {
         VStack(alignment: .leading, spacing: 24) {
-            HStack {
-                Text("Contact Information")
-                    .font(.title3.bold())
-                Spacer()
-//                Button(action: {
-//                    dismiss()
-//                }) {
-//                    Icons.close
-//                }
-            }
+            Text("Contact Information")
+                .font(.title3.bold())
+                .padding(.horizontal)
             
             VStack(alignment: .leading, spacing: 12) {
                 Text("Please enter your email to continue.")
