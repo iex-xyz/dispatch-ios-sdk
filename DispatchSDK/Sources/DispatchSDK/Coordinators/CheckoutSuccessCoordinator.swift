@@ -26,9 +26,7 @@ class CheckoutSuccessCoordinator: BaseCoordinator {
     }
     
     private func showSuccessScreen() {
-        let viewController = UIHostingController<CheckoutSuccessView>(
-            rootView: CheckoutSuccessView(viewModel: viewModel)
-        )
+        let viewController = CheckoutSuccessViewController(viewModel: viewModel)
         
         viewModel
             ._onMainCTATapped
