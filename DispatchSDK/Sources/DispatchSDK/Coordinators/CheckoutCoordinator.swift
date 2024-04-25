@@ -73,7 +73,7 @@ class CheckoutCoordinator: BaseCoordinator {
             rootView: .init(viewModel: viewModel)
         )
 
-        router.setRootModule(viewController)
+        router.setRootModule(viewController, animated: false)
         router.presentSelf(completion: nil)
     }
     

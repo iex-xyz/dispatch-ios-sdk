@@ -4,6 +4,8 @@ import SwiftUI
 struct ExpirationDateTextField: UIViewRepresentable {
     @Preference(\.theme) var theme
     @Binding var text: String
+    var isValid: Bool
+    var isFocused: Bool = false
 
     func makeUIView(context: Context) -> UITextField {
         let textField = PaddedTextField()
@@ -27,6 +29,14 @@ struct ExpirationDateTextField: UIViewRepresentable {
     
     func updateUIView(_ uiView: UITextField, context: Context) {
         uiView.text = text
+        if isFocused {
+            uiView.layer.borderColor = Color.dispatchBlue.cgColor
+        } else if !isValid {
+            uiView.layer.borderColor = Color.dispatchRed.cgColor
+        } else {
+            uiView.layer.borderColor = Colors.borderGray.cgColor
+        }
+
     }
 
     func makeCoordinator() -> Coordinator {

@@ -37,7 +37,7 @@ class CheckoutSuccessCoordinator: BaseCoordinator {
             }
             .store(in: &cancellables)
         
-        router.setRootModule(viewController, hideBar: false)
+        router.setRootModule(viewController, animated: true)
     }
     
 }

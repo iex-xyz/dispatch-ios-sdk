@@ -4,8 +4,8 @@ import SwiftUI
 struct PhoneNumberTextField: UIViewRepresentable {
     @Preference(\.theme) var theme
     @Binding var text: String
-    @State var isValid: Bool
-    @State var isFocused: Bool = false
+    var isValid: Bool
+    var isFocused: Bool = false
     var placeholder: String = "+1 (123) 456-7890"
 
     func makeUIView(context: Context) -> UITextField {

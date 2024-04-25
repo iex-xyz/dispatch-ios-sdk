@@ -28,15 +28,14 @@ struct CreditCardForm: View {
                             .font(.footnote)
                             .frame(alignment: .leading)
 
-                        CreditCardTextField(text: $viewModel.cardNumber)
+                        CreditCardTextField(
+                            text: $viewModel.cardNumber,
+                            isValid: !viewModel.isCardNumberDirty || viewModel.isCardNumberValid || $focusedField.wrappedValue == .cardNumber,
+                            isFocused: focusedField == .cardNumber,
+                            cardIcon: viewModel.cardType?.iconImage
+                        )
                             .textContentType(.creditCardNumber)
                             .focused($focusedField, equals: .cardNumber)
-                            .textFieldStyle(
-                                ThemeTextFieldStyle(
-                                    isFocused: $focusedField.wrappedValue == .cardNumber,
-                                    isValid: !viewModel.isCardNumberDirty || viewModel.isCardNumberValid || $focusedField.wrappedValue == .cardNumber
-                                )
-                            )
                     }
                     HStack {
                         VStack(alignment: .leading, spacing: 8) {
@@ -45,10 +44,14 @@ struct CreditCardForm: View {
                                 .font(.footnote)
                                 .frame(alignment: .leading)
 
-                            ExpirationDateTextField(text: $viewModel.expirationDate)
-                                .frame(height: 48)
-                                .focused($focusedField, equals: .expiry)
-                                .keyboardType(.numberPad)
+                            ExpirationDateTextField(
+                                text: $viewModel.expirationDate,
+                                isValid: !viewModel.isExpirationDateDirty || viewModel.isExpirationDateValid || focusedField == .expiry,
+                                isFocused: focusedField == .expiry
+                            )
+                            .frame(height: 48)
+                            .focused($focusedField, equals: .expiry)
+                            .keyboardType(.numberPad)
                         }
 
                         TextField("Security Code", text: $viewModel.securityCode)

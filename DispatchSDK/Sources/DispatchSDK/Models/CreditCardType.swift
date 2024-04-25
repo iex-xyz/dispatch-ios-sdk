@@ -1,4 +1,5 @@
 import Foundation
+import UIKit
 
 enum CreditCardType: CaseIterable {
     case visa
@@ -7,6 +8,23 @@ enum CreditCardType: CaseIterable {
     case discover
     case dinersClub
     case jcb
+    
+    var iconImage: UIImage? {
+        switch self {
+        case .visa:
+            Icons.Card.visa
+        case .masterCard:
+            Icons.Card.mastercard
+        case .americanExpress:
+            Icons.Card.amex
+        case .discover:
+            Icons.Card.discover
+        case .dinersClub:
+            Icons.Card.dinersClub
+        case .jcb:
+            Icons.Card.jcb
+        }
+    }
 
     var format: String {
         switch self {

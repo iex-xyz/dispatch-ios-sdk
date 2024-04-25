@@ -29,14 +29,14 @@ struct Icons {
     static var bagLight = Image("icon-bag-light", bundle: .module)
 
     struct Card {
-        static var amex = Image("card-amex", bundle: .module)
-        static var `default` = Image("card-default", bundle: .module)
-        static var discover = Image("card-discover", bundle: .module)
-        static var dinersClub = Image("card-diners-club", bundle: .module)
-        static var jcb = Image("card-jcb", bundle: .module)
-        static var mastercard = Image("card-mastercard", bundle: .module)
-        static var unionpay = Image("card-unionpay", bundle: .module)
-        static var visa = Image("card-visa", bundle: .module)
+        static var amex = UIImage(named: "card-amex", in: .module, with: nil)
+        static var `default` = UIImage(named: "card-default", in: .module, with: nil)
+        static var discover = UIImage(named: "card-discover", in: .module, with: nil)
+        static var dinersClub = UIImage(named: "card-diners-club", in: .module, with: nil)
+        static var jcb = UIImage(named: "card-jcb", in: .module, with: nil)
+        static var mastercard = UIImage(named: "card-mastercard", in: .module, with: nil)
+        static var unionpay = UIImage(named: "card-unionpay", in: .module, with: nil)
+        static var visa = UIImage(named: "card-visa", in: .module, with: nil)
     }
     
     struct Payment {
