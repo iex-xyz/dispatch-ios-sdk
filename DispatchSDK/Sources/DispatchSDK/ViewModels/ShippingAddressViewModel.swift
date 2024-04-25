@@ -30,7 +30,7 @@ class ShippingAddressViewModel: ObservableObject {
     @Published var city: String = ""
     @Published var state: String = ""
     @Published var zip: String = ""
-    @Published var phone: String = "1"
+    @Published var phone: String = ""
     @Published var country: String = "US"
 
     @Published var isFirstNameValid = false

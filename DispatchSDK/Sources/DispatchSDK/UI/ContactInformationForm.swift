@@ -28,7 +28,7 @@ struct ContactInformationForm: View {
                 Text("Please enter your email to continue.")
                     .font(.footnote)
                 TextField(
-                    "",
+                    "Email",
                     text: $viewModel.email
                 )
                 .placeholder(when: viewModel.email.isEmpty, placeholder: {
