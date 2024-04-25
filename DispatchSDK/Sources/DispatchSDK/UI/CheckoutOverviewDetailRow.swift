@@ -39,9 +39,11 @@ struct CheckoutOverviewDetailRow<Content: View>: View {
                 Spacer(minLength: 24)
                 HStack {
                     content()
-                    Image(systemName: "chevron.right")
-                        .font(.footnote.bold())
-                        .foregroundStyle(Color.dispatchBlue)
+                    if showChevron {
+                        Image(systemName: "chevron.right")
+                            .font(.footnote.bold())
+                            .foregroundStyle(Color.dispatchBlue)
+                    }
                 }
             }
             .padding()
