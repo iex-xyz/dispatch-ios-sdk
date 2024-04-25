@@ -45,8 +45,17 @@ struct CheckoutView: View {
                 }
             }
             VStack(spacing: 20) {
-                PayButton(ctaText: "Buy with", paymentType: viewModel.selectedPaymentMethod) {
-                    viewModel.onPaymentCTATapped()
+                HStack {
+                    if viewModel.maxQuantity > 1 {
+                        QuantityStepControl(
+                            value: $viewModel.currentQuantity,
+                            maxQuantity: viewModel.maxQuantity
+                        )
+                        .frame(minWidth: 120)
+                    }
+                    PayButton(ctaText: "Buy with", paymentType: viewModel.selectedPaymentMethod) {
+                        viewModel.onPaymentCTATapped()
+                    }
                 }
                 Button(action: {
                     viewModel.onMorePaymentMethodsButtonTapped()
@@ -57,16 +66,10 @@ struct CheckoutView: View {
             }
             .padding()
         }
-        .background(Color(UIColor.systemBackground))
-        .environment(\.theme, theme)
-        // TODO: This should come from the Theme
-        // once we have primary/background color decoding back in
+        .background(theme.backgroundColor)
         .tint(.dispatchBlue)
         .onChange(of: viewModel.checkout) { value in
             mediaViewModel.product = value?.product
-//            if let theme = value?.theme {
-//                self.theme = theme
-//            }
         }
         .colorScheme(theme.colorScheme)
     }

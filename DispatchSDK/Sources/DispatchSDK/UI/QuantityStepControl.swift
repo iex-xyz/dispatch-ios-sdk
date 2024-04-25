@@ -18,22 +18,22 @@ internal struct QuantityStepControl : View {
                 }
             }, label: {
                 Image(systemName: "minus")
-                    .foregroundColor(value > 1 ? .white : .white.opacity(0.5))
+                    .foregroundColor(value > 1 ? .primary : .primary.opacity(0.5))
             })
             
             Text("\(value)")
                 .font(.subheadline)
                 .fontWeight(.medium)
-                .foregroundColor(.white)
+                .foregroundColor(.primary)
             
             Button(action: {
-                if value < 1 {
+                if value < maxQuantity {
                     value += step
                     impactGenerator.impactOccurred()
                 }
             }, label: {
                 Image(systemName: "plus")
-                    .foregroundColor(value < maxQuantity ? .white : .white.opacity(0.5))
+                    .foregroundColor(value < maxQuantity ? .primary : .primary.opacity(0.5))
             })
         }
         .padding()
@@ -52,7 +52,7 @@ internal struct QuantityStepControl : View {
                 }
             }
         )
-        .preferredColorScheme(theme.mode == .dark ? .dark : .light)
+        .colorScheme(theme.colorScheme)
     }
 }
 

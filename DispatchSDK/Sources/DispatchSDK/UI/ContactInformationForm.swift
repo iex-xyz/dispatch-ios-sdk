@@ -17,11 +17,11 @@ struct ContactInformationForm: View {
                 Text("Contact Information")
                     .font(.title3.bold())
                 Spacer()
-                Button(action: {
-                    dismiss()
-                }) {
-                    Icons.close
-                }
+//                Button(action: {
+//                    dismiss()
+//                }) {
+//                    Icons.close
+//                }
             }
             
             VStack(alignment: .leading, spacing: 12) {
@@ -29,10 +29,12 @@ struct ContactInformationForm: View {
                     .font(.footnote)
                 TextField(
                     "",
-                    text: $viewModel.email,
-                    prompt: Text("your@email.com")
-                        .foregroundColor(Colors.placeholderColor)
+                    text: $viewModel.email
                 )
+                .placeholder(when: viewModel.email.isEmpty, placeholder: {
+                    Text("your@gmail.com")
+                        .foregroundColor(Colors.placeholderColor)
+                })
                 .autocorrectionDisabled()
                 .foregroundStyle(.primary)
                 .tint(Color.primary)

@@ -2,7 +2,7 @@ import Foundation
 import Combine
 
 class CheckoutOverviewViewModel: ObservableObject {
-    typealias Address = [String: String]
+    let apiClient: GraphQLClient
     let checkout: Checkout
     let orderId: String
     let email: String
@@ -12,6 +12,7 @@ class CheckoutOverviewViewModel: ObservableObject {
     let billingAddress: Address? // TODO: Model address
     // TODO: Billing details
     let shippingMethod: ShippingMethod
+    let tokenizedPayment: String
     
     // TODO: How should we model the cost breakdown?
     let subtotal: String
@@ -27,18 +28,21 @@ class CheckoutOverviewViewModel: ObservableObject {
     let _onOrderComplete = PassthroughSubject<(Void), Never>()
 
     init(
+        apiClient: GraphQLClient,
         checkout: Checkout,
         orderId: String,
         email: String,
         variant: Variation?,
         phone: String,
-        shippingAddress: [String : String],
-        billingAddress: [String : String]?,
+        shippingAddress: Address,
+        billingAddress: Address?,
         shippingMethod: ShippingMethod,
         subtotal: String,
         tax: String,
-        delivery: String
+        delivery: String,
+        tokenizedPayment: String
     ) {
+        self.apiClient = apiClient
         self.checkout = checkout
         self.orderId = orderId
         self.email = email
@@ -50,11 +54,18 @@ class CheckoutOverviewViewModel: ObservableObject {
         self.subtotal = subtotal
         self.tax = tax
         self.delivery = delivery
+        self.tokenizedPayment = tokenizedPayment
     }
-
     
     func onPayButtonTapped() {
-        
+        Task {
+            do {
+                try await completeOrder()
+            } catch {
+                // TODO: Error handling
+                print("Unable to complete order", error)
+            }
+        }
     }
     
     func onMorePaymentOptionsButtonTapped() {
@@ -66,26 +77,37 @@ class CheckoutOverviewViewModel: ObservableObject {
     }
     
     func onEmailButtonTapped() {
-        
+        _onEmailTapped.send(email)
     }
     
     func onPhoneButtonTapped() {
-        
+        _onPhoneTapped.send(phone)
     }
     
     func onShippingAddressButtonTapped() {
-        
+        // TODO:
+//        _onShippingMethodTapped.send(shippingAddress)
     }
     
     func onShippingMethodButtonTapped() {
-        
+        _onShippingMethodTapped.send(shippingMethod)
     }
     
     func onPaymentDetailsButtonTapped() {
-        
+//         TODO:
+//        _onPaymentDetailsTapped.send()
     }
     
     func onCloseButtonTapped() {
-        
+        // TODO:
+    }
+    
+    private func completeOrder() async throws {
+        let request = CompleteOrderRequest(orderId: orderId, tokenizedPayment: tokenizedPayment)
+        _ = try await apiClient.performOperation(request)
+        DispatchQueue.main.async {
+            // TODO: What do we need to pass to the next screen?
+            self._onOrderComplete.send()
+        }
     }
 }

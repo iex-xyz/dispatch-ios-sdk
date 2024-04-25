@@ -1,6 +1,12 @@
 import Foundation
 
 struct UpdateOrderShippingRequest: GraphQLRequest {
+    enum UpdateShippingType: String, Codable {
+        case shipping = "ADDRESS_SHIPPING"
+        case billing = "ADDRESS_BILLING"
+        case shippingAndBilling = "ADDRESS_SHIPPING_AND_BILLING"
+    }
+
     struct Response: Codable {
         let id: String
         let status: String // TODO: Type with enum?
@@ -17,6 +23,8 @@ struct UpdateOrderShippingRequest: GraphQLRequest {
         let zip: String
         let phoneNumber: String // TODO: Unformatted?
         let country: String
+        
+        let updateType: UpdateShippingType
     }
 
     typealias Output = Response
@@ -27,7 +35,7 @@ struct UpdateOrderShippingRequest: GraphQLRequest {
         mutation {
                updateOrderInformation(
                  orderId: \"\(params.orderId)\",
-                 updateType: ADDRESS_SHIPPING_AND_BILLING
+                 updateType: \(params.updateType.rawValue),
                    address1: \"\(params.address1)\",
                    address2: \"\(params.address2)\",
                    city: \"\(params.city)\",

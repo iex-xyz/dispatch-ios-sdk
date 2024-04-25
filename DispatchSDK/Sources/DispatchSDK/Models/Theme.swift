@@ -102,6 +102,17 @@ extension Theme {
     
     public var backgroundColor: Color {
         return mode == .dark ? .black : .white
+    }
+    
+    public var cornerRadius: CGFloat {
+        switch inputStyle {
+        case .round:
+            return 24
+        case .soft:
+            return 4
+        case .sharp:
+            return 0
+        }
 
     }
 }

@@ -9,7 +9,9 @@ class CreditCardInputViewModel: ShippingAddressViewModel {
     @Published var securityCode: String = ""
 
     @Published var billingAddressMatchesShipping: Bool = true
-    
+    @Published var isUpdatingBillingAddress: Bool = false
+    @Published var isGeneratingPaymentToken: Bool = false
+
     @Published var isCardNumberDirty: Bool = false
     @Published var isExpirationDateDirty: Bool = false
     @Published var isSecurityCodeDirty: Bool = false
@@ -19,7 +21,9 @@ class CreditCardInputViewModel: ShippingAddressViewModel {
     @Published var isSecurityCodeValid: Bool = false
     
     private var cancellables: Set<AnyCancellable> = []
-    
+
+    let _onPaymentTokenGenerated = PassthroughSubject<(String, Address), Never>()
+
     override init(
         addressLookupService: any AddressLookupService,
         apiClient: GraphQLClient,
@@ -34,7 +38,6 @@ class CreditCardInputViewModel: ShippingAddressViewModel {
     }
 
     private func setupCardValidationPublishers() {
-        // Card Number
         $cardNumber
             .dropFirst() // Avoid initial value
             .map { number -> (CreditCardType?, Bool) in
@@ -49,12 +52,10 @@ class CreditCardInputViewModel: ShippingAddressViewModel {
             }
             .store(in: &cancellables)
 
-        // Expiration Date
         $expirationDate
             .dropFirst()
             .map { date -> Bool in
-                return true
-//                date.map { CreditCardValidator.isDateValid($0) }// ?? false
+                ExpirationDateValidator.validateExpirationDate(date)
             }
             .sink { [weak self] isValid in
                 self?.isExpirationDateValid = isValid
@@ -62,7 +63,6 @@ class CreditCardInputViewModel: ShippingAddressViewModel {
             }
             .store(in: &cancellables)
 
-        // Security Code
         $securityCode
             .dropFirst()
             .map { code in
@@ -77,7 +77,90 @@ class CreditCardInputViewModel: ShippingAddressViewModel {
     }
     
     override func onContinueButtonTapped() {
-        // TODO: Ensure validation
-        // TODO: Where do we send credit card info via API?
+        // TODO: Ensure validation?
+        guard
+            !isGeneratingPaymentToken,
+            !isUpdatingBillingAddress,
+            isCardNumberValid,
+            isExpirationDateValid,
+            isSecurityCodeValid,
+            (billingAddressMatchesShipping || (
+                isAddress1Valid &&
+                isCityValid &&
+                isStateValid &&
+                isZipValid &&
+                isPhoneValid
+            ))
+        else {
+            // TODO: Handle invalid state
+            return
+        }
+        
+        self.isGeneratingPaymentToken = true
+        Task {
+            do {
+                // NOTE: We only need to update billing address if it does not match shipping
+                // since we pass ADDRESS_SHIPPING_AND_BILLING when setting our shipping address
+                // TODO: Can this potentially bite us if a user goes back to update their order?
+                if !billingAddressMatchesShipping {
+                    try await updateBillingAddress()
+                }
+                try await generatePaymentToken()
+            } catch {
+                print("Unable to generate payment token", error)
+                DispatchQueue.main.async {
+                    self.isGeneratingPaymentToken = false
+                }
+            }
+        }
+    }
+    
+    private func updateBillingAddress() async throws {
+        let params = UpdateOrderShippingRequest.RequestParams(
+            orderId: orderId,
+            firstName: firstName,
+            lastName: lastName,
+            address1: address1,
+            address2: address2,
+            city: city,
+            state: state,
+            zip: zip,
+            phoneNumber: phone,
+            country: country,
+            updateType: .billing
+        )
+        let request = UpdateOrderShippingRequest(params: params)
+        _ = try await apiClient.performOperation(request)
+
+        // TODO: Do we need to check status at any point?
+    }
+    
+    private func generatePaymentToken() async throws {
+        let expirationComponents = expirationDate.split(separator: "/")
+        guard
+            expirationComponents.count == 2,
+            let expirationMonth = expirationComponents.first,
+            let expirationYear = expirationComponents.last
+        else {
+            // TODO: Error handling
+            return
+        }
+        self.isGeneratingPaymentToken = true
+
+        let request = GetPaymentTokenRequest(
+            orderId: orderId,
+            cardNumber: cardNumber,
+            expirationMonth: String(expirationMonth),
+            expirationYear: String(expirationYear),
+            cvc: securityCode
+        )
+        
+        let response = try await apiClient.performOperation(request)
+        let address = Address(address1: address1, address2: address2, city: city, state: state, zip: zip)
+        
+        DispatchQueue.main.async {
+            self._onPaymentTokenGenerated.send((response.paymentToken, address))
+            self.isGeneratingPaymentToken = false
+        }
     }
 }

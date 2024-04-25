@@ -37,26 +37,28 @@ class CreditCardCoordinator: BaseCoordinator {
         
         viewModel
             ._onOrderInitiated
-            .sink { [weak self] order in
-                self?.showShippingAddressForm(for: order)
+            .sink { [weak self] order, email in
+                self?.showShippingAddressForm(
+                    for: order.id,
+                    email: email
+                )
             }
             .store(in: &cancellables)
 
-        if let sheet = viewController.sheetPresentationController {
-            sheet.detents = [.medium()]
-            sheet.preferredCornerRadius = 16
-        }
-        router.present(viewController, animated: true) { [weak self] in
+        router.push(viewController, animated: true) { [weak self] in
             self?.didCancel()
         }
     }
     
-    private func showShippingAddressForm(for order: InitiateOrder) {
+    private func showShippingAddressForm(
+        for orderId: String,
+        email: String
+    ) {
         let addressLookupService: AddressLookupService = MapKitAddressLookupService()
         let viewModel = ShippingAddressViewModel(
             addressLookupService: addressLookupService,
             apiClient: apiClient,
-            orderId: order.id
+            orderId: orderId
         )
         let viewController: UIHostingController<ShippingAddressFormContainer> = .init(
             rootView: ShippingAddressFormContainer(viewModel: viewModel)
@@ -64,17 +66,27 @@ class CreditCardCoordinator: BaseCoordinator {
         
         viewModel
             ._onOrderUpdated
-            .sink { [weak self] orderId in
-                self?.showShippingMethods(for: orderId)
+            .sink {
+                [weak self] orderId,
+                address, phone in
+                self?.showShippingMethods(
+                    for: orderId,
+                    email: email,
+                    phone: phone,
+                    address: address
+                )
             }
             .store(in: &cancellables)
         
-        router.dismissModule(animated: true) { [weak self] in
-            self?.router.push(viewController, animated: true)
-        }
+        router.push(viewController, animated: true)
     }
     
-    private func showShippingMethods(for orderId: String) {
+    private func showShippingMethods(
+        for orderId: String,
+        email: String,
+        phone: String,
+        address: Address
+    ) {
         let viewModel = ShippingMethodViewModel(apiClient: apiClient, orderId: orderId)
         let viewController = UIHostingController<ShippingMethodsView>(
             rootView: ShippingMethodsView(
@@ -85,15 +97,26 @@ class CreditCardCoordinator: BaseCoordinator {
         viewModel
             ._onShippingMethodTapped
             .sink { [weak self] shippingMethod in
-                print("Shipping method selected", shippingMethod)
-                self?.showBillingForm(for: orderId)
+                self?.showBillingForm(
+                    for: orderId,
+                    email: email,
+                    shippingAddress: address, 
+                    phone: phone,
+                    shippingMethod: shippingMethod
+                )
             }
             .store(in: &cancellables)
         
         router.push(viewController)
     }
     
-    private func showBillingForm(for orderId: String) {
+    private func showBillingForm(
+        for orderId: String,
+        email: String,
+        shippingAddress: Address,
+        phone: String,
+        shippingMethod: ShippingMethod
+    ) {
         let viewModel = CreditCardInputViewModel(
             addressLookupService: MapKitAddressLookupService(),
             apiClient: apiClient,
@@ -106,29 +129,53 @@ class CreditCardCoordinator: BaseCoordinator {
         )
         
         viewModel
-            ._onOrderUpdated
-            .sink { [weak self] orderId in
-                self?.showOrderPreview(for: orderId)
+            ._onPaymentTokenGenerated
+            .sink {
+                [weak self] (paymentToken,
+                billingAddress) in
+                self?.showOrderPreview(
+                    for: orderId,
+                    email: email,
+                    variant: nil,
+                    phone: phone,
+                    shippingAddress: shippingAddress,
+                    shippingMethod: shippingMethod,
+                    billingAddress: billingAddress,
+                    billingDetails: "TODO",
+                    paymentToken: paymentToken
+                )
             }
             .store(in: &cancellables)
         
         router.push(viewController)
     }
     
-    private func showOrderPreview(for orderId: String) {
+    private func showOrderPreview(
+        for orderId: String,
+        email: String,
+        variant: Variation?,
+        phone: String,
+        shippingAddress: Address,
+        shippingMethod: ShippingMethod,
+        billingAddress: Address,
+        billingDetails: String,
+        paymentToken: String
+    ) {
         // TODO: Where do we store all of this data while we go through the flow?
         let viewModel = CheckoutOverviewViewModel(
+            apiClient: apiClient,
             checkout: viewModel.checkout,
             orderId: orderId,
             email: viewModel.email,
             variant: nil,
-            phone: "",
-            shippingAddress: [:],
+            phone: phone,
+            shippingAddress: shippingAddress,
             billingAddress: nil,
             shippingMethod: .random(),
             subtotal: "$subtotal",
             tax: "$tax",
-            delivery: "$delivery"
+            delivery: "$delivery",
+            tokenizedPayment: paymentToken
         )
         
         let viewController = UIHostingController<CheckoutOverviewView>(

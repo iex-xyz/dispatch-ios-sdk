@@ -15,7 +15,6 @@ final class MainCoordinator: BaseCoordinator {
     }
     
     private func runCheckoutFlow() {
-
         let coordinator = CheckoutCoordinator(router: router, apiClient: apiClient)
         coordinator.shouldDismissFlow = { [weak self, weak coordinator] in
             self?.removeDependency(coordinator)

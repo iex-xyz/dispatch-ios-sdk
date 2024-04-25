@@ -6,7 +6,11 @@ struct ShippingAddressFormContainer: View {
     @ObservedObject var viewModel: ShippingAddressViewModel
 
     var body: some View {
-        VStack {
+        VStack(alignment: .leading) {
+            Text("Shipping Address")
+                .font(.title3.bold())
+                .padding(.horizontal)
+
             ScrollView {
                 ShippingAddressForm(viewModel: viewModel)
                     .padding()
@@ -39,38 +43,6 @@ struct ShippingAddressForm: View {
         case firstName, lastName, address1, address2, city, state, zip, phone
     }
     var body: some View {
-        Button(action: {
-            showCountryPicker = true
-        }) {
-            Text("Country")
-        }
-        .buttonStyle(SecondaryButtonStyle())
-        .popover(isPresented: $showCountryPicker,
-                 content: {
-            if #available(iOS 16.4, *) {
-                List {
-                    TextField.init("Search", text: $query)
-                        .textFieldStyle(
-                            ThemeTextFieldStyle(
-                                isFocused: focusedField == .city,
-                                isValid: true
-                            )
-                        )
-                    Text("United States")
-                    Text("United States")
-                    Text("United States")
-                    Text("United States")
-                    Text("United States")
-                }
-                .padding()
-                .frame(minWidth: 300, maxWidth: .infinity)
-                .presentationCompactAdaptation(.popover)
-            } else {
-                // Fallback on earlier versions
-            }
-        })
-        
-        
         VStack {
             TextField("First Name", text: $viewModel.firstName)
                 .textContentType(.givenName)
@@ -148,15 +120,7 @@ struct ShippingAddressForm: View {
                     )
                 )
             HStack {
-                TextField("State", text: $viewModel.state)
-                    .textContentType(.addressState)
-                    .focused($focusedField, equals: .state)
-                    .textFieldStyle(
-                        ThemeTextFieldStyle(
-                            isFocused: $focusedField.wrappedValue == .state,
-                            isValid: !viewModel.isStateDirty || viewModel.isStateValid || $focusedField.wrappedValue == .state
-                        )
-                    )
+                StatePickerControl(state: $viewModel.state)
                 TextField("ZIP", text: $viewModel.zip)
                     .textContentType(.postalCode)
                     .focused($focusedField, equals: .zip)
@@ -167,9 +131,67 @@ struct ShippingAddressForm: View {
                         )
                     )
             }
-            PhoneNumberTextField(text: $viewModel.phone)
+            PhoneNumberTextField(
+                text: $viewModel.phone,
+                isValid: viewModel.isPhoneValid
+            )
                 .focused($focusedField, equals: .phone)
         }
+        .toolbar {
+            ToolbarItemGroup(placement: .keyboard) {
+                Button(action: {
+                    switch focusedField {
+                    case .firstName:
+                        break
+                    case .lastName:
+                        focusedField = .firstName
+                    case .address1:
+                        focusedField = .lastName
+                    case .address2:
+                        focusedField = .address1
+                    case .city:
+                        focusedField = .address2
+                    case .state:
+                        focusedField = .city
+                    case .zip:
+                        focusedField = .state
+                    case .phone:
+                        focusedField = .zip
+                    case nil:
+                        break
+                    }
+                }) {
+                    Image(systemName: "chevron.up")
+                }
+                Button(action: {
+                    switch focusedField {
+                    case .firstName:
+                        focusedField = .lastName
+                    case .lastName:
+                        focusedField = .address1
+                    case .address1:
+                        focusedField = .address2
+                    case .address2:
+                        focusedField = .city
+                    case .city:
+                        focusedField = .state
+                    case .state:
+                        focusedField = .zip
+                    case .zip:
+                        focusedField = .phone
+                    case .phone:
+                        break
+                    case nil:
+                        break
+                    }
+
+                }) {
+                    Image(systemName: "chevron.down")
+                }
+                Spacer()
+            }
+        }
+
     }
 }
 

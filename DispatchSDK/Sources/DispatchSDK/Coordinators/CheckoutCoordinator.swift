@@ -55,17 +55,24 @@ class CheckoutCoordinator: BaseCoordinator {
                 switch paymentType {
                 case .creditCard:
                     self?.showPayWithCreditCard(for: checkout)
-                default:
+                case .applePay:
                     self?.showPayWithCreditCard(for: checkout)
+                default:
+                    print("[WARNING] Invalid payment type handler")
+                    return
                 }
         }
         .store(in: &cancellables)
-        let viewController = UIHostingController<CheckoutView>.init(rootView: .init(viewModel: viewModel))
+
+        let viewController = UIHostingController<CheckoutView>.init(
+            rootView: .init(viewModel: viewModel)
+        )
+
         router.setRootModule(viewController)
         router.presentSelf(completion: nil)
     }
     
-    func showVariantPicker(for viewModel: AttributeViewModel) {
+    private func showVariantPicker(for viewModel: AttributeViewModel) {
         let viewController = UIHostingController<VariantPickerView>(rootView: VariantPickerView(viewModel: viewModel, columns: .double))
         if let sheet = viewController.sheetPresentationController {
             sheet.detents = [.medium()]
@@ -85,7 +92,7 @@ class CheckoutCoordinator: BaseCoordinator {
 
     }
     
-    func showPaymentOptionsPicker(for checkout: Checkout) {
+    private func showPaymentOptionsPicker(for checkout: Checkout) {
         let viewController = UIHostingController(
             rootView: PaymentOptionsPickerView(onPaymentMethodSelected: { [weak self] paymentType in
                 self?.viewModel.selectedPaymentMethod = paymentType
@@ -100,9 +107,9 @@ class CheckoutCoordinator: BaseCoordinator {
         })
     }
     
-    func showSecureCheckout(for checkout: Checkout) {
+    private func showSecureCheckout(for checkout: Checkout) {
         let viewController = UIHostingController(
-            rootView: SecureCheckoutOverview()
+            rootView: SecureCheckoutOverview(checkout: checkout)
         )
         if let sheet = viewController.sheetPresentationController {
             sheet.detents = [.medium()]
@@ -114,7 +121,23 @@ class CheckoutCoordinator: BaseCoordinator {
 
     }
     
-    func showPayWithCreditCard(for checkout: Checkout) {
+    private func showPayWithApplePay(for checkout: Checkout) {
+        let viewModel = ApplePayViewModel(order: .mock(), merchantId: checkout.merchantId)
+        let coordinator = ApplePayCoordinator(
+            router: router,
+            apiClient: apiClient,
+            orderId: "invalid",
+            viewModel: viewModel,
+            didCancel: {
+                // TODO:
+            }
+        )
+        
+        addDependency(coordinator)
+        coordinator.start()
+    }
+    
+    private func showPayWithCreditCard(for checkout: Checkout) {
         let viewModel: InitiateCreditCardCheckoutViewModel = InitiateCreditCardCheckoutViewModel(
             checkout: checkout,
             variantId: viewModel.selectedVariant?.id,

@@ -39,17 +39,17 @@ struct CreditCardForm: View {
                             )
                     }
                     HStack {
-                        TextField("MM/YY", text: $viewModel.expirationDate)
-                            .focused($focusedField, equals: .expiry)
-                            .textFieldStyle(
-                                ThemeTextFieldStyle(
-                                    isFocused: $focusedField.wrappedValue == .expiry,
-                                    isValid: !viewModel.isExpirationDateDirty || viewModel.isExpirationDateValid || $focusedField.wrappedValue == .expiry,
-                                    labelText: "MM/YY"
+                        VStack(alignment: .leading, spacing: 8) {
+                            Text("Exp. Date")
+                                .foregroundStyle(.primary)
+                                .font(.footnote)
+                                .frame(alignment: .leading)
 
-                                )
-                            )
-                            .keyboardType(.numbersAndPunctuation)
+                            ExpirationDateTextField(text: $viewModel.expirationDate)
+                                .frame(height: 48)
+                                .focused($focusedField, equals: .expiry)
+                                .keyboardType(.numberPad)
+                        }
 
                         TextField("Security Code", text: $viewModel.securityCode)
                             .focused($focusedField, equals: .securityCode)
@@ -85,7 +85,9 @@ struct CreditCardForm: View {
                 .padding()
             }
             VStack(spacing: 32) {
-                Button(action: {}) {
+                Button(action: {
+                    viewModel.onContinueButtonTapped()
+                }) {
                     Text("Continue")
                 }
                 .buttonStyle(PrimaryButtonStyle(isLoading: false))

@@ -28,7 +28,7 @@ class InitiateCreditCardCheckoutViewModel: ObservableObject {
     @Published var isEmailDirty: Bool = false
     @Published var isEmailValid: Bool = false
 
-    let _onOrderInitiated = PassthroughSubject<InitiateOrder, Never>()
+    let _onOrderInitiated = PassthroughSubject<(InitiateOrder, String), Never>()
 
     private let apiClient: GraphQLClient
     
@@ -78,7 +78,7 @@ class InitiateCreditCardCheckoutViewModel: ObservableObject {
 
                 DispatchQueue.main.async {
                     self.orderState = .loaded(result)
-                    self._onOrderInitiated.send(result)
+                    self._onOrderInitiated.send((result, self.email))
                 }
 
             } catch {

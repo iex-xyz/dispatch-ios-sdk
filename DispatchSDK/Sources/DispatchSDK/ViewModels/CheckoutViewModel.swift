@@ -65,8 +65,8 @@ internal class CheckoutViewModel: ObservableObject {
         Task {
             // Checkout
 //            await fetchDistribution(for: "65e6289c71acbac4d940c8ef")
-//            await fetchDistribution(for: "652ef22e5599070b1b8b9986")
-            await fetchDistribution(for: "65df6f3a4ae12e4cec1d3eb2")
+            await fetchDistribution(for: "652ef22e5599070b1b8b9986") // Yeti
+//            await fetchDistribution(for: "65df6f3a4ae12e4cec1d3eb2") // Mystery Box
 //            await fetchDistribution(for: "661e8c14116bdd2bfe95eb29")
             // Content
 //            await fetchDistribution(for: "64dabb5fa62014aafefbe89e")

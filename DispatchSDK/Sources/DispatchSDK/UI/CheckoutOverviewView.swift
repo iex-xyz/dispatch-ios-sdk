@@ -57,7 +57,7 @@ struct CheckoutOverviewView: View {
                     }
                     Divider()
                     CheckoutOverviewDetailRow(title: "Ship to") {
-                        Text(viewModel.shippingAddress.debugDescription)
+                        Text(viewModel.shippingAddress.formattedString)
                             .multilineTextAlignment(.trailing)
                             .lineLimit(3)
                             .minimumScaleFactor(0.8)
@@ -108,17 +108,19 @@ struct CheckoutOverviewView: View {
 
 #Preview {
     let viewModel: CheckoutOverviewViewModel = .init(
+        apiClient: .init(networkService: RealNetworkService(), environment: .staging),
         checkout: .mock(),
         orderId: UUID().uuidString,
         email: "test@test.com",
         variant: .random(),
         phone: "8882223344",
-        shippingAddress: [:],
-        billingAddress: [:],
+        shippingAddress: Address.mock(),
+        billingAddress: Address.mock(),
         shippingMethod: .random(),
         subtotal: "$123.99",
         tax: "$4.99",
-        delivery: "$9.99"
+        delivery: "$9.99",
+        tokenizedPayment: UUID().uuidString
     )
     return CheckoutOverviewView(viewModel: viewModel)
 }

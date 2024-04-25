@@ -17,6 +17,9 @@ extension Color {
     static var borderGrayDark: Color = Color(hex: "#2D2F33")
     static var borderGrayLight: Color = Color(hex: "#E8E8E8")
 
+    static var secondaryTextDark: Color = Color(hex: "#85858A")
+    static var secondaryTextLight: Color = Color(hex: "#85858A")
+
     static var shopPayPurple: Color = Color(hex: "#5A31F4")
 }
 
@@ -28,6 +31,24 @@ struct Colors {
             return .borderGrayDark
         case .light:
             return .borderGrayLight
+        }
+    }
+    
+    static var secondaryBackgroundColor: Color {
+        switch theme.mode {
+        case .dark:
+            return .dispatchDarkBackground
+        case .light:
+            return .dispatchLightBackground
+        }
+    }
+    
+    static var secondaryText: Color {
+        switch theme.mode {
+        case .dark:
+            return .secondaryTextDark
+        case .light:
+            return .secondaryTextLight
         }
     }
     

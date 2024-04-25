@@ -16,9 +16,10 @@ class ShippingAddressViewModel: ObservableObject {
                 return false
             }
         }
+
     }
         
-    let _onOrderUpdated = PassthroughSubject<String, Never>()
+    let _onOrderUpdated = PassthroughSubject<(String, Address, String), Never>()
 
     @Published var addressLookupState: AddressLookupState = .idle
 
@@ -29,8 +30,9 @@ class ShippingAddressViewModel: ObservableObject {
     @Published var city: String = ""
     @Published var state: String = ""
     @Published var zip: String = ""
-    @Published var phone: String = ""
-    
+    @Published var phone: String = "1"
+    @Published var country: String = "US"
+
     @Published var isFirstNameValid = false
     @Published var isLastNameValid = false
     @Published var isAddress1Valid = false
@@ -75,7 +77,6 @@ class ShippingAddressViewModel: ObservableObject {
     }
 
     private func setupValidation() {
-        // FirstName Validation
         $firstName
             .dropFirst()
             .map { !$0.isEmpty && $0.count >= 2 }
@@ -86,7 +87,6 @@ class ShippingAddressViewModel: ObservableObject {
             .map { _ in true }
             .assign(to: &$isFirstNameDirty)
 
-        // LastName Validation
         $lastName
             .dropFirst()
             .map { !$0.isEmpty && $0.count >= 2 }
@@ -97,7 +97,6 @@ class ShippingAddressViewModel: ObservableObject {
             .map { _ in true }
             .assign(to: &$isLastNameDirty)
 
-        // Address1 Validation
         $address1
             .dropFirst()
             .map { !$0.isEmpty }
@@ -108,7 +107,6 @@ class ShippingAddressViewModel: ObservableObject {
             .map { _ in true }
             .assign(to: &$isAddress1Dirty)
 
-        // City Validation
         $city
             .dropFirst()
             .map { !$0.isEmpty }
@@ -119,7 +117,6 @@ class ShippingAddressViewModel: ObservableObject {
             .map { _ in true }
             .assign(to: &$isCityDirty)
 
-        // State Validation
         $state
             .dropFirst()
             .map { !$0.isEmpty && $0.count == 2 }
@@ -130,7 +127,6 @@ class ShippingAddressViewModel: ObservableObject {
             .map { _ in true }
             .assign(to: &$isStateDirty)
 
-        // ZIP Code Validation
         $zip
             .dropFirst()
             .map { zip in
@@ -144,7 +140,6 @@ class ShippingAddressViewModel: ObservableObject {
             .map { _ in true }
             .assign(to: &$isZipDirty)
 
-        // Phone Number Validation
         $phone
             .dropFirst()
             .map { phone in
@@ -187,14 +182,27 @@ class ShippingAddressViewModel: ObservableObject {
     }
     
     func onContinueButtonTapped() {
-        guard !isUpdatingOrder else { return }
         // TODO: Form validation
+        guard
+            !isUpdatingOrder,
+            isAddress1Valid,
+            isCityValid,
+            isStateValid,
+            isZipValid,
+            isPhoneValid
+        else {
+            return
+        }
         Task {
-            await updateOrderAddress()
+            // NOTE: We optimistically set the billing address here to save a round trip
+            // on the billing form if the user's shipping and billing match. Otherwise we
+            // will need to update the billing address separately
+            // TODO: Can this potentially bite us when editing the form?
+            await updateOrderAddress(using: .shippingAndBilling)
         }
     }
 
-    private func updateOrderAddress() async {
+    private func updateOrderAddress(using updateType: UpdateOrderShippingRequest.UpdateShippingType) async {
         self.isUpdatingOrder = true
         Task { [weak self] in
             guard let self else { return }
@@ -210,15 +218,23 @@ class ShippingAddressViewModel: ObservableObject {
                         state: self.state,
                         zip: self.zip,
                         phoneNumber: self.phone,
-                        country: "US" // TODO: Fix
+                        country: self.country,
+                        updateType: updateType
                     )
                 )
                 
                 let response = try await apiClient.performOperation(request)
                 
+                let address: Address = .init(
+                    address1: address1,
+                    address2: address2,
+                    city: city,
+                    state: state,
+                    zip: zip
+                )
                 DispatchQueue.main.async {
                     self.isUpdatingOrder = false
-                    self._onOrderUpdated.send(self.orderId)
+                    self._onOrderUpdated.send((self.orderId, address, self.phone))
                 }
             } catch {
                 DispatchQueue.main.async {

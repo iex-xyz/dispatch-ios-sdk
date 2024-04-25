@@ -4,11 +4,15 @@ import SwiftUI
 struct PhoneNumberTextField: UIViewRepresentable {
     @Preference(\.theme) var theme
     @Binding var text: String
+    @State var isValid: Bool
+    @State var isFocused: Bool = false
+    var placeholder: String = "+1 (123) 456-7890"
 
     func makeUIView(context: Context) -> UITextField {
         let textField = PaddedTextField()
         textField.keyboardType = .phonePad
         textField.delegate = context.coordinator
+        textField.placeholder = placeholder
         textField.layer.borderWidth = 2
         textField.layer.borderColor = Colors.borderGray.cgColor
         textField.backgroundColor = UIColor(Colors.controlBackground)
@@ -16,7 +20,7 @@ struct PhoneNumberTextField: UIViewRepresentable {
         textField.textContentType = .telephoneNumber
         switch theme.inputStyle {
         case .round:
-            textField.layer.cornerRadius = 24
+            textField.layer.cornerRadius = theme.cornerRadius
         case .sharp:
             textField.layer.cornerRadius = 0
         case .soft:
@@ -27,6 +31,14 @@ struct PhoneNumberTextField: UIViewRepresentable {
     
     func updateUIView(_ uiView: UITextField, context: Context) {
         uiView.text = text
+        
+        if isFocused {
+            uiView.layer.borderColor = Color.dispatchBlue.cgColor
+        } else if !isValid {
+            uiView.layer.borderColor = Color.dispatchRed.cgColor
+        } else {
+            uiView.layer.borderColor = Colors.borderGray.cgColor
+        }
     }
 
     func makeCoordinator() -> Coordinator {
@@ -38,6 +50,14 @@ struct PhoneNumberTextField: UIViewRepresentable {
 
         init(_ textField: PhoneNumberTextField) {
             self.parent = textField
+        }
+        
+        func textFieldDidBeginEditing(_ textField: UITextField) {
+            parent.isFocused = true
+        }
+        
+        func textFieldDidEndEditing(_ textField: UITextField) {
+            parent.isFocused = false
         }
 
         func textField(_ textField: UITextField, shouldChangeCharactersIn range: NSRange, replacementString string: String) -> Bool {
@@ -68,6 +88,17 @@ struct PhoneNumberTextField: UIViewRepresentable {
 
 #Preview {
     @State var phone: String = ""
-    return PhoneNumberTextField(text: $phone)
+    return VStack {
+        PhoneNumberTextField(
+            text: $phone,
+            isValid: true
+        )
         .frame(height: 44)
+        PhoneNumberTextField(
+            text: $phone,
+            isValid: false
+        )
+        .frame(height: 44)
+    }
+    .padding()
 }
