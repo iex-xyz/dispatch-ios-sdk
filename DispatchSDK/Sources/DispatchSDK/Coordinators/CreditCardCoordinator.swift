@@ -27,8 +27,7 @@ class CreditCardCoordinator: BaseCoordinator {
     }
     
     override func start() {
-        navigateToOrderCompleteCoordinator()
-//        showEmailCaptureForm()
+        showEmailCaptureForm()
     }
     
     private func showEmailCaptureForm() {

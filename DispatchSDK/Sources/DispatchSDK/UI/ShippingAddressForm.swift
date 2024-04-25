@@ -49,8 +49,8 @@ struct ShippingAddressForm: View {
                 .focused($focusedField, equals: .firstName)
                 .textFieldStyle(
                     ThemeTextFieldStyle(
-                        isFocused: $focusedField.wrappedValue == .firstName,
-                        isValid: !viewModel.isFirstNameDirty || viewModel.isFirstNameValid || $focusedField.wrappedValue == .firstName
+                        isFocused: focusedField == .firstName,
+                        isValid: !viewModel.isFirstNameDirty || viewModel.isFirstNameValid || focusedField == .firstName
                     )
                 )
             TextField("Last Name", text: $viewModel.lastName)
@@ -58,8 +58,8 @@ struct ShippingAddressForm: View {
                 .textContentType(.familyName)
                 .textFieldStyle(
                     ThemeTextFieldStyle(
-                        isFocused: $focusedField.wrappedValue == .lastName,
-                        isValid: !viewModel.isLastNameDirty || viewModel.isLastNameValid || $focusedField.wrappedValue == .lastName
+                        isFocused: focusedField == .lastName,
+                        isValid: !viewModel.isLastNameDirty || viewModel.isLastNameValid || focusedField == .lastName
                     )
                 )
             TextField("Address Line 1", text: $viewModel.address1)
@@ -67,8 +67,8 @@ struct ShippingAddressForm: View {
                 .focused($focusedField, equals: .address1)
                 .textFieldStyle(
                     ThemeTextFieldStyle(
-                        isFocused: $focusedField.wrappedValue == .address1,
-                        isValid: !viewModel.isAddress1Dirty || viewModel.isAddress1Valid || $focusedField.wrappedValue == .address1
+                        isFocused: focusedField == .address1,
+                        isValid: !viewModel.isAddress1Dirty || viewModel.isAddress1Valid || focusedField == .address1
                     )
                 )
             if focusedField == .address1 {
@@ -106,7 +106,7 @@ struct ShippingAddressForm: View {
                 .focused($focusedField, equals: .address2)
                 .textFieldStyle(
                     ThemeTextFieldStyle(
-                        isFocused: $focusedField.wrappedValue == .address2,
+                        isFocused: focusedField == .address2,
                         isValid: true
                     )
                 )
@@ -115,8 +115,8 @@ struct ShippingAddressForm: View {
                 .focused($focusedField, equals: .city)
                 .textFieldStyle(
                     ThemeTextFieldStyle(
-                        isFocused: $focusedField.wrappedValue == .city,
-                        isValid: !viewModel.isCityDirty || viewModel.isCityValid || $focusedField.wrappedValue == .city
+                        isFocused: focusedField == .city,
+                        isValid: !viewModel.isCityDirty || viewModel.isCityValid || focusedField == .city
                     )
                 )
             HStack {
@@ -126,14 +126,15 @@ struct ShippingAddressForm: View {
                     .focused($focusedField, equals: .zip)
                     .textFieldStyle(
                         ThemeTextFieldStyle(
-                            isFocused: $focusedField.wrappedValue == .zip,
-                            isValid: !viewModel.isZipDirty || viewModel.isZipValid || $focusedField.wrappedValue == .zip
+                            isFocused: focusedField == .zip,
+                            isValid: !viewModel.isZipDirty || viewModel.isZipValid || focusedField == .zip
                         )
                     )
             }
             PhoneNumberTextField(
                 text: $viewModel.phone,
-                isValid: viewModel.isPhoneValid
+                isValid: !viewModel.isPhoneDirty || viewModel.isPhoneValid || focusedField == .phone,
+                isFocused: focusedField == .phone
             )
                 .focused($focusedField, equals: .phone)
         }

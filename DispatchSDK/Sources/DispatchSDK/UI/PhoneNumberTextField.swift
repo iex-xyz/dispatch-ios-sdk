@@ -5,7 +5,7 @@ struct PhoneNumberTextField: UIViewRepresentable {
     @Preference(\.theme) var theme
     @Binding var text: String
     var isValid: Bool
-    var isFocused: Bool = false
+    var isFocused: Bool
     var placeholder: String = "+1 (123) 456-7890"
 
     func makeUIView(context: Context) -> UITextField {
@@ -91,14 +91,21 @@ struct PhoneNumberTextField: UIViewRepresentable {
     return VStack {
         PhoneNumberTextField(
             text: $phone,
-            isValid: true
+            isValid: false,
+            isFocused: true
         )
         .frame(height: 44)
         PhoneNumberTextField(
             text: $phone,
-            isValid: false
+            isValid: true,
+            isFocused: false
         )
         .frame(height: 44)
+        PhoneNumberTextField(
+            text: $phone,
+            isValid: false,
+            isFocused: false
+        )
     }
     .padding()
 }
