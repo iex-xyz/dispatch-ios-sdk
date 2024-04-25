@@ -12,7 +12,7 @@ internal class CheckoutViewModel: ObservableObject {
     
     let _onMorePaymentMethodsButtonTapped = PassthroughSubject<Checkout, Never>()
     let _onSecureCheckoutButtonTapped = PassthroughSubject<Checkout, Never>()
-    let _onAttributeTapped = PassthroughSubject<(AttributeViewModel), Never>()
+    let _onAttributeTapped = PassthroughSubject<(Attribute, [Variation], Variation, Int), Never>()
     let _onLockButtonTapped = PassthroughSubject<Checkout, Never>()
     let _onPaymentCTATapped = PassthroughSubject<(Checkout, PaymentType), Never>()
 
@@ -26,7 +26,7 @@ internal class CheckoutViewModel: ObservableObject {
                 self.productViewModel = ProductViewModel(product: product)
             }
             guard let checkout else { return }
-            self.selectedVariant = checkout.product.variations.first
+            self.selectedVariation = checkout.product.variations.first
             checkout.product.attributes?.values.forEach { attribute in
                 self.selectedVariantMap[attribute.id] = .init(
                     attribute: attribute,
@@ -39,7 +39,7 @@ internal class CheckoutViewModel: ObservableObject {
 
     @Published var selectedVariantMap: [String: AttributeViewModel] = [:]
     @Published var selectedAt: Attribute? = nil
-    @Published var selectedVariant: Variation? = nil
+    @Published var selectedVariation: Variation? = nil
     @Published var selectedPaymentMethod: PaymentType = .creditCard
 
     @Published var currentQuantity: Int = 1
@@ -49,8 +49,8 @@ internal class CheckoutViewModel: ObservableObject {
             return 0
         }
         
-        if let selectedVariant {
-            return Int(selectedVariant.quantityAvailable ?? 0)
+        if let selectedVariation {
+            return Int(selectedVariation.quantityAvailable ?? 0)
         }
         
         return product.baseQuantity
@@ -93,8 +93,25 @@ internal class CheckoutViewModel: ObservableObject {
     }
     
     func onAttributeTapped(_ attribute: Attribute) {
-        guard  let viewModel = selectedVariantMap[attribute.id] else { return }
-        _onAttributeTapped.send(viewModel)
+        guard let checkout, let selectedVariation else {
+            return
+        }
+        
+        let possibleVariations: [Variation] = checkout.product.variations.filter { variant in
+            guard let attributes = selectedVariation.attributes else {
+                return true
+            }
+
+            for (key, value) in attributes {
+                if key != attribute.id, variant.attributes?[key] != value {
+                    return false
+                }
+            }
+            
+            return true
+        }
+        
+        _onAttributeTapped.send((attribute, possibleVariations, selectedVariation, currentQuantity))
     }
     
     func onVariationTapped(_ variation: Variation, for attributeId: String) {
@@ -103,7 +120,7 @@ internal class CheckoutViewModel: ObservableObject {
     
     func onPaymentCTATapped() {
         guard let checkout else { return }
-        _onPaymentCTATapped.send((checkout, .creditCard))
+        _onPaymentCTATapped.send((checkout, selectedPaymentMethod))
     }
     
     private func updateCheckout(_ checkout: Checkout) {

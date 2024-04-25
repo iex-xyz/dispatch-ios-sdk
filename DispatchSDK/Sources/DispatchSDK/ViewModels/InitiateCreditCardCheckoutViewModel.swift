@@ -19,7 +19,7 @@ class InitiateCreditCardCheckoutViewModel: ObservableObject {
     }
 
     let checkout: Checkout
-    let variantId: String
+    let variant: Variation?
 
     @Published var hasAgreedToTerms: Bool = false
     @Published var email: String = ""
@@ -27,14 +27,17 @@ class InitiateCreditCardCheckoutViewModel: ObservableObject {
     
     @Published var isEmailDirty: Bool = false
     @Published var isEmailValid: Bool = false
+    
+    let quantity: Int
 
     let _onOrderInitiated = PassthroughSubject<(InitiateOrder, String), Never>()
 
     private let apiClient: GraphQLClient
     
-    init(checkout: Checkout, variantId: String?, apiClient: GraphQLClient) {
+    init(checkout: Checkout, variant: Variation?, quantity: Int, apiClient: GraphQLClient) {
         self.checkout = checkout
-        self.variantId = variantId ?? ""
+        self.variant = variant
+        self.quantity = quantity
         self.apiClient = apiClient
         
         setupValidation()
@@ -72,7 +75,7 @@ class InitiateCreditCardCheckoutViewModel: ObservableObject {
                 let request =  InitiateOrderRequest(
                     email: email,
                     productId: checkout.product.id,
-                    variantId: variantId
+                    variantId: variant?.id
                 )
                 let result = try await apiClient.performOperation(request)
 

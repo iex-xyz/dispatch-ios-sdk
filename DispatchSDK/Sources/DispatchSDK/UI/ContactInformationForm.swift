@@ -82,7 +82,8 @@ struct ContactInformationForm_Preview: PreviewProvider {
             ContactInformationForm(
                 viewModel: .init(
                     checkout: .mock(),
-                    variantId: "fake",
+                    variant: nil, 
+                    quantity: 1,
                     apiClient: GraphQLClient(
                         networkService: RealNetworkService(),
                         environment: .staging

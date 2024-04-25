@@ -1,4 +1,5 @@
 import XCTest
+import Combine
 @testable import DispatchSDK
 
 final class DispatchSDKTests: XCTestCase {
@@ -8,6 +9,84 @@ final class DispatchSDKTests: XCTestCase {
 
         // Defining Test Cases and Test Methods
         // https://developer.apple.com/documentation/xctest/defining_test_cases_and_test_methods
+    }
+}
+class CheckoutViewModelTests: XCTestCase {
+    var viewModel: CheckoutViewModel!
+    var variations: [Variation]!
+    var attributeColor: Attribute!
+    var attributeSize: Attribute!
+    var cancellables: Set<AnyCancellable>!
+
+    override func setUp() {
+        super.setUp()
+        viewModel = CheckoutViewModel()
+        cancellables = []
+
+        // Setup for attributes and variations (similar to previous setup)
+        let colorOptions = ["red": AttributeOption(title: "Red", images: []),
+                            "blue": AttributeOption(title: "Blue", images: []),
+                            "green": AttributeOption(title: "Green", images: [])]
+        let sizeOptions = ["small": AttributeOption(title: "Small", images: []),
+                           "medium": AttributeOption(title: "Medium", images: []),
+                           "large": AttributeOption(title: "Large", images: [])]
+
+        attributeColor = Attribute(title: "Color", options: colorOptions)
+        attributeSize = Attribute(title: "Size", options: sizeOptions)
+        
+        variations = [
+            Variation(attributes: ["color": "red", "size": "small"], id: UUID().uuidString, quantityAvailable: 10),
+            Variation(attributes: ["color": "red", "size": "medium"], id: UUID().uuidString, quantityAvailable: 10),
+            Variation(attributes: ["color": "blue", "size": "small"], id: UUID().uuidString, quantityAvailable: 0),
+            Variation(attributes: ["color": "blue", "size": "medium"], id: UUID().uuidString, quantityAvailable: 10),
+            Variation(attributes: ["color": "green", "size": "large"], id: UUID().uuidString, quantityAvailable: 5)
+        ]
+    }
+    func testSelectingNewColorFiltersVariantsCorrectly() {
+        let expectation = XCTestExpectation(description: "Subscribe to attribute taps")
+        
+        viewModel._onAttributeTapped
+            .sink { attribute, variations, selectedVariation, quantity in
+                let expectedVariations = self.variations.filter { $0.attributes?["color"] == "red" }
+                XCTAssertEqual(variations, expectedVariations, "Variations filtered based on color are incorrect")
+                expectation.fulfill()
+            }
+            .store(in: &cancellables)
+        
+        // Ensuring the selected variation is set before calling the method
+        let selectedVariation = variations.first { $0.attributes?["color"] == "red" && $0.attributes?["size"] == "small" }
+        viewModel.selectedVariation = selectedVariation!
+        
+        // Call the method that should trigger the emission
+        viewModel.onAttributeTapped(attributeColor)
+        
+        wait(for: [expectation], timeout: 5.0) // Increased timeout for debugging
+    }
+
+    func testSelectingNewSizeFiltersVariantsCorrectly() {
+        let expectation = XCTestExpectation(description: "Subscribe to attribute taps")
+        
+        viewModel._onAttributeTapped
+            .sink { attribute, variations, selectedVariation, quantity in
+                let expectedVariations = self.variations.filter { $0.attributes?["size"] == "small" }
+                XCTAssertEqual(variations, expectedVariations, "Variations filtered based on size are incorrect")
+                expectation.fulfill()
+            }
+            .store(in: &cancellables)
+        
+        let selectedVariation = variations.first { $0.attributes?["color"] == "blue" && $0.attributes?["size"] == "small" }
+        viewModel.selectedVariation = selectedVariation!
+        
+        viewModel.onAttributeTapped(attributeSize)
+        
+        wait(for: [expectation], timeout: 5.0) // Increased timeout for debugging
+    }
+
+    override func tearDown() {
+        viewModel = nil
+        cancellables.forEach { $0.cancel() }
+        cancellables = .init()
+        super.tearDown()
     }
 }
 

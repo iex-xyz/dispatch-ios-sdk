@@ -22,7 +22,7 @@ struct CheckoutView: View {
                             ProductOverviewDetailsCell(product: productViewModel.product)
                             if
                                 let checkout = viewModel.checkout,
-                                let selectedVariant = viewModel.selectedVariant,
+                                let selectedVariant = viewModel.selectedVariation,
                                 let attributes = checkout.product.attributes
                             {
                                 ForEach(Array(attributes.values), id: \.id) { attribute in

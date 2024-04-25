@@ -9,6 +9,26 @@ public struct Variation: Codable, Equatable, Identifiable, Hashable {
     public let price: Float?
     public let quantityAvailable: Float?
     public let strikethroughPrice: Float?
+    
+    public init(
+        attributes: [String : String]? = nil,
+        compareAtPrice: Float? = nil,
+        externalVariantId: String? = nil,
+        id: String,
+        maxPrice: Float? = nil,
+        price: Float? = nil,
+        quantityAvailable: Float? = nil,
+        strikethroughPrice: Float? = nil
+    ) {
+        self.attributes = attributes
+        self.compareAtPrice = compareAtPrice
+        self.externalVariantId = externalVariantId
+        self.id = id
+        self.maxPrice = maxPrice
+        self.price = price
+        self.quantityAvailable = quantityAvailable
+        self.strikethroughPrice = strikethroughPrice
+    }
 }
 
 extension Variation {

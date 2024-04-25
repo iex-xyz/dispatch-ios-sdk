@@ -31,10 +31,15 @@ class CheckoutCoordinator: BaseCoordinator {
         
         viewModel
             ._onAttributeTapped
-            .sink { [weak self] viewModel in
-                self?.showVariantPicker(for: viewModel)
-        }
-        .store(in: &cancellables)
+            .sink { [weak self] (attribute, variations, selectedVariant, quantity) in
+                self?.showVariantPicker(
+                    for: attribute,
+                    variations: variations,
+                    selectedVariation: selectedVariant,
+                    quantity: quantity
+                )
+            }
+            .store(in: &cancellables)
         
         viewModel
             ._onMorePaymentMethodsButtonTapped
@@ -56,7 +61,7 @@ class CheckoutCoordinator: BaseCoordinator {
                 case .creditCard:
                     self?.showPayWithCreditCard(for: checkout)
                 case .applePay:
-                    self?.showPayWithCreditCard(for: checkout)
+                    self?.showPayWithApplePay(for: checkout)
                 default:
                     print("[WARNING] Invalid payment type handler")
                     return
@@ -72,24 +77,34 @@ class CheckoutCoordinator: BaseCoordinator {
         router.presentSelf(completion: nil)
     }
     
-    private func showVariantPicker(for viewModel: AttributeViewModel) {
-        let viewController = UIHostingController<VariantPickerView>(rootView: VariantPickerView(viewModel: viewModel, columns: .double))
+    private func showVariantPicker(for attribute: Attribute, variations: [Variation], selectedVariation: Variation, quantity: Int) {
+        let viewModel = VariantPickerViewModel(
+            attribute: attribute,
+            variations: variations,
+            selectedVariation: selectedVariation,
+            quantity: quantity
+        )
+        let viewController = UIHostingController<VariantPickerView>(
+            rootView: VariantPickerView(
+                viewModel: viewModel,
+                columns: .double
+            )
+        )
         if let sheet = viewController.sheetPresentationController {
             sheet.detents = [.medium()]
             sheet.preferredCornerRadius = 16
         }
         
-        // FIXME: Why doesn't this work
-//        viewModel
-//            .selectedVariant
-//            .publisher
-//            .compactMap { $0 }
-//            .assign(to: &self.viewModel.$selectedVariant)
+        viewModel
+            .$selectedVariation
+            .sink(receiveValue: { [weak self] variation in
+                self?.viewModel.selectedVariation = variation
+            })
+            .store(in: &cancellables)
 
         router.present(viewController, animated: true, completion: { [weak self] in
-            self?.viewModel.selectedVariant = viewModel.selectedVariant
+            self?.viewModel.selectedVariation = viewModel.selectedVariation
         })
-
     }
     
     private func showPaymentOptionsPicker(for checkout: Checkout) {
@@ -140,7 +155,8 @@ class CheckoutCoordinator: BaseCoordinator {
     private func showPayWithCreditCard(for checkout: Checkout) {
         let viewModel: InitiateCreditCardCheckoutViewModel = InitiateCreditCardCheckoutViewModel(
             checkout: checkout,
-            variantId: viewModel.selectedVariant?.id,
+            variant: viewModel.selectedVariation,
+            quantity: viewModel.currentQuantity,
             apiClient: apiClient
         )
         let coordinator = CreditCardCoordinator(

@@ -4,10 +4,43 @@ import Combine
 import UIKit
 import Foundation
 
+class VariantPickerViewModel: ObservableObject {
+    @Published var selectedVariation: Variation
+    let attribute: Attribute
+    let variations: [Variation]
+    let quantity: Int
+
+    init(
+        attribute: Attribute,
+        variations: [Variation],
+        selectedVariation: Variation,
+        quantity: Int
+    ) {
+        self.attribute = attribute
+        self.variations = variations
+        self.selectedVariation = selectedVariation
+        self.quantity = quantity
+    }
+    
+    func onVariantTapped(_ variant: Variation) {
+        self.selectedVariation = variant
+    }
+    
+    func isVariationEnabled(_ variation: Variation) -> Bool {
+        guard 
+            let quantityAvailable = variation.quantityAvailable
+        else {
+            return false
+        }
+        
+        return Int(quantityAvailable) >= quantity
+    }
+}
+
 struct VariantPickerView: View {
     @Preference(\.theme) var theme
     @Environment(\.dismiss) var dismiss
-    @StateObject var viewModel: AttributeViewModel
+    @StateObject var viewModel: VariantPickerViewModel
 
     enum ColumnType {
         case single
@@ -22,11 +55,16 @@ struct VariantPickerView: View {
                     HStack(spacing: 8) {
                         ForEach(variants) { variant in
                             Button(action: {
-                                viewModel.onVariationTapped(variant)
+                                viewModel.onVariantTapped(variant)
                             }) {
-                                VariantPickerCell(text: variant.attributes?[viewModel.attribute.id] ?? "--", isSelected: viewModel.selectedVariant?.id == variant.id)
+                                VariantPickerCell(
+                                    text: variant.attributes?[viewModel.attribute.id] ?? "--",
+                                    isSelected: viewModel.selectedVariation.id == variant.id
+                                )
                             }
                             .foregroundStyle(.primary)
+                            .opacity(viewModel.isVariationEnabled(variant) ? 1 : 0.5)
+                            .disabled(!viewModel.isVariationEnabled(variant))
                             .frame(width: (geometry.size.width / 2) - 8)
                         }
                     }
@@ -39,12 +77,16 @@ struct VariantPickerView: View {
         VStack(spacing: 8) {
             ForEach(viewModel.variations) { variant in
                 Button(action: {
-                    viewModel.onVariationTapped(variant)
+                    viewModel.onVariantTapped(variant)
                 }) {
-                    VariantPickerCell(text: variant.attributes?[viewModel.attribute.id] ?? "--", isSelected: viewModel.selectedVariant?.id == variant.id)
+                    VariantPickerCell(
+                        text: variant.attributes?[viewModel.attribute.id] ?? "--",
+                        isSelected: viewModel.selectedVariation.id == variant.id
+                    )
                 }
+                .opacity(viewModel.isVariationEnabled(variant) ? 1 : 0.5)
+                .disabled(!viewModel.isVariationEnabled(variant))
                 .frame(maxWidth: .infinity)
-                .background(.red)
             }
         }
     }

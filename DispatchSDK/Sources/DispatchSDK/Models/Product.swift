@@ -91,6 +91,14 @@ public struct Attribute: Codable, Identifiable, Equatable {
     public var id: String { title }
     public let title: String
     public var options: [String: AttributeOption]
+    
+    public init(
+        title: String,
+        options: [String: AttributeOption]
+    ) {
+        self.title = title
+        self.options = options
+    }
 
     public init(from decoder: Decoder) throws {
         let container = try decoder.container(keyedBy: CodingKeys.self)
