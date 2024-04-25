@@ -48,6 +48,9 @@ struct ContactInformationForm: View {
                         isValid: isFocused || viewModel.isEmailValid || !viewModel.isEmailDirty
                     )
                 )
+                .onAppear {
+                    isFocused = true
+                }
             }
             
             Toggle(isOn: $viewModel.hasAgreedToTerms, label: {
