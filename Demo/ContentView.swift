@@ -3,6 +3,20 @@ import DispatchSDK
 
 struct ContentView: View {
     @State var environment: AppEnvironment = .staging
+    
+    let buildInfo = """
+• Apple Pay is setup but needs proper mapping to Dispatch API models (line items, shipping methods, etc)
+
+• Navigation hasn't been updated to match latest Figma. Still some questions/research around feasibility going sheet -> fullscreen
+
+• Checkout order preview isn't wired to handle going in and editing values yet
+
+• Billing info update was throwing an error on the API side. Needs investigation
+
+• Shipping method text needs to match web formatting
+
+
+"""
     var body: some View {
             List {
                 Section("Options") {
@@ -40,6 +54,12 @@ struct ContentView: View {
                     }) {
                         Text("Successful Order")
                     }
+                }
+                
+                Section("Current Build Information") {
+                    Text(buildInfo)
+                        .font(.caption.monospaced())
+                        .multilineTextAlignment(.leading)
                 }
 
             }

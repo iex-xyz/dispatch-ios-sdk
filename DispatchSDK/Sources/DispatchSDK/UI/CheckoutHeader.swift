@@ -28,7 +28,8 @@ internal struct CheckoutHeader: View {
     let logo: Image?
     let domain: String
     let onLockButtonTapped: () -> Void
-    
+    let onCloseButtonTapped: () -> Void
+
     var body: some View {
         ZStack {
 //            AsyncSVGView(url: URL(string: "https://bevelpr.com/images/bevel-logo-dark.svg")!)
@@ -53,9 +54,9 @@ internal struct CheckoutHeader: View {
 
                 Spacer()
                 Button(action: {
-                    onLockButtonTapped()
+                    onCloseButtonTapped()
                 }) {
-                    Icons.lock.tint(.dispatchLightGray)
+                    Icons.close
                 }
             }
         }

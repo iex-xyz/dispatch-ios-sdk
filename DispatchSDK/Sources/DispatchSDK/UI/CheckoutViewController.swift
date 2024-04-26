@@ -13,10 +13,12 @@ struct CheckoutView: View {
             if let domain = viewModel.checkout?.product.pdpDomain {
                 CheckoutHeader(
                     logo: nil,
-                    domain: domain
-                ) {
-                    viewModel.onLockButtonTapped()
-                }
+                    domain: domain,
+                    onLockButtonTapped: {
+                        viewModel.onLockButtonTapped()
+                    }, onCloseButtonTapped: {
+                        viewModel.onCloseButtonTapped()
+                    })
             }
             ScrollView {
                 VStack {

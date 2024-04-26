@@ -15,6 +15,7 @@ internal class CheckoutViewModel: ObservableObject {
     let _onAttributeTapped = PassthroughSubject<(Attribute, [Variation], Variation, Int), Never>()
     let _onLockButtonTapped = PassthroughSubject<Checkout, Never>()
     let _onPaymentCTATapped = PassthroughSubject<(Checkout, PaymentType), Never>()
+    let _onCloseButtonTapped = PassthroughSubject<Void, Never>()
 
     @Published private(set) var state: State = .idle
 
@@ -132,7 +133,10 @@ internal class CheckoutViewModel: ObservableObject {
         self.checkout = checkout
         self.productViewModel = .init(product: checkout.product)
     }
-    
+    func onCloseButtonTapped() {
+        _onCloseButtonTapped.send()
+    }
+
     func onLockButtonTapped() {
         guard let checkout else { return }
         _onLockButtonTapped.send(checkout)

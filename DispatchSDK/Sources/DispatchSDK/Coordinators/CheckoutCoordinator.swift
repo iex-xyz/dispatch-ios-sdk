@@ -32,6 +32,15 @@ class CheckoutCoordinator: BaseCoordinator {
         .store(in: &cancellables)
         
         viewModel
+            ._onCloseButtonTapped
+            .sink { [weak self] in
+                self?.router.dismissSelf(completion: { [weak self] in
+                    self?.router.popToRootModule(animated: false)
+                })
+            }
+            .store(in: &cancellables)
+        
+        viewModel
             ._onAttributeTapped
             .sink { [weak self] (attribute, variations, selectedVariant, quantity) in
                 self?.showVariantPicker(
