@@ -26,7 +26,16 @@ internal class CheckoutViewModel: ObservableObject {
                 self.productViewModel = ProductViewModel(product: product)
             }
             guard let checkout else { return }
-            self.selectedVariation = checkout.product.variations.first
+            self.selectedVariation = checkout.product.variations.first(where: {
+                guard 
+                    let quantityAvailable = $0.quantityAvailable,
+                        quantityAvailable > 0
+                else {
+                    return false
+                }
+                
+                return true
+            })
             checkout.product.attributes?.values.forEach { attribute in
                 self.selectedVariantMap[attribute.id] = .init(
                     attribute: attribute,
@@ -43,6 +52,8 @@ internal class CheckoutViewModel: ObservableObject {
     @Published var selectedPaymentMethod: PaymentType = .creditCard
 
     @Published var currentQuantity: Int = 1
+    
+    private let id: String
     
     var maxQuantity: Int {
         guard let product = checkout?.product else {
@@ -61,17 +72,11 @@ internal class CheckoutViewModel: ObservableObject {
         environment: .staging
     )
     
-    init() {
+    init(id: String) {
+        self.id = id
+
         Task {
-            // Checkout
-//            await fetchDistribution(for: "65e6289c71acbac4d940c8ef")
-//            await fetchDistribution(for: "652ef22e5599070b1b8b9986") // Yeti
-            await fetchDistribution(for: "65df6f3a4ae12e4cec1d3eb2") // Mystery Box
-//            await fetchDistribution(for: "661e8c14116bdd2bfe95eb29")
-            // Content
-//            await fetchDistribution(for: "64dabb5fa62014aafefbe89e")
-            // Leadgen
-//            await fetchDistribution(for: "65fb4a90149d4449c0190e3c")
+            await fetchDistribution(for: id)
         }
     }
     

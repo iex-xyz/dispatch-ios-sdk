@@ -48,24 +48,33 @@ struct VariantPickerView: View {
     }
     @State var columns: ColumnType
     
+    func VariantCell(for variant: Variation) -> some View {
+        Button(action: {
+            viewModel.onVariantTapped(variant)
+        }) {
+            if
+                let attributeKey = variant.attributes?[viewModel.attribute.id],
+                let selectedValue = viewModel.attribute.options[attributeKey]?.title
+            {
+                VariantPickerCell(
+                    text: selectedValue,
+                    isSelected: viewModel.selectedVariation.id == variant.id
+                )
+            }
+        }
+        .foregroundStyle(.primary)
+        .opacity(viewModel.isVariationEnabled(variant) ? 1 : 0.5)
+        .disabled(!viewModel.isVariationEnabled(variant))
+    }
+    
     func DoubleColumns() -> some View {
         GeometryReader { geometry in
             VStack(alignment: .leading, spacing: 8) {
                 ForEach(viewModel.variations.chunked(into: 2).map { ($0, $0.map { $0.id })}, id: \.1) { variants, _ in
                     HStack(spacing: 8) {
                         ForEach(variants) { variant in
-                            Button(action: {
-                                viewModel.onVariantTapped(variant)
-                            }) {
-                                VariantPickerCell(
-                                    text: variant.attributes?[viewModel.attribute.id] ?? "--",
-                                    isSelected: viewModel.selectedVariation.id == variant.id
-                                )
-                            }
-                            .foregroundStyle(.primary)
-                            .opacity(viewModel.isVariationEnabled(variant) ? 1 : 0.5)
-                            .disabled(!viewModel.isVariationEnabled(variant))
-                            .frame(width: (geometry.size.width / 2) - 8)
+                            VariantCell(for: variant)
+                                .frame(width: (geometry.size.width / 2) - 8)
                         }
                     }
                 }
@@ -76,17 +85,8 @@ struct VariantPickerView: View {
     func SingleColumn() -> some View {
         VStack(spacing: 8) {
             ForEach(viewModel.variations) { variant in
-                Button(action: {
-                    viewModel.onVariantTapped(variant)
-                }) {
-                    VariantPickerCell(
-                        text: variant.attributes?[viewModel.attribute.id] ?? "--",
-                        isSelected: viewModel.selectedVariation.id == variant.id
-                    )
-                }
-                .opacity(viewModel.isVariationEnabled(variant) ? 1 : 0.5)
-                .disabled(!viewModel.isVariationEnabled(variant))
-                .frame(maxWidth: .infinity)
+                VariantCell(for: variant)
+                    .frame(maxWidth: .infinity)
             }
         }
     }

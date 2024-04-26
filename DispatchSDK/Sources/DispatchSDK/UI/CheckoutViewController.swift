@@ -26,13 +26,18 @@ struct CheckoutView: View {
                                 let attributes = checkout.product.attributes
                             {
                                 ForEach(Array(attributes.values), id: \.id) { attribute in
-                                    LightVariantPreviewButton(
-                                        title: attribute.title,
-                                        selectedValue: selectedVariant.attributes?[attribute.id] ?? "None",
-                                        onTap: {
-                                            viewModel.onAttributeTapped(attribute)
-                                        }
-                                    )
+                                    if
+                                        let attributeKey = selectedVariant.attributes?[attribute.id],
+                                        let selectedValue = attributes[attribute.id]?.options[attributeKey]?.title
+                                    {
+                                        LightVariantPreviewButton(
+                                            title: attribute.title,
+                                            selectedValue: selectedValue,
+                                            onTap: {
+                                                viewModel.onAttributeTapped(attribute)
+                                            }
+                                        )
+                                    }
                                 }
                             }
                             

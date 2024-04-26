@@ -14,14 +14,24 @@ class ApplePayViewModel: ObservableObject {
         self.countryCode = "US"
         self.merchantId = merchantId
         self.supportedNetworks = [.visa, .masterCard, .amex]
-        self.paymentSummaryItems = []//order.lineItems.map {
-            //            PKPaymentSummaryItem(label: $0.productId, amount: NSNumber
-//        }
+        self.paymentSummaryItems = [
+            .init(
+                label: "Total",
+                amount: .init(floatLiteral: Double(order.totalCost)),
+                type: .final
+            )
+        ]
         self.merchentCapabilities = .credit
         
     }
     
     func generateRequest() -> PKPaymentRequest {
+        let shipping = PKShippingMethod(
+            label: "Ground",
+            amount: .init(decimal: 0.00)
+        )
+        
+        shipping.identifier = UUID().uuidString
         let request = PKPaymentRequest()
         request.currencyCode = self.currencyCode
         request.countryCode = self.countryCode
@@ -29,6 +39,9 @@ class ApplePayViewModel: ObservableObject {
         request.merchantIdentifier = self.merchantId
         request.paymentSummaryItems = self.paymentSummaryItems
         request.merchantCapabilities = self.merchentCapabilities
+        request.shippingMethods = [
+            shipping
+        ]
         return request
     }
 }

@@ -30,11 +30,14 @@ class ApplePayCoordinator: BaseCoordinator {
     override func start() {
         showPaymentView(with: viewModel)
     }
+    
+    override func start(with route: DeepLinkRoute) {
+        print("[WARNING] Invalid deep link coordinator. Cannot handle deep link route")
+        start()
+    }
    
     private func showPaymentView(with viewModel: ApplePayViewModel) {
-        if PKPaymentAuthorizationViewController.canMakePayments(
-            usingNetworks: viewModel.supportedNetworks
-        ) {
+        if PKPaymentAuthorizationViewController.canMakePayments() {
             let request = viewModel.generateRequest()
             let viewController = PKPaymentAuthorizationViewController(paymentRequest: request)
             router.present(viewController, animated: true) {

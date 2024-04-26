@@ -30,6 +30,11 @@ class CreditCardCoordinator: BaseCoordinator {
         showEmailCaptureForm()
     }
     
+    override func start(with route: DeepLinkRoute) {
+        print("[WARNING] Invalid deep link coordinator. Cannot handle deep link route")
+        start()
+    }
+    
     private func showEmailCaptureForm() {
         let viewController = UIHostingController<ContactInformationForm>(
             rootView: ContactInformationForm(viewModel: viewModel)

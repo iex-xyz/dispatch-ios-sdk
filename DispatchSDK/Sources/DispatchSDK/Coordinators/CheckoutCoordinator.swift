@@ -5,23 +5,25 @@ import Combine
 class CheckoutCoordinator: BaseCoordinator {
     let router: Router
     let apiClient: GraphQLClient
+    let checkoutId: String
     var shouldDismissFlow: (() -> Void)?
-    let viewModel = CheckoutViewModel()
+    lazy private(set) var viewModel: CheckoutViewModel = .init(id: checkoutId)
 
     private var cancellables: Set<AnyCancellable> = .init()
     
     init(
         router: Router,
         apiClient: GraphQLClient,
+        checkoutId: String,
         shouldDismiss: (() -> Void)? = nil
     ) {
         self.router = router
         self.apiClient = apiClient
+        self.checkoutId = checkoutId
         self.shouldDismissFlow = shouldDismiss
     }
     
     override func start() {
-
         viewModel
             ._onSecureCheckoutButtonTapped
             .sink { [weak self] checkout in
@@ -77,6 +79,10 @@ class CheckoutCoordinator: BaseCoordinator {
         router.presentSelf(completion: nil)
     }
     
+    override func start(with route: DeepLinkRoute) {
+        
+    }
+    
     private func showVariantPicker(for attribute: Attribute, variations: [Variation], selectedVariation: Variation, quantity: Int) {
         let viewModel = VariantPickerViewModel(
             attribute: attribute,
@@ -87,7 +93,7 @@ class CheckoutCoordinator: BaseCoordinator {
         let viewController = UIHostingController<VariantPickerView>(
             rootView: VariantPickerView(
                 viewModel: viewModel,
-                columns: .double
+                columns: variations.count > 4 ? .double : .single
             )
         )
         if let sheet = viewController.sheetPresentationController {

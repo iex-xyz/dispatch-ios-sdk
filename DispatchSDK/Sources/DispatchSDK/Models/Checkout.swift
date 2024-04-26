@@ -6,7 +6,7 @@ public struct Checkout: Codable, Equatable {
     public let initScreen: InitScreen?
     public let product: Product
     public let applicationId: String
-    public let theme: Theme
+    public let theme: Theme?
     public let pspPublishableKey: String
     public let createdAt: String
     public let updatedAt: String

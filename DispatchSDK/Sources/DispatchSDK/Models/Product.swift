@@ -88,14 +88,16 @@ public struct Product: Codable, Equatable {
 }
 
 public struct Attribute: Codable, Identifiable, Equatable {
-    public var id: String { title }
+    public let id: String
     public let title: String
     public var options: [String: AttributeOption]
     
     public init(
+        id: String,
         title: String,
         options: [String: AttributeOption]
     ) {
+        self.id = id
         self.title = title
         self.options = options
     }
@@ -104,34 +106,74 @@ public struct Attribute: Codable, Identifiable, Equatable {
         let container = try decoder.container(keyedBy: CodingKeys.self)
         title = try container.decode(String.self, forKey: .title)
         
+        // Capture the parent key as the id using the decoder's codingPath
+        if let lastKey = decoder.codingPath.last {
+            id = lastKey.stringValue
+        } else {
+            throw DecodingError.dataCorruptedError(
+                forKey: .id,
+                in: container,
+                debugDescription: "Unable to retrieve coding path to initialize Attribute id"
+            )
+        }
+
+        let optionsContainer = try decoder.container(keyedBy: DynamicCodingKeys.self)
         var optionsDict = [String: AttributeOption]()
-        for key in container.allKeys {
-            if key.stringValue != "title" {
-                let option = try container.decode(AttributeOption.self, forKey: key)
+
+        for key in optionsContainer.allKeys {
+            if key.stringValue != "title" {  // Skip known keys
+                let option = try optionsContainer.decode(AttributeOption.self, forKey: key)
                 optionsDict[key.stringValue] = option
             }
         }
+
         options = optionsDict
     }
-    
+
     public func encode(to encoder: Encoder) throws {
         var container = encoder.container(keyedBy: CodingKeys.self)
         try container.encode(title, forKey: .title)
         
+        var optionsContainer = encoder.container(keyedBy: DynamicCodingKeys.self)
         for (key, value) in options {
-            try container.encode(value, forKey: CodingKeys(stringValue: key)!)
+            guard let codingKey = DynamicCodingKeys(stringValue: key) else {
+                continue
+            }
+            try optionsContainer.encode(value, forKey: codingKey)
         }
     }
-    
+
     enum CodingKeys: String, CodingKey {
+        case id
         case title
     }
+    
+    struct DynamicCodingKeys: CodingKey {
+        var stringValue: String
+        var intValue: Int?
+
+        init?(stringValue: String) {
+            self.stringValue = stringValue
+        }
+
+        init?(intValue: Int) {
+            self.intValue = intValue
+            self.stringValue = "\(intValue)"
+        }
+    }
+
 }
 
 
 public struct AttributeOption: Codable, Equatable {
     public var title: String
     public var images: [String]
+    
+    public init(from decoder: any Decoder) throws {
+        let container = try decoder.container(keyedBy: CodingKeys.self)
+        self.title = try container.decode(String.self, forKey: .title)
+        self.images = try container.decodeIfPresent([String].self, forKey: .images) ?? []
+    }
 }
 
 extension Product {

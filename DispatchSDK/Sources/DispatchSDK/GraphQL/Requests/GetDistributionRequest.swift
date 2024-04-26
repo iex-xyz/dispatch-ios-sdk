@@ -53,8 +53,11 @@ extension GetDistributionRequest.Response {
             let checkout = try Checkout(from: decoder)
             self = .checkout(checkout)
         case .content:
-            let content = try Content(from: decoder)
-            self = .content(content)
+            // NOTE: For now the iOS SDK will treat 'Content' and 'Checkout' type as the same flow
+            let checkout = try Checkout(from: decoder)
+            self = .checkout(checkout)
+//            let content = try Content(from: decoder)
+//            self = .content(content)
         }
     }
     

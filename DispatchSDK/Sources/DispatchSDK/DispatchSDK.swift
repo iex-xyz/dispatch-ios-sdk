@@ -3,6 +3,11 @@ import Foundation
 
 public class DispatchSDK {
     public static var shared: DispatchSDK = .init()
+    #if DEBUG
+    public private(set) var environment: AppEnvironment = .staging
+    #else
+    public private(set) var environment: AppEnvironment = .production
+    #endif
 
     private lazy var coordinator: Coordinator = self.makeCoordinator()
     
@@ -11,12 +16,16 @@ public class DispatchSDK {
             router: RouterImp(rootController: UINavigationController()),
             apiClient: GraphQLClient(
                 networkService: RealNetworkService(),
-                environment: .staging
+                environment: environment
             )
         )
     }
     
-    public func present() {
-        coordinator.start()
+    public func setEnvironment(_ environment: AppEnvironment) {
+        self.environment = environment
+    }
+    
+    public func present(with route: DeepLinkRoute) {
+        coordinator.start(with: route)
     }
 }
