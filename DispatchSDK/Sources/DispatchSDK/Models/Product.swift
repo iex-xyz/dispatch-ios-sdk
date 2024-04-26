@@ -5,6 +5,7 @@ public struct Product: Codable, Equatable {
     public let description: String
     public let requiresShipping: Bool
     public let basePrice: Int
+    public let baseCompareAtPrice: Int?
     public let baseImages: [String]
     public let pdpUrl: String
     public let baseQuantity: Int
@@ -21,11 +22,16 @@ public struct Product: Codable, Equatable {
     public let requiresBilling: Bool
     public let id: String
     
+    public var pdpDomain: String? {
+        return URL(string: pdpUrl)?.host
+    }
+    
     init(
         name: String,
         description: String,
         requiresShipping: Bool,
         basePrice: Int,
+        baseCompareAtPrice: Int?,
         baseImages: [String],
         pdpUrl: String,
         baseQuantity: Int,
@@ -46,6 +52,7 @@ public struct Product: Codable, Equatable {
         self.description = description
         self.requiresShipping = requiresShipping
         self.basePrice = basePrice
+        self.baseCompareAtPrice = baseCompareAtPrice
         self.baseImages = baseImages
         self.pdpUrl = pdpUrl
         self.baseQuantity = baseQuantity
@@ -69,6 +76,7 @@ public struct Product: Codable, Equatable {
         description = try container.decode(String.self, forKey: .description)
         requiresShipping = try container.decode(Bool.self, forKey: .requiresShipping)
         basePrice = try container.decode(Int.self, forKey: .basePrice)
+        baseCompareAtPrice = try container.decodeIfPresent(Int.self, forKey: .baseCompareAtPrice)
         baseImages = try container.decode([String].self, forKey: .baseImages)
         pdpUrl = try container.decode(String.self, forKey: .pdpUrl)
         baseQuantity = try container.decode(Int.self, forKey: .baseQuantity)
@@ -182,6 +190,7 @@ extension Product {
         description: String = "Product Description",
         requiresShipping: Bool = true,
         basePrice: Int = 9999,
+        baseCompareAtPrice: Int? = 5555,
         baseImages: [String] = [
             "https://example.com/image1.jpg",
             "https://example.com/image2.jpg"
@@ -204,6 +213,7 @@ extension Product {
             description: description,
             requiresShipping: requiresShipping,
             basePrice: basePrice,
+            baseCompareAtPrice: baseCompareAtPrice,
             baseImages: baseImages,
             pdpUrl: pdpUrl,
             baseQuantity: 1,

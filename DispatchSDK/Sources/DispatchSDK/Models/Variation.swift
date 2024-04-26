@@ -2,21 +2,21 @@ import Foundation
 
 public struct Variation: Codable, Equatable, Identifiable, Hashable {
     public let attributes: [String: String]?
-    public let compareAtPrice: Float?
+    public let compareAtPrice: Int?
     public let externalVariantId: String?
     public let id: String
     public let maxPrice: Float?
-    public let price: Float?
+    public let price: Int?
     public let quantityAvailable: Float?
     public let strikethroughPrice: Float?
     
     public init(
         attributes: [String : String]? = nil,
-        compareAtPrice: Float? = nil,
+        compareAtPrice: Int? = nil,
         externalVariantId: String? = nil,
         id: String,
         maxPrice: Float? = nil,
-        price: Float? = nil,
+        price: Int? = nil,
         quantityAvailable: Float? = nil,
         strikethroughPrice: Float? = nil
     ) {

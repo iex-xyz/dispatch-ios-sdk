@@ -10,8 +10,13 @@ struct CheckoutView: View {
 
     var body: some View {
         VStack {
-            CheckoutHeader(logo: nil) {
-                viewModel.onLockButtonTapped()
+            if let domain = viewModel.checkout?.product.pdpDomain {
+                CheckoutHeader(
+                    logo: nil,
+                    domain: domain
+                ) {
+                    viewModel.onLockButtonTapped()
+                }
             }
             ScrollView {
                 VStack {
@@ -19,7 +24,11 @@ struct CheckoutView: View {
                         .frame(height: 200)
                     VStack {
                         if let productViewModel = viewModel.productViewModel {
-                            ProductOverviewDetailsCell(product: productViewModel.product)
+                            ProductOverviewDetailsCell(
+                                product: productViewModel.product,
+                                basePrice: viewModel.selectedVariation?.price ?? productViewModel.product.basePrice,
+                                baseComparePrice: viewModel.selectedVariation?.compareAtPrice ?? productViewModel.product.baseCompareAtPrice
+                            )
                             if
                                 let checkout = viewModel.checkout,
                                 let selectedVariant = viewModel.selectedVariation,

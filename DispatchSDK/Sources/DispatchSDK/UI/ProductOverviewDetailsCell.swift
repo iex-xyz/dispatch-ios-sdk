@@ -10,15 +10,19 @@ internal struct ProductOverviewDetailsCell: View {
     }()
 
     let product: Product
-    
-    init(product: Product) {
+    let basePrice: Int
+    let baseComparePrice: Int?
+
+    init(product: Product, basePrice: Int, baseComparePrice: Int? = nil) {
         self.product = product
         Self.priceFormatter.currencyCode = product.currencyCode
+        self.basePrice = basePrice
+        self.baseComparePrice = baseComparePrice
     }
     
-    func formattedPrice() -> String {
+    func formattedPrice(_ price: Int) -> String {
         Self.priceFormatter.currencyCode = product.currencyCode
-        let priceValue: NSNumber = .init(floatLiteral: Double(product.basePrice) / 100)
+        let priceValue: NSNumber = .init(floatLiteral: Double(price) / 100)
         return Self.priceFormatter.string(from: priceValue) ?? "--"
     }
 
@@ -28,24 +32,28 @@ internal struct ProductOverviewDetailsCell: View {
                 Text(product.name)
                     .foregroundStyle(.primary)
                     .font(.title3.bold())
-                PriceLabel(basePrice: formattedPrice(), currentPrice: nil)
+                if let baseComparePrice {
+                    PriceLabel(basePrice: formattedPrice(baseComparePrice), currentPrice: formattedPrice(basePrice))
+                } else {
+                    PriceLabel(basePrice: formattedPrice(basePrice), currentPrice: nil)
+                }
             }
 
             Text(product.description)
-            
-            Button(action: {
-                
-            }) {
-                HStack {
-                    Text("Shop on Nike.com")
-                    Image(systemName: "arrow.right")
-                    Spacer()
-                }
-                .font(.footnote.bold())
-            }
-            .buttonStyle(SecondaryButtonStyle())
-            .preferredColorScheme(theme.colorScheme)
+//            
+//            Button(action: {
+//                
+//            }) {
+//                HStack {
+//                    Text("Shop on Nike.com")
+//                    Image(systemName: "arrow.right")
+//                    Spacer()
+//                }
+//                .font(.footnote.bold())
+//            }
+//            .buttonStyle(SecondaryButtonStyle())
         }
+        .colorScheme(theme.colorScheme)
     }
 }
 
@@ -56,7 +64,11 @@ internal struct ProductOverviewDetailsCell: View {
     let theme: Theme = .sharp
     @State var text: String = ""
     return VStack(spacing: 24) {
-        ProductOverviewDetailsCell(product: product)
+        ProductOverviewDetailsCell(
+            product: product,
+            basePrice: 1600,
+            baseComparePrice: 3200
+        )
         //            VariantPreviewButton(theme: theme, title: "Select Color", selectedValue: "M 9 / W 10.5")
         //            VariantPreviewButton(theme: theme, title: "Select Size", selectedValue: "M 9 / W 10.5")
     }
