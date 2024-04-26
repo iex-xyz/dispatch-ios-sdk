@@ -2,9 +2,17 @@ import SwiftUI
 import DispatchSDK
 
 struct ContentView: View {
+    @State var environment: AppEnvironment = .staging
     var body: some View {
-        NavigationView {
             List {
+                Section("Options") {
+                    Picker("Environment", selection: $environment) {
+                        Text("Staging").tag(AppEnvironment.staging)
+                        Text("Demo").tag(AppEnvironment.demo)
+                        Text("Production").tag(AppEnvironment.production)
+                    }
+                    .pickerStyle(SegmentedPickerStyle())
+                }
                 Section("Checkouts") {
                     Button(action: {
                         handleItemTapped(.testYetiCheckout)
@@ -25,15 +33,21 @@ struct ContentView: View {
                         Text("Quantity Picker")
                     }
                 }
+                
+                Section("Scenarios") {
+                    Button(action: {
+                        handleItemTapped(.testSuccessfulOrder)
+                    }) {
+                        Text("Successful Order")
+                    }
+                }
+
             }
             .listStyle(.insetGrouped)
-        }
-        .navigationTitle("Dispatch SDK")
-        .navigationBarTitleDisplayMode(.automatic)
     }
     
     func handleItemTapped(_ route: DeepLinkRoute) {
-        DispatchSDK.shared.setEnvironment(.staging)
+        DispatchSDK.shared.setEnvironment(environment)
         DispatchSDK.shared.present(with: route)
 
     }

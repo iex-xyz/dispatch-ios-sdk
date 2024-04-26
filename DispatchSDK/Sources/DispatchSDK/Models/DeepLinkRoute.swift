@@ -1,8 +1,12 @@
 import Foundation
 
 public enum DeepLinkRoute {
+    public enum Mock {
+        case orderSuccess
+    }
     case checkout(_ id: String)
     case leadgen(_ id: String)
+    case mock(_ mock: Mock)
 }
 
 extension DeepLinkRoute {
@@ -16,5 +20,9 @@ extension DeepLinkRoute {
     
     public static var testQuantityPicker: Self {
         return .checkout("661e8c14116bdd2bfe95eb29")
+    }
+    
+    public static var testSuccessfulOrder: Self {
+        return .mock(.orderSuccess)
     }
 }

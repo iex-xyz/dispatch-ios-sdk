@@ -6,8 +6,9 @@ struct DemoApp: App {
         WindowGroup {
             NavigationView {
                 ContentView()
+                    .navigationTitle("Dispatch SDK")
             }
-            .navigationTitle("Dispatch SDK Demo")
+            .navigationBarTitleDisplayMode(.large)
         }
     }
 }

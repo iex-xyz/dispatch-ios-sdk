@@ -20,6 +20,26 @@ final class MainCoordinator: BaseCoordinator {
             runCheckoutFlow(for: id)
         case let .leadgen(id):
             runLeadgenFlow(for: id)
+        case let .mock(scenario):
+            switch scenario {
+            case .orderSuccess:
+                let successCoordinator = CheckoutSuccessCoordinator(
+                    router: router,
+                    apiClient: apiClient,
+                    viewModel: .init(
+                        checkout: .mock(),
+                        orderNumber: UUID().uuidString,
+                        shippingAddress: Address.mock().formattedString,
+                        payment: "4242 [MOCK]"
+                    )
+                )
+                
+                addDependency(successCoordinator)
+                router.presentSelf {
+                    successCoordinator.start()
+                }
+                
+            }
         }
     }
     
