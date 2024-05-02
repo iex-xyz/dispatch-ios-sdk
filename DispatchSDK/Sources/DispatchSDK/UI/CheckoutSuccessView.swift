@@ -133,7 +133,7 @@ struct CheckoutSuccessView: View {
                     Divider()
                     CheckoutOverviewDetailRow(title: "Shipping Address", showChevron: false) {
                         Text(viewModel.shippingAddress.formattedString)
-                            .multilineTextAlignment(.leading)
+                            .multilineTextAlignment(.trailing)
                     } handler: {}
                     Divider()
                     if let billingInfo = viewModel.billingInfo {
@@ -174,8 +174,8 @@ struct CheckoutSuccessView: View {
     let viewModel = CheckoutSuccessViewModel(
         checkout: .mock(),
         orderNumber: "C0192329328",
-        shippingAddress: "1234 Town\nBrooklyn NY 11211",
-        payment: "4242 [VISA]"
+        shippingAddress: .mock(),
+        billingInfo: .mock()
     )
     return CheckoutSuccessView(
         viewModel: viewModel

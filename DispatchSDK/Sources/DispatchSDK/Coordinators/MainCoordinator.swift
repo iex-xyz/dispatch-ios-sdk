@@ -29,8 +29,8 @@ final class MainCoordinator: BaseCoordinator {
                     viewModel: .init(
                         checkout: .mock(),
                         orderNumber: UUID().uuidString,
-                        shippingAddress: Address.mock().formattedString,
-                        payment: "4242 [MOCK]"
+                        shippingAddress: Address.mock(),
+                        billingInfo: .mock()
                     )
                 )
                 

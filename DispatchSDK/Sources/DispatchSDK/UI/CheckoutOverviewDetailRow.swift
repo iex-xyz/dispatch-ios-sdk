@@ -34,7 +34,7 @@ struct CheckoutOverviewDetailRow<Content: View>: View {
             HStack {
                 Text(title)
                     .foregroundStyle(.primary)
-                    .font(.body)
+                    .font(.footnote)
                     .frame(idealWidth: 80)
                 Spacer(minLength: 24)
                 HStack {
@@ -45,6 +45,7 @@ struct CheckoutOverviewDetailRow<Content: View>: View {
                             .foregroundStyle(Color.dispatchBlue)
                     }
                 }
+                .font(.footnote)
             }
             .padding()
             .foregroundStyle(.primary)
