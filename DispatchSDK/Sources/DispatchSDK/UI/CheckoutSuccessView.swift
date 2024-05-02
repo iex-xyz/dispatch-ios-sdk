@@ -126,6 +126,9 @@ struct CheckoutSuccessView: View {
                     Divider()
                     CheckoutOverviewDetailRow(title: "Order Number", showChevron: false) {
                         Text(viewModel.orderNumber)
+                            .minimumScaleFactor(0.5)
+                            .truncationMode(.middle)
+                            .lineLimit(1)
                     } handler: {}
                     Divider()
                     CheckoutOverviewDetailRow(title: "Shipping Address", showChevron: false) {
