@@ -64,7 +64,7 @@ class ShippingMethodViewModel: ObservableObject {
                 )
             )
             
-            let response = try await apiClient.performOperation(request)
+            _ = try await apiClient.performOperation(request)
             DispatchQueue.main.async {
                 self._onShippingMethodTapped.send(shippingMethod)
             }

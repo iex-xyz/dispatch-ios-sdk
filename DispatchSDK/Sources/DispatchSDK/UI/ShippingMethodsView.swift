@@ -28,7 +28,7 @@ struct ShippingMethodsView: View {
                         }
                     }
                     
-                case let .error(error):
+                case .error:
                     Text("Something went wrong")
                 }
             }

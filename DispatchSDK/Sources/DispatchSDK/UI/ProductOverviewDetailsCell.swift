@@ -61,7 +61,6 @@ internal struct ProductOverviewDetailsCell: View {
 
 #Preview {
     let product: Product = .mock()
-    let theme: Theme = .sharp
     @State var text: String = ""
     return VStack(spacing: 24) {
         ProductOverviewDetailsCell(
@@ -70,11 +69,7 @@ internal struct ProductOverviewDetailsCell: View {
             baseComparePrice: 3200,
             expandHandler: {}
         )
-        //            VariantPreviewButton(theme: theme, title: "Select Color", selectedValue: "M 9 / W 10.5")
-        //            VariantPreviewButton(theme: theme, title: "Select Size", selectedValue: "M 9 / W 10.5")
     }
     .padding()
-    .preferredColorScheme(.dark)
-    .previewDevice("iPhone 12") // Specify the device here
 }
 

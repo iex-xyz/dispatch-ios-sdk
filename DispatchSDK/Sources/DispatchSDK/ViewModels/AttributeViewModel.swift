@@ -24,7 +24,6 @@ internal class AttributeViewModel: ObservableObject, Identifiable {
     
     func onVariationTapped(_ variation: Variation) {
         self.selectedVariant = variation
-        print("Selected variant", selectedVariant?.id)
     }
     
     func title(for variation: Variation) -> String {
