@@ -27,64 +27,69 @@ struct MediaCarouselView: View {
                 
                 HStack {
                     ScrollView(.vertical, showsIndicators: false) {
-                        VStack {
-                            ForEach(viewModel.images.indices, id: \.self) { index in
-                                Button(action :{
-                                    withAnimation {
-                                        viewModel.currentIndex = index
-                                    }
-                                }) {
-                                    AsyncImage(url: URL(string: viewModel.images[index])) { image in
-                                        image
-                                            .resizable()
-                                            .scaledToFill()
-                                    } placeholder: {
-                                        ProgressView()
-                                    }
-                                    .frame(width: 32, height: 32)
-                                    .overlay(
-                                        Group {
-                                            if index == viewModel.currentIndex {
-                                                RoundedRectangle(cornerRadius: 4)
-                                                    .fill(Color.black.opacity(0.4))
-                                            } else {
-                                                RoundedRectangle(cornerRadius: 4)
-                                                    .stroke(Color(hex: "#E8E8E8"))
-                                            }
+                        if viewModel.images.count > 1 {
+                            VStack {
+                                ForEach(viewModel.images.indices, id: \.self) { index in
+                                    Button(action :{
+                                        withAnimation {
+                                            viewModel.currentIndex = index
                                         }
-                                    )
-                                    .clipShape(RoundedRectangle(cornerRadius: 4))
+                                    }) {
+                                        AsyncImage(url: URL(string: viewModel.images[index])) { image in
+                                            image
+                                                .resizable()
+                                                .scaledToFill()
+                                        } placeholder: {
+                                            ProgressView()
+                                        }
+                                        .frame(width: 32, height: 32)
+                                        .overlay(
+                                            Group {
+                                                if index == viewModel.currentIndex {
+                                                    RoundedRectangle(cornerRadius: 4)
+                                                        .fill(Color.black.opacity(0.4))
+                                                } else {
+                                                    RoundedRectangle(cornerRadius: 4)
+                                                        .stroke(Color(hex: "#E8E8E8"))
+                                                }
+                                            }
+                                        )
+                                        .clipShape(RoundedRectangle(cornerRadius: 4))
+                                    }
                                 }
                             }
+                            .padding(.vertical)
                         }
-                        .padding(.vertical)
                     }
                     .frame(width: 60)
                     Spacer()
                 }
                 
                 
+                
                 VStack {
                     Spacer()
-                    HStack(spacing: 8) {
-                        Spacer()
-                        Button(action: {
-                            withAnimation {
-                                viewModel.onPreviousButtonTapped()
+                    if viewModel.images.count > 1 {
+                        HStack(spacing: 8) {
+                            Spacer()
+                            Button(action: {
+                                withAnimation {
+                                    viewModel.onPreviousButtonTapped()
+                                }
+                            }) {
+                                Image(systemName: "chevron.left")
                             }
-                        }) {
-                            Image(systemName: "chevron.left")
-                        }
-                        .buttonStyle(CarouselArrowButtonStyle())
-                        
-                        Button(action: {
-                            withAnimation {
-                                viewModel.onNextButtonTapped()
+                            .buttonStyle(CarouselArrowButtonStyle())
+                            
+                            Button(action: {
+                                withAnimation {
+                                    viewModel.onNextButtonTapped()
+                                }
+                            }) {
+                                Image(systemName: "chevron.right")
                             }
-                        }) {
-                            Image(systemName: "chevron.right")
+                            .buttonStyle(CarouselArrowButtonStyle())
                         }
-                        .buttonStyle(CarouselArrowButtonStyle())
                     }
                 }
                 .padding(.trailing)
