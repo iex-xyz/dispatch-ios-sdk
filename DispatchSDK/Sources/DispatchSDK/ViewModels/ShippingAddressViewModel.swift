@@ -185,7 +185,7 @@ class ShippingAddressViewModel: ObservableObject {
 
         $state
             .dropFirst()
-            .map { !$0.isEmpty && $0.count == 2 }
+            .map { !$0.isEmpty || self.country.zones.isEmpty || !self.country.shouldShowField("zone") }
             .assign(to: &$isStateValid)
 
         $state
@@ -196,8 +196,7 @@ class ShippingAddressViewModel: ObservableObject {
         $zip
             .dropFirst()
             .map { zip in
-                let zipRegex = "^[0-9]{5}(-[0-9]{4})?$"
-                return NSPredicate(format: "SELF MATCHES %@", zipRegex).evaluate(with: zip)
+                zip.isEmpty == false || !self.country.shouldShowField("zip")
             }
             .assign(to: &$isZipValid)
 
