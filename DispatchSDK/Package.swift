@@ -14,7 +14,8 @@ let package = Package(
     ],
     targets: [
         .target(
-            name: "DispatchSDK"
+            name: "DispatchSDK",
+            resources: [.process("Resources/phone_number_rules.json")]
         ),
         .testTarget(
             name: "DispatchSDKTests",

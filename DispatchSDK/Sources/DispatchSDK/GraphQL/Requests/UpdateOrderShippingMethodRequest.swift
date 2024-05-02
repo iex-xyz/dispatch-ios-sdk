@@ -25,6 +25,10 @@ struct UpdateOrderShippingMethodRequest: GraphQLRequest {
                ) {
                 id
                 status
+                totalCost
+                productCost
+                shippingCost
+                taxCost
              }
            
           }

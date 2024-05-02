@@ -5,10 +5,18 @@ struct CheckoutProductPreviewRow: View {
     
     var body: some View {
         HStack {
-            if let imageUrlString = product.baseImages.first, let url = URL(string: imageUrlString) {
-                AsyncImage(url: url)
-                    .frame(width: 40, height: 40)
-                    .clipShape(RoundedRectangle(cornerRadius: 4))
+            if 
+                let imageUrlString = product.baseImages.first,
+                let url = URL(string: imageUrlString)
+            {
+                AsyncImage(url: url, content: { content in
+                    content
+                        .image?
+                        .resizable()
+                        .scaledToFill()
+                })
+                .frame(width: 40, height: 40)
+                .clipShape(RoundedRectangle(cornerRadius: 4))
             }
             Text(product.name)
                 .font(.title3)

@@ -22,17 +22,17 @@ class CreditCardInputViewModel: ShippingAddressViewModel {
     
     private var cancellables: Set<AnyCancellable> = []
 
-    let _onPaymentTokenGenerated = PassthroughSubject<(String, Address), Never>()
+    let _onPaymentTokenGenerated = PassthroughSubject<(String, Address, BillingInfo), Never>()
 
     override init(
         addressLookupService: any AddressLookupService,
         apiClient: GraphQLClient,
-        orderId: String
+        order: InitiateOrder
     ) {
         super.init(
             addressLookupService: addressLookupService,
             apiClient: apiClient,
-            orderId: orderId
+            order: order
         )
         setupCardValidationPublishers()
     }
@@ -117,7 +117,7 @@ class CreditCardInputViewModel: ShippingAddressViewModel {
     
     private func updateBillingAddress() async throws {
         let params = UpdateOrderShippingRequest.RequestParams(
-            orderId: orderId,
+            orderId: order.id,
             firstName: firstName,
             lastName: lastName,
             address1: address1,
@@ -126,7 +126,7 @@ class CreditCardInputViewModel: ShippingAddressViewModel {
             state: state,
             zip: zip,
             phoneNumber: phone,
-            country: country,
+            country: country.code,
             updateType: .billing
         )
         let request = UpdateOrderShippingRequest(params: params)
@@ -148,7 +148,7 @@ class CreditCardInputViewModel: ShippingAddressViewModel {
         self.isGeneratingPaymentToken = true
 
         let request = GetPaymentTokenRequest(
-            orderId: orderId,
+            orderId: order.id,
             cardNumber: cardNumber,
             expirationMonth: String(expirationMonth),
             expirationYear: String(expirationYear),
@@ -156,10 +156,19 @@ class CreditCardInputViewModel: ShippingAddressViewModel {
         )
         
         let response = try await apiClient.performOperation(request)
-        let address = Address(address1: address1, address2: address2, city: city, state: state, zip: zip)
+        let address = Address(
+            address1: address1,
+            address2: address2,
+            city: city,
+            state: state,
+            zip: zip,
+            country: country.code
+        )
         
+        // FIXME: We need a better fallback here
+        let billingInfo = BillingInfo(cardPreview: String(cardNumber.suffix(4)), cardType: cardType ?? .visa)
         DispatchQueue.main.async {
-            self._onPaymentTokenGenerated.send((response.paymentToken, address))
+            self._onPaymentTokenGenerated.send((response.paymentToken, address, billingInfo))
             self.isGeneratingPaymentToken = false
         }
     }

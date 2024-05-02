@@ -23,7 +23,8 @@ public struct Product: Codable, Equatable {
     public let id: String
     
     public var pdpDomain: String? {
-        return URL(string: pdpUrl)?.host
+        guard let url = URL(string: pdpUrl) else { return nil }
+        return url.host?.replacingOccurrences(of: "www.", with: "")
     }
     
     init(

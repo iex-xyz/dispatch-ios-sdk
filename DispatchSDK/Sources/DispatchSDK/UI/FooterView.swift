@@ -11,7 +11,6 @@ struct FooterView: View {
     var body: some View {
         HStack(spacing: 48) {
             Icons.poweredByDispatch
-            Icons.poweredByStripe
         }
         .padding(.horizontal)
     }

@@ -11,12 +11,14 @@ struct ShippingMethodCell: View {
                 Text(shippingMethod.title)
                     .font(.headline)
                     .foregroundStyle(.primary)
-                Text(shippingMethod.handle)
-                    .font(.subheadline)
-                    .foregroundStyle(.primary)
+                if let estimatedETA = shippingMethod.getEstimatedArrivalDateText() {
+                    Text(estimatedETA)
+                        .font(.subheadline)
+                        .foregroundStyle(.primary)
+                }
             }
             Spacer()
-            Text("$\(shippingMethod.price)")
+            Text(CurrencyHelpers.formatCentsToDollars(cents: shippingMethod.price))
                 .font(.subheadline.bold())
                 .foregroundStyle(.primary)
         }

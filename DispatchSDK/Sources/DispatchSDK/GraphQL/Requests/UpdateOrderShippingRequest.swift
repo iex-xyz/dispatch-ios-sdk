@@ -7,11 +7,6 @@ struct UpdateOrderShippingRequest: GraphQLRequest {
         case shippingAndBilling = "ADDRESS_SHIPPING_AND_BILLING"
     }
 
-    struct Response: Codable {
-        let id: String
-        let status: String // TODO: Type with enum?
-    }
-    
     struct RequestParams: Codable {
         let orderId: String
         let firstName: String
@@ -27,7 +22,7 @@ struct UpdateOrderShippingRequest: GraphQLRequest {
         let updateType: UpdateShippingType
     }
 
-    typealias Output = Response
+    typealias Output = InitiateOrder
     typealias Input = [String: AnyEncodable]
     
     var operationString: String {
@@ -48,6 +43,10 @@ struct UpdateOrderShippingRequest: GraphQLRequest {
                ) {
                 id
                 status
+                totalCost
+                productCost
+                shippingCost
+                taxCost
              }
            
           }

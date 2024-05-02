@@ -26,7 +26,8 @@ struct ExpandableText: View {
     internal var collapseButton: TextSet? = nil
     
     internal var animation: Animation? = .none
-    
+    internal var expandHandler: (() -> Void)?
+
     @State private var expand : Bool = false
     @State private var truncated : Bool = false
     @State private var fullSize: CGFloat = 0
@@ -38,7 +39,8 @@ struct ExpandableText: View {
         lineLimit: Int = 3,
         expandButtonCta: String = "more",
         collapseButtonCta: String? = "less",//TextSet(text: "less", font: .body, color: .blue),
-        animation: Animation? = nil
+        animation: Animation? = nil,
+        expandHandler:(() -> Void)? = nil
     ) {
         self.text = text
         self.font = font
@@ -60,6 +62,7 @@ struct ExpandableText: View {
         self.expand = expand
         self.truncated = truncated
         self.fullSize = fullSize
+        self.expandHandler = expandHandler
     }
 
     internal var body: some View {
@@ -123,7 +126,11 @@ struct ExpandableText: View {
             if truncated {
                 if let collapseButton = collapseButton {
                     Button(action: {
-                        self.expand.toggle()
+                        if let expandHandler {
+                            expandHandler()
+                        } else {
+                            self.expand.toggle()
+                        }
                     }, label: {
                         Text(expand == false ? expandButton.text : collapseButton.text)
                             .font(expand == false ? expandButton.font : collapseButton.font)

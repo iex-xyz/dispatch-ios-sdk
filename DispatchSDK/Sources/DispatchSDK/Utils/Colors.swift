@@ -4,6 +4,8 @@ extension Color {
     static var dispatchRed: Color = Color(hex: "#FF4343")
     static var dispatchBlue: Color = Color(hex: "#158AFF")
     static var dispatchGreen: Color = Color(hex: "#65DF81")
+    // NOTE: Figma may be out of date with the web client. Using tailwind green-300 instead
+//    static var dispatchGreen: Color = Color(hex: "#86efac")
     static var dispatchOrange: Color = Color(hex: "#FE6A3B")
 
     static var dispatchBlueDarkened: Color = Color(hex: "#2750AE")

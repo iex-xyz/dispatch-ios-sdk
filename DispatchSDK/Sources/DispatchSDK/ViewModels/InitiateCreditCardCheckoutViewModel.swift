@@ -67,6 +67,18 @@ class InitiateCreditCardCheckoutViewModel: ObservableObject {
             .assign(to: &$isEmailValid)
     }
     
+    private func updateQuantity(for orderId: String) async throws -> UpdateOrderQuantityRequest.Response {
+        let request = UpdateOrderQuantityRequest(
+            params: .init(
+                orderId: orderId,
+                productId: checkout.product.id,
+                quantity: quantity
+            )
+        )
+
+        return try await apiClient.performOperation(request)
+    }
+    
     private func initiateOrder() {
         orderState = .loading
         Task { [weak self] in
@@ -75,7 +87,8 @@ class InitiateCreditCardCheckoutViewModel: ObservableObject {
                 let request =  InitiateOrderRequest(
                     email: email,
                     productId: checkout.product.id,
-                    variantId: variant?.id
+                    variantId: variant?.id,
+                    quantity: quantity
                 )
                 let result = try await apiClient.performOperation(request)
 

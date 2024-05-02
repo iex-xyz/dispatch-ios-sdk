@@ -2,14 +2,14 @@ import Foundation
 
 struct ShippingMethod: Codable, Identifiable {
     let id: String
-    let estimatedTimeInTransit: [Float]?
+    let estimatedTimeInTransit: [Int]?
     let handle: String
     let phoneRequired: Bool
     let price: Int
     let title: String
     
     init(
-        estimatedTimeInTransit: [Float],
+        estimatedTimeInTransit: [Int],
         handle: String,
         id: String,
         phoneRequired: Bool,
@@ -33,7 +33,6 @@ struct ShippingMethod: Codable, Identifiable {
         case title
     }
 
-    // Custom init from decoder if needed, especially for handling nullable arrays or transforming units
     init(from decoder: Decoder) throws {
         let container = try decoder.container(keyedBy: CodingKeys.self)
         self.handle = try container.decode(String.self, forKey: .handle)
@@ -41,11 +40,9 @@ struct ShippingMethod: Codable, Identifiable {
         self.phoneRequired = try container.decode(Bool.self, forKey: .phoneRequired)
         self.price = try container.decode(Int.self, forKey: .price)
         self.title = try container.decode(String.self, forKey: .title)
-        // Handle optional array of Floats
-        self.estimatedTimeInTransit = try container.decodeIfPresent([Float].self, forKey: .estimatedTimeInTransit)
+        self.estimatedTimeInTransit = try container.decodeIfPresent([Int].self, forKey: .estimatedTimeInTransit)
     }
 
-    // Encode function is standard unless specific custom behavior is needed
     func encode(to encoder: Encoder) throws {
         var container = encoder.container(keyedBy: CodingKeys.self)
         try container.encode(handle, forKey: .handle)
@@ -58,8 +55,35 @@ struct ShippingMethod: Codable, Identifiable {
 }
 
 extension ShippingMethod {
+    static private let formatter = DateFormatter()
+
+    func getEstimatedArrivalDateText() -> String? {
+        guard
+            let estimatedTimeInTransit = estimatedTimeInTransit,
+                estimatedTimeInTransit.count == 2
+        else {
+            return nil
+        }
+        
+        let SECONDS_IN_DAY = 86_400
+        let maxDays = Int(ceil(Double(estimatedTimeInTransit[1]) / Double(SECONDS_IN_DAY)))
+        let now = Date()
+        var components = DateComponents()
+        components.day = maxDays
+        let futureDate = Calendar.current.date(byAdding: components, to: now)!
+        
+        Self.formatter.locale = Locale(identifier: "en_US")
+        Self.formatter.dateFormat = "MMMM d, EEE"
+        let deliveryDate = Self.formatter.string(from: futureDate)
+        
+        return "Delivery by \(deliveryDate)"
+    }
+}
+
+
+extension ShippingMethod {
     static func random(
-        estimatedTimeInTransit: [Float] = [],
+        estimatedTimeInTransit: [Int] = [],
         handle: String = "handle",
         id: String = UUID().uuidString,
         phoneRequired: Bool = false,

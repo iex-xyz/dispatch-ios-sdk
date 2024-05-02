@@ -12,33 +12,46 @@ struct SecureCheckoutOverview: View {
 
     var body: some View {
         VStack(alignment: .leading, spacing: 16) {
-            HStack {
-                Circle()
-                    .fill()
-                    .frame(width: 40, height: 40)
-                VStack {
-                    Text("Secure Checkout")
-                        .font(.subheadline)
-                        .foregroundStyle(.primary)
-                    Text(checkout.product.pdpUrl)
-                        .foregroundStyle(Colors.secondaryText)
-                        .font(.footnote)
+            ZStack {
+                if let domain = checkout.product.pdpDomain {
+                    MerchantSecurityTag(domain: domain, tapHandler: {})
                 }
-                Spacer()
-                Button(action: {
-                    dismiss()
-                }) {
-                    Image(systemName: "xmark")
-                        .resizable()
-                        .scaledToFit()
-                        .frame(width: 10, height: 10)
+                HStack {
+                    Circle()
+                        .fill()
+                        .frame(width: 40, height: 40)
+                    Spacer()
+                    CloseButton {
+                        dismiss()
+                    }
                 }
-                .frame(width: 40, height: 40)
             }
-            Text("Nike is selling across the web thanks to Dispatch. All orders will be handled by Nike who is responsible for:")
+            Text("Secure Checkout")
+                .font(.title3.bold())
+                .foregroundStyle(.primary)
+            Text("\(checkout.merchantName) is selling across the web thanks to Dispatch. All orders will be handled by \(checkout.merchantName) who is responsible for:")
                 .foregroundStyle(.primary)
                 .font(.caption)
             
+            VStack(spacing: 8) {
+                ForEach(
+                    [
+                        "Storing your personal info for order fulfillment",
+                        "Handling all disputes, returns or exchanges"
+                    ],
+                    id: \.self
+                ) { term in
+                    HStack {
+                        Text("•")
+                            .font(.headline)
+                        Text("\(term)")
+                            .font(.caption)
+                        Spacer()
+                    }
+                    .foregroundStyle(.primary)
+                }
+            }
+
             VStack(spacing: 0) {
                 Button(action: {
                     
@@ -83,6 +96,7 @@ struct SecureCheckoutOverview: View {
             .font(.body)
             .background(theme.backgroundColor)
             .foregroundStyle(Color.dispatchBlue)
+            .overlay(RoundedRectangle(cornerRadius: 8).stroke(Colors.secondaryBackgroundColor, lineWidth: 2))
             .clipShape(RoundedRectangle(cornerRadius: 8))
             Spacer()
             Button(action: {
@@ -94,7 +108,7 @@ struct SecureCheckoutOverview: View {
         }
         .foregroundStyle(.primary)
         .padding()
-        .background(Colors.secondaryBackgroundColor)
+        .background(theme.backgroundColor)
         .colorScheme(theme.colorScheme)
     }
 }

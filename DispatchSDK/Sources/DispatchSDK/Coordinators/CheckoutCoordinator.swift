@@ -2,12 +2,59 @@ import UIKit
 import SwiftUI
 import Combine
 
+struct CheckoutNavigationTitle: View {
+    @ObservedObject var viewModel: CheckoutViewModel
+    
+    let tapHandler: (Checkout) -> Void
+    
+    var body: some View {
+        Group {
+            if let checkout = viewModel.checkout, let domain = checkout.product.pdpDomain {
+                MerchantSecurityTag(domain: domain, tapHandler: {
+                    tapHandler(checkout)
+                })
+            }
+        }
+    }
+}
+
 class CheckoutCoordinator: BaseCoordinator {
     let router: Router
     let apiClient: GraphQLClient
     let checkoutId: String
     var shouldDismissFlow: (() -> Void)?
     lazy private(set) var viewModel: CheckoutViewModel = .init(id: checkoutId)
+    
+    
+    private lazy var rightBarButtonController: UIHostingController<CloseButton> = {
+        let controller = UIHostingController<CloseButton>(rootView: CloseButton { [weak self] in
+            self?.shouldDismissFlow?()
+        })
+        
+        controller.view.backgroundColor = .clear
+        controller.view.translatesAutoresizingMaskIntoConstraints = false
+        return controller
+    }()
+
+    private lazy var navigationTitleController: UIHostingController<CheckoutNavigationTitle> = {
+        let controller = UIHostingController<CheckoutNavigationTitle>(rootView: CheckoutNavigationTitle(viewModel: viewModel, tapHandler: { [weak self] checkout in
+            self?.showSecureCheckout(for: checkout)
+        }))
+        controller.view.backgroundColor = .clear
+        controller.view.translatesAutoresizingMaskIntoConstraints = false
+        return controller
+    }()
+
+    // TODO: We need logo image support
+//    private lazy var leftBarButtonController: UIHostingController<CloseButton> = {
+//        let controller = UIHostingController<CloseButton>(rootView: CloseButton { [weak self] in
+//            self?.didCancel()
+//        })
+//        
+//        controller.view.backgroundColor = .clear
+//        controller.view.translatesAutoresizingMaskIntoConstraints = false
+//        return controller
+//    }()
 
     private var cancellables: Set<AnyCancellable> = .init()
     
@@ -65,6 +112,14 @@ class CheckoutCoordinator: BaseCoordinator {
                 self?.showSecureCheckout(for: checkout)
         }
         .store(in: &cancellables)
+        
+        viewModel
+            ._onMoreProductInfoButtonTapped
+            .sink { [weak self] checkout in
+                self?.showProductOverview(for: checkout)
+        }
+        .store(in: &cancellables)
+        
         viewModel
             ._onPaymentCTATapped
             .sink { [weak self] (checkout, paymentType) in
@@ -83,6 +138,24 @@ class CheckoutCoordinator: BaseCoordinator {
         let viewController = UIHostingController<CheckoutView>.init(
             rootView: .init(viewModel: viewModel)
         )
+        
+        viewController.navigationItem.rightBarButtonItem = .init(customView: rightBarButtonController.view)
+//        viewController.navigationItem.leftBarButtonItem = .init(customView: leftBarButtonController.view)
+        viewController.navigationItem.titleView = navigationTitleController.view
+        
+        viewModel
+            .checkout
+            .publisher.sink { _ in
+                //
+            } receiveValue: { [weak self] _ in
+                self?.navigationTitleController.view.setNeedsLayout()
+                self?.navigationTitleController.view.layoutIfNeeded()
+            }
+            .store(in: &cancellables)
+
+        viewController.navigationItem.setHidesBackButton(true, animated: false)
+        let emptyView = UIView(frame: .zero)
+        viewController.navigationItem.backBarButtonItem = UIBarButtonItem(customView: emptyView)
 
         router.setRootModule(viewController, animated: false)
         router.presentSelf(completion: nil)
@@ -144,11 +217,39 @@ class CheckoutCoordinator: BaseCoordinator {
         if let sheet = viewController.sheetPresentationController {
             sheet.detents = [.medium()]
             sheet.preferredCornerRadius = 16
+            sheet.prefersGrabberVisible = true
         }
         router.present(viewController, animated: true, completion: {
             print("Sheet Dismissed")
         })
 
+    }
+    
+    func showProductOverview(for checkout: Checkout) {
+        let viewModel = ProductOverviewViewModel(product: checkout.product)
+        
+        viewModel
+            ._onCloseButtonTapped
+            .sink { [weak self] _ in
+                self?.router.dismissModule()
+            }
+            .store(in: &cancellables)
+        
+        let viewController = UIHostingController<ProductOverview>(
+            rootView: ProductOverview(viewModel: viewModel)
+        )
+        
+        if let sheet = viewController.sheetPresentationController {
+            sheet.detents = [.large()]
+            sheet.preferredCornerRadius = 16
+            sheet.prefersGrabberVisible = true
+            sheet.prefersScrollingExpandsWhenScrolledToEdge = true
+        }
+        
+//        viewController.modalPresentationStyle = .fullScreen
+        router.present(viewController, animated: true) {
+            //
+        }
     }
     
     private func showPayWithApplePay(for checkout: Checkout) {
@@ -177,7 +278,6 @@ class CheckoutCoordinator: BaseCoordinator {
         let coordinator = CreditCardCoordinator(
             router: router,
             apiClient: apiClient,
-            orderId: "invalid",
             viewModel: viewModel
         ) {
             // TODO:

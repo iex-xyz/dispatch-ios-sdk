@@ -12,6 +12,9 @@ final class RouterImp: NSObject, Router {
         super.init()
         self.rootController?.delegate = self
         self.rootController?.modalPresentationStyle = .fullScreen
+        
+//        self.rootController?.navigationBar.barTintColor = UIColor.yellow
+//        self.rootController?.navigationBar.isTranslucent = false
     }
     
     func toPresent() -> UIViewController? {

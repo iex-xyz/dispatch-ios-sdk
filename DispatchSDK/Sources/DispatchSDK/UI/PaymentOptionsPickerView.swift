@@ -13,10 +13,8 @@ struct PaymentOptionsPickerView: View {
                     .foregroundStyle(.primary)
                     .font(.title3.bold())
                 Spacer()
-                Button(action: {
+                CloseButton {
                     dismiss()
-                }) {
-                    Icons.close
                 }
             }
             ScrollView {

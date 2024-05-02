@@ -2,22 +2,33 @@ import Foundation
 import Combine
 
 class CheckoutOverviewViewModel: ObservableObject {
+    enum OrderCheckoutState {
+        case idle
+        case loading
+        case complete(InitiateOrder)
+        case failed(Error)
+        
+        var isEnabled: Bool {
+            switch self {
+            case .idle, .failed, .complete: return true
+            case .loading: return false
+            }
+        }
+    }
+    
+    @Published var state: OrderCheckoutState = .idle
+    
     let apiClient: GraphQLClient
     let checkout: Checkout
-    let orderId: String
     let email: String
     let variant: Variation?
     let phone: String
     let shippingAddress: Address // TODO: Model address
     let billingAddress: Address? // TODO: Model address
-    // TODO: Billing details
+    let billingInfo: BillingInfo
     let shippingMethod: ShippingMethod
     let tokenizedPayment: String
-    
-    // TODO: How should we model the cost breakdown?
-    let subtotal: String
-    let tax: String
-    let delivery: String
+    let order: InitiateOrder
     
     let _onShippingMethodTapped = PassthroughSubject<(ShippingMethod), Never>()
     let _onShippingAddressTapped = PassthroughSubject<(Address), Never>()
@@ -25,45 +36,49 @@ class CheckoutOverviewViewModel: ObservableObject {
     let _onEmailTapped = PassthroughSubject<(String), Never>()
     let _onPhoneTapped = PassthroughSubject<(String), Never>()
 
-    let _onOrderComplete = PassthroughSubject<(Void), Never>()
+    let _onOrderComplete = PassthroughSubject<(InitiateOrder), Never>()
 
     init(
         apiClient: GraphQLClient,
         checkout: Checkout,
-        orderId: String,
+        order: InitiateOrder,
         email: String,
         variant: Variation?,
         phone: String,
         shippingAddress: Address,
         billingAddress: Address?,
+        billingInfo: BillingInfo,
         shippingMethod: ShippingMethod,
-        subtotal: String,
-        tax: String,
-        delivery: String,
         tokenizedPayment: String
     ) {
         self.apiClient = apiClient
         self.checkout = checkout
-        self.orderId = orderId
+        self.order = order
         self.email = email
         self.variant = variant
         self.phone = phone
         self.shippingAddress = shippingAddress
         self.billingAddress = billingAddress
+        self.billingInfo = billingInfo
         self.shippingMethod = shippingMethod
-        self.subtotal = subtotal
-        self.tax = tax
-        self.delivery = delivery
         self.tokenizedPayment = tokenizedPayment
     }
     
     func onPayButtonTapped() {
+        self.state = .loading
         Task {
             do {
-                try await completeOrder()
+                let order = try await completeOrder()
+                DispatchQueue.main.async {
+                    self.state = .complete(order)
+                    self._onOrderComplete.send(order)
+                }
             } catch {
                 // TODO: Error handling
                 print("Unable to complete order", error)
+                DispatchQueue.main.async {
+                    self.state = .failed(error)
+                }
             }
         }
     }
@@ -102,12 +117,10 @@ class CheckoutOverviewViewModel: ObservableObject {
         // TODO:
     }
     
-    private func completeOrder() async throws {
-        let request = CompleteOrderRequest(orderId: orderId, tokenizedPayment: tokenizedPayment)
-        _ = try await apiClient.performOperation(request)
-        DispatchQueue.main.async {
-            // TODO: What do we need to pass to the next screen?
-            self._onOrderComplete.send()
-        }
+    private func completeOrder() async throws -> InitiateOrder {
+        let request = CompleteOrderRequest(orderId: order.id, tokenizedPayment: tokenizedPayment)
+        return try await apiClient.performOperation(request)
+        
+        
     }
 }

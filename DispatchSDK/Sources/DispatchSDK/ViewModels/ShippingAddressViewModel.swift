@@ -1,6 +1,63 @@
 import Foundation
 import Combine
 
+class CountriesViewModel: ObservableObject {
+
+    enum State {
+        case idle
+        case loading
+        case complete([Country])
+        case failed(Error)
+        
+        var countries: [Country] {
+            switch self {
+            case let .complete(countries):
+                return countries
+            default:
+                return []
+            }
+        }
+        
+        var isEnabled: Bool {
+            switch self {
+            case .complete, .failed:
+                return true
+            default:
+                return false
+            }
+        }
+    }
+    
+    @Published var state: State = .idle
+    
+    let apiClient: GraphQLClient
+    
+    init(apiClient: GraphQLClient) {
+        self.apiClient = apiClient
+        
+        fetchCountries()
+    }
+
+    func fetchCountries() {
+        self.state = .loading
+        Task {
+            do {
+                let request = GetCountriesRequest(locale: "en") // TODO: https://github.com/iex-xyz/frontend-monorepo/blob/development/apps/checkout/i18n/i18n.ts#L16
+                let response = try await apiClient.performOperation(request)
+                
+                DispatchQueue.main.async {
+                    self.state = .complete(response.countries)
+                }
+            } catch {
+                print("Unable to fetch countries list: ", error)
+                DispatchQueue.main.async {
+                    self.state = .failed(error)
+                }
+            }
+        }
+    }
+}
+
 class ShippingAddressViewModel: ObservableObject {
     enum AddressLookupState {
         case idle
@@ -19,9 +76,10 @@ class ShippingAddressViewModel: ObservableObject {
 
     }
         
-    let _onOrderUpdated = PassthroughSubject<(String, Address, String), Never>()
+    let _onOrderUpdated = PassthroughSubject<(InitiateOrder, Address, String), Never>()
 
     @Published var addressLookupState: AddressLookupState = .idle
+    @Published var countriesViewModel: CountriesViewModel
 
     @Published var firstName: String = ""
     @Published var lastName: String = ""
@@ -30,8 +88,15 @@ class ShippingAddressViewModel: ObservableObject {
     @Published var city: String = ""
     @Published var state: String = ""
     @Published var zip: String = ""
+    @Published var zone: Country.Zone = .empty
     @Published var phone: String = ""
-    @Published var country: String = "US"
+    @Published var country: Country = .unitedStates {
+        didSet {
+            if !country.zones.contains(zone) {
+                zone = .empty
+            }
+        }
+    }
 
     @Published var isFirstNameValid = false
     @Published var isLastNameValid = false
@@ -49,7 +114,7 @@ class ShippingAddressViewModel: ObservableObject {
     @Published var isZipDirty = false
     @Published var isPhoneDirty = false
     
-    let orderId: String
+    let order: InitiateOrder
     let apiClient: GraphQLClient
     
     @Published var isUpdatingOrder: Bool = false
@@ -60,11 +125,12 @@ class ShippingAddressViewModel: ObservableObject {
     init(
         addressLookupService: AddressLookupService,
         apiClient: GraphQLClient,
-        orderId: String
+        order: InitiateOrder
     ) {
         self.addressLookupService = addressLookupService
         self.apiClient = apiClient
-        self.orderId = orderId
+        self.order = order
+        self.countriesViewModel = CountriesViewModel(apiClient: apiClient)
         setupValidation()
     }
     
@@ -143,7 +209,7 @@ class ShippingAddressViewModel: ObservableObject {
         $phone
             .dropFirst()
             .map { phone in
-                PhoneNumberValidator.validatePhoneNumber(phone)
+                PhoneNumberValidator.validatePhoneNumber(phone, country: self.country)
             }
             .assign(to: &$isPhoneValid)
 
@@ -209,16 +275,16 @@ class ShippingAddressViewModel: ObservableObject {
             do {
                 let request = UpdateOrderShippingRequest(
                     params: .init(
-                        orderId: self.orderId,
+                        orderId: self.order.id,
                         firstName: self.firstName,
                         lastName: self.lastName,
                         address1: self.address1,
                         address2: self.address2,
                         city: self.city,
-                        state: self.state,
+                        state: self.zone.code,
                         zip: self.zip,
                         phoneNumber: self.phone,
-                        country: self.country,
+                        country: self.country.code,
                         updateType: updateType
                     )
                 )
@@ -229,12 +295,13 @@ class ShippingAddressViewModel: ObservableObject {
                     address1: address1,
                     address2: address2,
                     city: city,
-                    state: state,
-                    zip: zip
+                    state: zone.code,
+                    zip: zip,
+                    country: self.country.code
                 )
                 DispatchQueue.main.async {
                     self.isUpdatingOrder = false
-                    self._onOrderUpdated.send((self.orderId, address, self.phone))
+                    self._onOrderUpdated.send((response, address, self.phone))
                 }
             } catch {
                 DispatchQueue.main.async {

@@ -2,25 +2,70 @@ import UIKit
 import SwiftUI
 import Combine
 
+struct RightNavigationButtons: View {
+    let leftButtonHandler: () -> Void
+    let rightButtonHandler: () -> Void
+
+    var body: some View {
+        HStack {
+            Button(action: {
+                
+            }) {
+                Image(systemName: "chevron.left")
+            }
+            Button(action: {
+                
+            }) {
+                Image(systemName: "chevron.right")
+            }
+        }
+    }
+}
+
 class CreditCardCoordinator: BaseCoordinator {
     private let router: Router
     private let apiClient: GraphQLClient
-    private let orderId: String
+    private var order: InitiateOrder?
     private var cancellables: Set<AnyCancellable> = .init()
     
     private let viewModel: InitiateCreditCardCheckoutViewModel
     private let didCancel: () -> Void
+    
+    private lazy var rightBarButtonController: UIHostingController<RightNavigationButtons> = {
+        let controller = UIHostingController<RightNavigationButtons>(rootView: RightNavigationButtons(leftButtonHandler: {
+            //
+        }, rightButtonHandler: {
+            //
+        }))
+        
+        controller.view.backgroundColor = .clear
+        controller.view.translatesAutoresizingMaskIntoConstraints = false
+        return controller
+    }()
+    private lazy var navigationTitleController: UIHostingController<MerchantSecurityTag> = {
+        let controller = UIHostingController<MerchantSecurityTag>(rootView: MerchantSecurityTag(domain: viewModel.checkout.product.pdpDomain ?? "", tapHandler: {}))
+        controller.view.backgroundColor = .clear
+        controller.view.translatesAutoresizingMaskIntoConstraints = false
+        return controller
+    }()
 
+    private lazy var closeButtonController: UIHostingController<CloseButton> = {
+        let controller = UIHostingController<CloseButton>(rootView: CloseButton { [weak self] in
+            self?.didCancel()
+        })
+        
+        controller.view.backgroundColor = .clear
+        controller.view.translatesAutoresizingMaskIntoConstraints = false
+        return controller
+    }()
     init(
         router: Router,
         apiClient: GraphQLClient,
-        orderId: String,
         viewModel: InitiateCreditCardCheckoutViewModel,
         didCancel: @escaping () -> Void
     ) {
         self.router = router
         self.apiClient = apiClient
-        self.orderId = orderId
         self.viewModel = viewModel
         self.didCancel = didCancel
         super.init()
@@ -35,16 +80,24 @@ class CreditCardCoordinator: BaseCoordinator {
         start()
     }
     
+    @objc private func handleBackButton() {
+        router.popModule()
+    }
+    
     private func showEmailCaptureForm() {
         let viewController = UIHostingController<ContactInformationForm>(
             rootView: ContactInformationForm(viewModel: viewModel)
         )
-        
+
+        viewController.navigationItem.rightBarButtonItem = .init(customView: closeButtonController.view)
+        viewController.navigationItem.titleView = navigationTitleController.view
+
         viewModel
             ._onOrderInitiated
             .sink { [weak self] order, email in
+                self?.order = order
                 self?.showShippingAddressForm(
-                    for: order.id,
+                    for: order,
                     email: email
                 )
             }
@@ -56,26 +109,29 @@ class CreditCardCoordinator: BaseCoordinator {
     }
     
     private func showShippingAddressForm(
-        for orderId: String,
+        for order: InitiateOrder,
         email: String
     ) {
         let addressLookupService: AddressLookupService = MapKitAddressLookupService()
         let viewModel = ShippingAddressViewModel(
             addressLookupService: addressLookupService,
             apiClient: apiClient,
-            orderId: orderId
+            order: order
         )
         let viewController: UIHostingController<ShippingAddressFormContainer> = .init(
             rootView: ShippingAddressFormContainer(viewModel: viewModel)
         )
-        
+
+        viewController.navigationItem.rightBarButtonItem = .init(customView: closeButtonController.view)
+        viewController.navigationItem.titleView = navigationTitleController.view
+
         viewModel
             ._onOrderUpdated
             .sink {
-                [weak self] orderId,
+                [weak self] order,
                 address, phone in
                 self?.showShippingMethods(
-                    for: orderId,
+                    for: order,
                     email: email,
                     phone: phone,
                     address: address
@@ -87,23 +143,26 @@ class CreditCardCoordinator: BaseCoordinator {
     }
     
     private func showShippingMethods(
-        for orderId: String,
+        for order: InitiateOrder,
         email: String,
         phone: String,
         address: Address
     ) {
-        let viewModel = ShippingMethodViewModel(apiClient: apiClient, orderId: orderId)
+        let viewModel = ShippingMethodViewModel(apiClient: apiClient, orderId: order.id)
         let viewController = UIHostingController<ShippingMethodsView>(
             rootView: ShippingMethodsView(
                 viewModel: viewModel
             )
         )
-        
+
+        viewController.navigationItem.rightBarButtonItem = .init(customView: closeButtonController.view)
+        viewController.navigationItem.titleView = navigationTitleController.view
+
         viewModel
             ._onShippingMethodTapped
             .sink { [weak self] shippingMethod in
                 self?.showBillingForm(
-                    for: orderId,
+                    for: order,
                     email: email,
                     shippingAddress: address, 
                     phone: phone,
@@ -116,7 +175,7 @@ class CreditCardCoordinator: BaseCoordinator {
     }
     
     private func showBillingForm(
-        for orderId: String,
+        for order: InitiateOrder,
         email: String,
         shippingAddress: Address,
         phone: String,
@@ -125,28 +184,31 @@ class CreditCardCoordinator: BaseCoordinator {
         let viewModel = CreditCardInputViewModel(
             addressLookupService: MapKitAddressLookupService(),
             apiClient: apiClient,
-            orderId: orderId
+            order: order
         )
         let viewController = UIHostingController(
             rootView: CreditCardForm(
                 viewModel: viewModel
             )
         )
-        
+
+        viewController.navigationItem.rightBarButtonItem = .init(customView: closeButtonController.view)
+        viewController.navigationItem.titleView = navigationTitleController.view
+
         viewModel
             ._onPaymentTokenGenerated
             .sink {
                 [weak self] (paymentToken,
-                billingAddress) in
+                billingAddress, billingInfo) in
                 self?.showOrderPreview(
-                    for: orderId,
+                    for: order,
                     email: email,
                     variant: nil,
                     phone: phone,
                     shippingAddress: shippingAddress,
                     shippingMethod: shippingMethod,
                     billingAddress: billingAddress,
-                    billingDetails: "TODO",
+                    billingInfo: billingInfo,
                     paymentToken: paymentToken
                 )
             }
@@ -156,30 +218,28 @@ class CreditCardCoordinator: BaseCoordinator {
     }
     
     private func showOrderPreview(
-        for orderId: String,
+        for order: InitiateOrder,
         email: String,
         variant: Variation?,
         phone: String,
         shippingAddress: Address,
         shippingMethod: ShippingMethod,
         billingAddress: Address,
-        billingDetails: String,
+        billingInfo: BillingInfo,
         paymentToken: String
     ) {
         // TODO: Where do we store all of this data while we go through the flow?
         let viewModel = CheckoutOverviewViewModel(
             apiClient: apiClient,
             checkout: viewModel.checkout,
-            orderId: orderId,
+            order: order,
             email: viewModel.email,
             variant: variant,
             phone: phone,
             shippingAddress: shippingAddress,
             billingAddress: billingAddress,
+            billingInfo: billingInfo,
             shippingMethod: shippingMethod,
-            subtotal: "$subtotal",
-            tax: "$tax",
-            delivery: "$delivery",
             tokenizedPayment: paymentToken
         )
         
@@ -189,8 +249,8 @@ class CreditCardCoordinator: BaseCoordinator {
         
         viewModel
             ._onOrderComplete
-            .sink { [weak self] in
-                self?.navigateToOrderCompleteCoordinator()
+            .sink { [weak self] order in
+                self?.navigateToOrderCompleteCoordinator(order: order)
             }
             .store(in: &cancellables)
         
@@ -204,10 +264,10 @@ class CreditCardCoordinator: BaseCoordinator {
         
     }
     
-    private func navigateToOrderCompleteCoordinator() {
+    private func navigateToOrderCompleteCoordinator(order: InitiateOrder) {
         let viewModel = CheckoutSuccessViewModel(
             checkout: viewModel.checkout,
-            orderNumber: orderId,
+            orderNumber: order.id,
             shippingAddress: "mock address",
             payment: "4242 [MOCK]"
         )

@@ -16,7 +16,6 @@ struct CheckoutOverviewView: View {
                     .fontWeight(.bold)
                     .foregroundStyle(.primary)
                 Spacer()
-                Icons.close
             }
             .padding(.horizontal)
             .padding(.bottom)
@@ -25,18 +24,25 @@ struct CheckoutOverviewView: View {
             Divider()
             ScrollView {
                 VStack {
-                    if let variant = viewModel.variant {
-                        CheckoutOverviewDetailRow(title: "Variant") {
-                            Text("Variant detail will end up going here")
-                                .multilineTextAlignment(.trailing)
-                                .lineLimit(3)
-                                .foregroundStyle(.primary)
-                        } handler: {
-                            viewModel.onVariantButtonTapped()
+                    if
+                        let variant = viewModel.variant,
+                        let attributes = viewModel.checkout.product.attributes?.values
+                    {
+                        ForEach(Array(attributes), id: \.id) { attribute in
+                            if let renderedValue = variant.attributes?[attribute.id] {
+                                CheckoutOverviewDetailRow(title: attribute.title, showChevron: false) {
+                                    Text(renderedValue)
+                                        .multilineTextAlignment(.trailing)
+                                        .lineLimit(3)
+                                        .foregroundStyle(.primary)
+                                } handler: {
+                                    viewModel.onVariantButtonTapped()
+                                }
+                                Divider()
+                            }
                         }
-                        Divider()
                     }
-                    CheckoutOverviewDetailRow(title: "Email") {
+                    CheckoutOverviewDetailRow(title: "Email", showChevron: false) {
                         Text(viewModel.email)
                             .multilineTextAlignment(.trailing)
                             .lineLimit(2)
@@ -46,7 +52,7 @@ struct CheckoutOverviewView: View {
                         viewModel.onEmailButtonTapped()
                     }
                     Divider()
-                    CheckoutOverviewDetailRow(title: "Phone") {
+                    CheckoutOverviewDetailRow(title: "Phone", showChevron: false) {
                         Text(viewModel.phone)
                             .multilineTextAlignment(.trailing)
                             .lineLimit(1)
@@ -56,7 +62,7 @@ struct CheckoutOverviewView: View {
                         viewModel.onPhoneButtonTapped()
                     }
                     Divider()
-                    CheckoutOverviewDetailRow(title: "Ship to") {
+                    CheckoutOverviewDetailRow(title: "Ship to", showChevron: false) {
                         Text(viewModel.shippingAddress.formattedString)
                             .multilineTextAlignment(.trailing)
                             .lineLimit(3)
@@ -66,17 +72,22 @@ struct CheckoutOverviewView: View {
                         viewModel.onShippingAddressButtonTapped()
                     }
                     Divider()
-                    CheckoutOverviewDetailRow(title: "Payment") {
-                        Text("TODO")
-                            .multilineTextAlignment(.trailing)
-                            .lineLimit(3)
-                            .minimumScaleFactor(0.8)
+                    CheckoutOverviewDetailRow(title: "Payment", showChevron: false) {
+                        HStack {
+                            Text(viewModel.billingInfo.cardPreview)
+                            if let icon = viewModel.billingInfo.cardType.iconImage {
+                                Image(uiImage: icon)
+                                    .resizable()
+                                    .scaledToFit()
+                                    .frame(width: 32, height: 16)
+                            }
+                        }
                             .foregroundStyle(.primary)
                     } handler: {
                         viewModel.onPaymentDetailsButtonTapped()
                     }
                     Divider()
-                    CheckoutOverviewDetailRow(title: "Delivery") {
+                    CheckoutOverviewDetailRow(title: "Delivery", showChevron: false) {
                         Text(viewModel.shippingMethod.handle)
                             .multilineTextAlignment(.trailing)
                             .lineLimit(3)
@@ -86,10 +97,72 @@ struct CheckoutOverviewView: View {
                         viewModel.onShippingMethodButtonTapped()
                     }
                     Divider()
+                    CheckoutOverviewDetailRow(title: "Subtotal", showChevron: false) {
+                        Text(
+                            CurrencyHelpers.formatCentsToDollars(
+                                cents: viewModel.order.productCost,
+                                currencyCode: viewModel.checkout.product.currencyCode
+                            )
+                        )
+                            .multilineTextAlignment(.trailing)
+                            .lineLimit(3)
+                            .minimumScaleFactor(0.8)
+                            .foregroundStyle(.primary)
+                    } handler: {
+                        viewModel.onShippingMethodButtonTapped()
+                    }
+                    Divider()
+                    CheckoutOverviewDetailRow(title: "Tax", showChevron: false) {
+                        Text(
+                            CurrencyHelpers.formatCentsToDollars(
+                                cents: viewModel.order.taxCost,
+                                currencyCode: viewModel.checkout.product.currencyCode
+                            )
+                        )
+                            .multilineTextAlignment(.trailing)
+                            .lineLimit(3)
+                            .minimumScaleFactor(0.8)
+                            .foregroundStyle(.primary)
+                    } handler: {
+                        viewModel.onShippingMethodButtonTapped()
+                    }
+                    Divider()
+                    CheckoutOverviewDetailRow(title: "Total", showChevron: false) {
+                        Text(
+                            CurrencyHelpers.formatCentsToDollars(
+                                cents: viewModel.order.totalCost,
+                                currencyCode: viewModel.checkout.product.currencyCode
+                            )
+                        )
+                            .multilineTextAlignment(.trailing)
+                            .lineLimit(3)
+                            .minimumScaleFactor(0.8)
+                            .foregroundStyle(.primary)
+                    } handler: {
+                        viewModel.onShippingMethodButtonTapped()
+                    }
+                    Divider()
+                    Button(action: {
+                        if
+                            let url = URL(string: viewModel.checkout.merchantTermsUrl),
+                            UIApplication.shared.canOpenURL(url)
+                        {
+                            UIApplication.shared.open(url)
+                        }
+                    }) {
+                        Text("By continuing, I agree to the ") + Text("Terms of Sale").underline()
+                    }
+                    .font(.caption2)
+                    .foregroundStyle(.primary)
+                    .padding()
                 }
             }
             VStack(spacing: 16) {
-                PayButton(ctaText: "Pay with", paymentType: .creditCard) {
+                PayButton(
+                    ctaText: "Pay with",
+                    paymentType: .creditCard,
+                    isDisabled: !viewModel.state.isEnabled
+                ) {
                     viewModel.onPayButtonTapped()
                 }
                 Button(action: {
@@ -110,16 +183,14 @@ struct CheckoutOverviewView: View {
     let viewModel: CheckoutOverviewViewModel = .init(
         apiClient: .init(networkService: RealNetworkService(), environment: .staging),
         checkout: .mock(),
-        orderId: UUID().uuidString,
+        order: .mock(),
         email: "test@test.com",
         variant: .random(),
         phone: "8882223344",
         shippingAddress: Address.mock(),
         billingAddress: Address.mock(),
+        billingInfo: BillingInfo.mock(),
         shippingMethod: .random(),
-        subtotal: "$123.99",
-        tax: "$4.99",
-        delivery: "$9.99",
         tokenizedPayment: UUID().uuidString
     )
     return CheckoutOverviewView(viewModel: viewModel)

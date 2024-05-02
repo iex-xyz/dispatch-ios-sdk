@@ -38,13 +38,18 @@ struct ShippingAddressForm: View {
     
     @State var showCountryPicker: Bool = false
     @State var query: String = ""
+    @State var country: Country? = nil
     
     enum FocusField: Hashable {
         case firstName, lastName, address1, address2, city, state, zip, phone
     }
     var body: some View {
         VStack {
-            TextField("First Name", text: $viewModel.firstName)
+            CountryPickerControl(
+                viewModel: viewModel.countriesViewModel,
+                selectedCountry: $viewModel.country
+            )
+            TextField(viewModel.country.labels.firstName, text: $viewModel.firstName)
                 .textContentType(.givenName)
                 .focused($focusedField, equals: .firstName)
                 .textFieldStyle(
@@ -53,7 +58,7 @@ struct ShippingAddressForm: View {
                         isValid: !viewModel.isFirstNameDirty || viewModel.isFirstNameValid || focusedField == .firstName
                     )
                 )
-            TextField("Last Name", text: $viewModel.lastName)
+            TextField(viewModel.country.labels.lastName, text: $viewModel.lastName)
                 .focused($focusedField, equals: .lastName)
                 .textContentType(.familyName)
                 .textFieldStyle(
@@ -62,7 +67,7 @@ struct ShippingAddressForm: View {
                         isValid: !viewModel.isLastNameDirty || viewModel.isLastNameValid || focusedField == .lastName
                     )
                 )
-            TextField("Address Line 1", text: $viewModel.address1)
+            TextField(viewModel.country.labels.address1, text: $viewModel.address1)
                 .textContentType(.streetAddressLine1)
                 .focused($focusedField, equals: .address1)
                 .textFieldStyle(
@@ -101,38 +106,55 @@ struct ShippingAddressForm: View {
                 }
             }
             
-            TextField("Apartment, Suite, etc.", text: $viewModel.address2)
-                .textContentType(.streetAddressLine2)
-                .focused($focusedField, equals: .address2)
-                .textFieldStyle(
-                    ThemeTextFieldStyle(
-                        isFocused: focusedField == .address2,
-                        isValid: true
-                    )
-                )
-            TextField("City", text: $viewModel.city)
-                .textContentType(.addressCity)
-                .focused($focusedField, equals: .city)
-                .textFieldStyle(
-                    ThemeTextFieldStyle(
-                        isFocused: focusedField == .city,
-                        isValid: !viewModel.isCityDirty || viewModel.isCityValid || focusedField == .city
-                    )
-                )
-            HStack {
-                StatePickerControl(state: $viewModel.state)
-                TextField("ZIP", text: $viewModel.zip)
-                    .textContentType(.postalCode)
-                    .focused($focusedField, equals: .zip)
+            if viewModel.country.shouldShowField("address2") {
+                TextField(viewModel.country.labels.address2, text: $viewModel.address2)
+                    .textContentType(.streetAddressLine2)
+                    .focused($focusedField, equals: .address2)
                     .textFieldStyle(
                         ThemeTextFieldStyle(
-                            isFocused: focusedField == .zip,
-                            isValid: !viewModel.isZipDirty || viewModel.isZipValid || focusedField == .zip
+                            isFocused: focusedField == .address2,
+                            isValid: true
                         )
                     )
             }
+            if viewModel.country.shouldShowField("city") {
+                TextField(viewModel.country.labels.city, text: $viewModel.city)
+                    .textContentType(.addressCity)
+                    .focused($focusedField, equals: .city)
+                    .textFieldStyle(
+                        ThemeTextFieldStyle(
+                            isFocused: focusedField == .city,
+                            isValid: !viewModel.isCityDirty || viewModel.isCityValid || focusedField == .city
+                        )
+                    )
+            }
+            
+            if viewModel.country.shouldShowField("zone") || viewModel.country.shouldShowField("zip") {
+                HStack {
+                    if viewModel.country.shouldShowField("zone") || !viewModel.country.zones.isEmpty {
+                        ZonePickerControl(
+                            country: viewModel.country,
+                            zones: viewModel.country.zones,
+                            selectedZone: $viewModel.zone
+                        )
+                    }
+                    
+                    if viewModel.country.shouldShowField("zip") {
+                        TextField(viewModel.country.labels.postalCode, text: $viewModel.zip)
+                            .textContentType(.postalCode)
+                            .focused($focusedField, equals: .zip)
+                            .textFieldStyle(
+                                ThemeTextFieldStyle(
+                                    isFocused: focusedField == .zip,
+                                    isValid: !viewModel.isZipDirty || viewModel.isZipValid || focusedField == .zip
+                                )
+                            )
+                    }
+                }
+            }
             PhoneNumberTextField(
                 text: $viewModel.phone,
+                country: $viewModel.country,
                 isValid: !viewModel.isPhoneDirty || viewModel.isPhoneValid || focusedField == .phone,
                 isFocused: focusedField == .phone
             )
@@ -151,13 +173,35 @@ struct ShippingAddressForm: View {
                     case .address2:
                         focusedField = .address1
                     case .city:
-                        focusedField = .address2
+                        if viewModel.country.shouldShowField("address2") {
+                            focusedField = .address2
+                        } else {
+                            focusedField = .address1
+                        }
                     case .state:
                         focusedField = .city
                     case .zip:
-                        focusedField = .state
+                        if viewModel.country.shouldShowField("zone") {
+                            focusedField = .state
+                        } else if viewModel.country.shouldShowField("city") {
+                            focusedField = .city
+                        } else if viewModel.country.shouldShowField("address2") {
+                            focusedField = .address2
+                        } else {
+                            focusedField = .address1
+                        }
                     case .phone:
-                        focusedField = .zip
+                        if viewModel.country.shouldShowField("zip") {
+                            focusedField = .zip
+                        } else if viewModel.country.shouldShowField("zone") {
+                            focusedField = .state
+                        } else if viewModel.country.shouldShowField("city") {
+                            focusedField = .city
+                        } else if viewModel.country.shouldShowField("address2") {
+                            focusedField = .address2
+                        } else {
+                            focusedField = .address1
+                        }
                     case nil:
                         break
                     }
@@ -171,13 +215,41 @@ struct ShippingAddressForm: View {
                     case .lastName:
                         focusedField = .address1
                     case .address1:
-                        focusedField = .address2
+                        if viewModel.country.shouldShowField("address2") {
+                            focusedField = .address2
+                        } else if viewModel.country.shouldShowField("city") {
+                            focusedField = .city
+                        } else if viewModel.country.shouldShowField("zone") {
+                            focusedField = .state
+                        } else if viewModel.country.shouldShowField("zip") {
+                            focusedField = .zip
+                        } else {
+                            focusedField = .phone
+                        }
                     case .address2:
-                        focusedField = .city
+                        if viewModel.country.shouldShowField("city") {
+                            focusedField = .city
+                        } else if viewModel.country.shouldShowField("zone") {
+                            focusedField = .state
+                        } else if viewModel.country.shouldShowField("zip") {
+                            focusedField = .zip
+                        } else {
+                            focusedField = .phone
+                        }
                     case .city:
-                        focusedField = .state
+                        if viewModel.country.shouldShowField("zone") {
+                            focusedField = .state
+                        } else if viewModel.country.shouldShowField("zip") {
+                            focusedField = .zip
+                        } else {
+                            focusedField = .phone
+                        }
                     case .state:
-                        focusedField = .zip
+                        if viewModel.country.shouldShowField("zip") {
+                            focusedField = .zip
+                        } else {
+                            focusedField = .phone
+                        }
                     case .zip:
                         focusedField = .phone
                     case .phone:
@@ -185,7 +257,6 @@ struct ShippingAddressForm: View {
                     case nil:
                         break
                     }
-
                 }) {
                     Image(systemName: "chevron.down")
                 }
@@ -203,7 +274,7 @@ struct ShippingAddressForm: View {
             networkService: RealNetworkService(),
             environment: .staging
         ), 
-        orderId: UUID().uuidString
+        order: .mock()
     )
     @Preference(\.theme) var theme
     return ZStack {

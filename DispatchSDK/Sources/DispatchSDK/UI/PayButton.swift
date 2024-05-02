@@ -4,7 +4,7 @@ struct PayButton: View {
     @Preference(\.theme) var theme
     let ctaText: String
     let paymentType: PaymentType
-    @State var isDisabled: Bool = false
+    @State var isDisabled: Bool
     let onButtonTapped: () -> Void
 
     var body: some View {
@@ -35,6 +35,7 @@ struct PayButton: View {
             }
             .opacity(isDisabled ? 0.24 : 1)
         }
+        .disabled(isDisabled)
         .buttonStyle(
             PrimaryButtonStyle()
         )
@@ -48,16 +49,16 @@ struct PayButton: View {
             ForEach(["Pay with", "Continue with", "Donate with"], id: \.self) { cta in
                     VStack {
                         PayButton(ctaText: cta, paymentType: .applePay, isDisabled: true) {}
-                        PayButton(ctaText: cta, paymentType: .googlePay) {}
+                        PayButton(ctaText: cta, paymentType: .googlePay, isDisabled: false) {}
                         PayButton(ctaText: cta, paymentType: .creditCard, isDisabled: true) {}
-                        PayButton(ctaText: cta, paymentType: .paypal) {}
+                        PayButton(ctaText: cta, paymentType: .paypal, isDisabled: false) {}
                     }
                     
                     VStack {
                         PayButton(ctaText: cta, paymentType: .applePay, isDisabled: true) {}
                         PayButton(ctaText: cta, paymentType: .googlePay, isDisabled: true) {}
-                        PayButton(ctaText: cta, paymentType: .creditCard) {}
-                        PayButton(ctaText: cta, paymentType: .paypal) {}
+                        PayButton(ctaText: cta, paymentType: .creditCard, isDisabled: false) {}
+                        PayButton(ctaText: cta, paymentType: .paypal, isDisabled: false) {}
                     }
                     .environment(\.theme, .mock(mode: .dark))
             }

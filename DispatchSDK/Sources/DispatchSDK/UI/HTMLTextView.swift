@@ -1,87 +1,154 @@
 import SwiftUI
-import WebKit
 
-struct HTMLStringView: UIViewRepresentable {
-    let htmlContent: String
-
-    func makeUIView(context: Context) -> WKWebView {
-        let webView = WKWebView()
-        webView.scrollView.isScrollEnabled = false
-        
-        return webView
+struct HTMLLabel: UIViewRepresentable {
+    @Preference(\.theme) var theme
+    let htmlString: String
+    let bulletSpacing: CGFloat
+    
+    func makeUIView(context: Context) -> UILabel {
+        let label = UILabel()
+        label.numberOfLines = 0
+        label.lineBreakMode = .byWordWrapping
+        return label
     }
-
-    func updateUIView(_ uiView: WKWebView, context: Context) {
-        uiView.loadHTMLString(htmlContent, baseURL: nil)
+    
+    func updateUIView(_ uiView: UILabel, context: Context) {
+        let textColor: UIColor = theme.mode == .light ? .black : .white
+        let attributedString = htmlString.htmlAttributedString(textColor: textColor)
+        let modifiedAttributedString = attributedString.modifyBulletSpacing(spacing: bulletSpacing)
+        uiView.attributedText = modifiedAttributedString
     }
 }
-fileprivate let html = """
-<h1>Heading</h1>
-<p>paragraph with enough text for us to test what the alignment does on multiple linebreaks</p>
-<ul>
-    <li>paragraph</li>
-    <li>paragraph</li>
-    <li>paragraph</li>
-</ul>
-<h4>paragraph.</h4>
-"""
 
-struct TestHTMLText: View {
-    var body: some View {
-        if let nsAttributedString = try? NSMutableAttributedString(
-            data: Data(html.utf8),
+
+
+struct HTMLTextView: UIViewRepresentable {
+    @Preference(\.theme) var theme
+
+    let htmlString: String
+    let bulletSpacing: CGFloat
+//    let width: CGFloat
+
+    func makeUIView(context: Context) -> UITextView {
+        let textView = UITextView()
+        textView.isEditable = false
+        textView.isSelectable = true
+        textView.backgroundColor = .clear
+        textView.isScrollEnabled = true
+        textView.textContainerInset = .zero
+        textView.textContainer.lineFragmentPadding = 0
+        return textView
+    }
+    
+    func updateUIView(_ uiView: UITextView, context: Context) {
+        let textColor: UIColor = theme.mode == .light ? .black : .white
+        let attributedString = htmlString.htmlAttributedString(textColor: textColor)
+        let modifiedAttributedString = attributedString.modifyBulletSpacing(spacing: bulletSpacing)
+        uiView.attributedText = modifiedAttributedString
+
+        // Resize the UITextView based on its content size
+//        let contentSize = uiView.sizeThatFits(CGSize(width: width, height: CGFloat.greatestFiniteMagnitude))
+//        uiView.frame.size = contentSize
+//        uiView.invalidateIntrinsicContentSize()
+        // Set the frame size explicitly
+//        uiView.frame.size = CGSize(width: width, height: UIView.layoutFittingCompressedSize.height)
+//        uiView.sizeToFit()
+
+    }
+}
+
+extension UIColor {
+    var hexString: String {
+        var red: CGFloat = 0
+        var green: CGFloat = 0
+        var blue: CGFloat = 0
+        var alpha: CGFloat = 0
+        
+        getRed(&red, green: &green, blue: &blue, alpha: &alpha)
+        
+        let hexString = String(format: "#%02X%02X%02X", Int(red * 255), Int(green * 255), Int(blue * 255))
+        return hexString
+    }
+}
+
+fileprivate extension String {
+    func htmlAttributedString(textColor: UIColor) -> NSAttributedString {
+        let htmlTemplate = """
+        <!doctype html>
+        <html>
+          <head>
+            <style>
+              body {
+                font-family: -apple-system;
+                font-size: 14px;
+                color: \(textColor.hexString);
+              }
+              h1 { font-size: 28px; font-weight: bold; }
+              h2 { font-size: 22px; font-weight: medium; }
+              h3 { font-size: 20px; font-weight: medium; }
+            </style>
+          </head>
+          <body>
+            \(self)
+          </body>
+        </html>
+        """
+        
+        guard let data = htmlTemplate.data(using: .utf8) else {
+            return NSAttributedString()
+        }
+        
+        guard let attributedString = try? NSAttributedString(
+            data: data,
             options: [.documentType: NSAttributedString.DocumentType.html],
             documentAttributes: nil
-        ) {
-            let paragraphStyle = NSMutableParagraphStyle()
-            paragraphStyle.paragraphSpacingBefore = 1
-            paragraphStyle.paragraphSpacing = 2
-            
-
-            nsAttributedString.enumerateAttribute(
-                .paragraphStyle,
-                in: NSRange(location: 0, length: nsAttributedString.length),
-                options: []
-            )     { (paragraphStyle, range, _) in
-                guard let paragraphStyle = paragraphStyle as? NSParagraphStyle else { return }
-                let updatedStyle = NSMutableParagraphStyle()
-                updatedStyle.alignment = .right
-                updatedStyle.setParagraphStyle(paragraphStyle)
-                updatedStyle.paragraphSpacing = 5
-
-                // Here we can modify paragraphs. Also could add condition to update only paragraphs with lists.
-                updatedStyle.firstLineHeadIndent = 0
-                updatedStyle.headIndent = 20
-                
-                nsAttributedString.addAttribute(.paragraphStyle, value: updatedStyle, range: range)
-            }
-
-
-            if let attributedString = try? AttributedString(
-                nsAttributedString,
-                including: \.uiKit
-            ) {
-                return Text(attributedString)
-                    .foregroundStyle(.red)
-            } else {
-                return Text(html)
-                    .foregroundStyle(.green)
-            }
-        } else {
-            // fallback...
-            return Text(html)
-                .foregroundStyle(.blue)
+        ) else {
+            return NSAttributedString()
         }
+        
+        return attributedString
+    }
+}
+
+fileprivate extension NSAttributedString {
+    func modifyBulletSpacing(spacing: CGFloat, lineSpacing: CGFloat = 2) -> NSAttributedString {
+        let mutableAttributedString = NSMutableAttributedString(attributedString: self)
+        
+        let paragraphStyle = NSMutableParagraphStyle()
+        paragraphStyle.tabStops = [NSTextTab(textAlignment: .left, location: spacing)]
+        paragraphStyle.defaultTabInterval = spacing
+        paragraphStyle.firstLineHeadIndent = 0
+        paragraphStyle.headIndent = spacing
+        paragraphStyle.lineSpacing = lineSpacing
+
+        mutableAttributedString.addAttribute(
+            .paragraphStyle,
+            value: paragraphStyle,
+            range: NSRange(location: 0, length: length)
+        )
+        
+        return mutableAttributedString
     }
 }
 
 
-struct TestHTMLTextPreviews_Previews: PreviewProvider {
-    static var previews: some View {
-        VStack {
-            TestHTMLText()
-            TestHTMLText()
-//            HTMLStringView(htmlContent: html)
-        }
-    }
+#Preview {
+    let html = """
+    <h1>Heading</h1>
+    <p>paragraph with enough text for us to test what the alignment does on multiple linebreaks</p>
+    <ul>
+        <li>paragraph</li>
+        <li>paragraph</li>
+        <li>paragraph</li>
+    </ul>
+    <h4>paragraph.</h4>
+    """
+
+
+    return HTMLTextView(
+        htmlString: html,
+        bulletSpacing: 5
+//        width: 300
+    )
+    .padding()
 }

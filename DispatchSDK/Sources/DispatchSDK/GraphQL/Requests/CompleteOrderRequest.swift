@@ -1,7 +1,7 @@
 import Foundation
 
 struct CompleteOrderRequest: GraphQLRequest {
-    typealias Output = Response
+    typealias Output = InitiateOrder
     typealias Input = OrderInput
     
     struct Response: Codable {
@@ -23,6 +23,10 @@ struct CompleteOrderRequest: GraphQLRequest {
             ) {
                 id
                 status
+                totalCost
+                productCost
+                shippingCost
+                taxCost
           }
         }
         """

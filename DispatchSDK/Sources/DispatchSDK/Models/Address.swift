@@ -6,11 +6,13 @@ struct Address {
     let city: String
     let state: String
     let zip: String
+    let country: String
 }
 
 extension Address {
     var formattedString: String {
-        return [address1, address2, "\(city), \(state) \(zip)"]
+        let normalizedAddress2 = address2?.isEmpty == true ? nil : address2
+        return [address1, normalizedAddress2, "\(city), \(state) \(zip)"]
             .compactMap { $0 }
             .joined(separator: "\n")
     }
@@ -29,7 +31,8 @@ extension Address {
             address2: address2,
             city: city,
             state: state,
-            zip: zip
+            zip: zip,
+            country: "US"
         )
     }
 }

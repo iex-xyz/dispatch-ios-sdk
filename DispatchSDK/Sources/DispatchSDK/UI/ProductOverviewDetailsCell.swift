@@ -2,28 +2,22 @@ import SwiftUI
 
 internal struct ProductOverviewDetailsCell: View {
     @Preference(\.theme) var theme
-    private static var priceFormatter: NumberFormatter = {
-        let formatter = NumberFormatter()
-        formatter.numberStyle = .currency
-        formatter.locale = Locale(identifier: "en_US")
-        return formatter
-    }()
 
     let product: Product
     let basePrice: Int
     let baseComparePrice: Int?
+    let expandHandler: () -> Void
 
-    init(product: Product, basePrice: Int, baseComparePrice: Int? = nil) {
+    init(
+        product: Product,
+        basePrice: Int,
+        baseComparePrice: Int? = nil,
+        expandHandler: @escaping () -> Void
+    ) {
         self.product = product
-        Self.priceFormatter.currencyCode = product.currencyCode
         self.basePrice = basePrice
         self.baseComparePrice = baseComparePrice
-    }
-    
-    func formattedPrice(_ price: Int) -> String {
-        Self.priceFormatter.currencyCode = product.currencyCode
-        let priceValue: NSNumber = .init(floatLiteral: Double(price) / 100)
-        return Self.priceFormatter.string(from: priceValue) ?? "--"
+        self.expandHandler = expandHandler
     }
 
     var body: some View {
@@ -33,25 +27,31 @@ internal struct ProductOverviewDetailsCell: View {
                     .foregroundStyle(.primary)
                     .font(.title3.bold())
                 if let baseComparePrice {
-                    PriceLabel(basePrice: formattedPrice(baseComparePrice), currentPrice: formattedPrice(basePrice))
+                    PriceLabel(
+                        basePrice: CurrencyHelpers.formatCentsToDollars(
+                            cents: baseComparePrice,
+                            currencyCode: product.currencyCode
+                        ),
+                        currentPrice: CurrencyHelpers.formatCentsToDollars(
+                            cents: basePrice,
+                            currencyCode: product.currencyCode
+                        )
+                    )
                 } else {
-                    PriceLabel(basePrice: formattedPrice(basePrice), currentPrice: nil)
+                    PriceLabel(
+                        basePrice: CurrencyHelpers.formatCentsToDollars(
+                            cents: basePrice,
+                            currencyCode: product.currencyCode
+                        ),
+                        currentPrice: nil
+                    )
                 }
             }
 
-            Text(product.description)
-//            
-//            Button(action: {
-//                
-//            }) {
-//                HStack {
-//                    Text("Shop on Nike.com")
-//                    Image(systemName: "arrow.right")
-//                    Spacer()
-//                }
-//                .font(.footnote.bold())
-//            }
-//            .buttonStyle(SecondaryButtonStyle())
+            ExpandableText(
+                text: product.description,
+                expandHandler: expandHandler
+            )
         }
         .colorScheme(theme.colorScheme)
     }
@@ -67,7 +67,8 @@ internal struct ProductOverviewDetailsCell: View {
         ProductOverviewDetailsCell(
             product: product,
             basePrice: 1600,
-            baseComparePrice: 3200
+            baseComparePrice: 3200,
+            expandHandler: {}
         )
         //            VariantPreviewButton(theme: theme, title: "Select Color", selectedValue: "M 9 / W 10.5")
         //            VariantPreviewButton(theme: theme, title: "Select Size", selectedValue: "M 9 / W 10.5")

@@ -10,16 +10,6 @@ struct CheckoutView: View {
 
     var body: some View {
         VStack {
-            if let domain = viewModel.checkout?.product.pdpDomain {
-                CheckoutHeader(
-                    logo: nil,
-                    domain: domain,
-                    onLockButtonTapped: {
-                        viewModel.onLockButtonTapped()
-                    }, onCloseButtonTapped: {
-                        viewModel.onCloseButtonTapped()
-                    })
-            }
             ScrollView {
                 VStack {
                     MediaCarouselView(viewModel: mediaViewModel)
@@ -29,8 +19,9 @@ struct CheckoutView: View {
                             ProductOverviewDetailsCell(
                                 product: productViewModel.product,
                                 basePrice: viewModel.selectedVariation?.price ?? productViewModel.product.basePrice,
-                                baseComparePrice: viewModel.selectedVariation?.compareAtPrice ?? productViewModel.product.baseCompareAtPrice
-                            )
+                                baseComparePrice: viewModel.selectedVariation?.compareAtPrice ?? productViewModel.product.baseCompareAtPrice) {
+                                    viewModel.onMoreProductInfoButtonTapped()
+                                }
                             if
                                 let checkout = viewModel.checkout,
                                 let selectedVariant = viewModel.selectedVariation,
@@ -69,7 +60,11 @@ struct CheckoutView: View {
                         )
                         .frame(minWidth: 120)
                     }
-                    PayButton(ctaText: "Buy with", paymentType: viewModel.selectedPaymentMethod) {
+                    PayButton(
+                        ctaText: "Buy with",
+                        paymentType: viewModel.selectedPaymentMethod,
+                        isDisabled: false
+                    ) {
                         viewModel.onPaymentCTATapped()
                     }
                 }

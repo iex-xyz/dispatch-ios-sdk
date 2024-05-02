@@ -12,6 +12,7 @@ struct InitiateOrderRequest: GraphQLRequest {
         let email: String
         let productId: String
         let variantId: String?
+        let quantity: Int
     }
 
     var operationString: String {
@@ -19,7 +20,8 @@ struct InitiateOrderRequest: GraphQLRequest {
         query {
             initiateOrder(
               emailAddress: \"\(input.email)\",
-              productId: \"\(input.productId)\"
+              productId: \"\(input.productId)\",
+              quantity: \(input.quantity),
         """
         
         if let variantId = input.variantId {
@@ -34,6 +36,10 @@ variantId: \"\(variantId)\"
             ) {
                 id
                 status
+                totalCost
+                productCost
+                shippingCost
+                taxCost
           }
         }
         """
@@ -44,7 +50,7 @@ variantId: \"\(variantId)\"
 
     var input: Input
 
-    init(email: String, productId: String, variantId: String?) {
-        self.input = .init(email: email, productId: productId, variantId: variantId)
+    init(email: String, productId: String, variantId: String?, quantity: Int) {
+        self.input = .init(email: email, productId: productId, variantId: variantId, quantity: quantity)
     }
 }
