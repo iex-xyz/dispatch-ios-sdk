@@ -16,6 +16,16 @@ class InitiateCreditCardCheckoutViewModel: ObservableObject {
                 return false
             }
         }
+        
+        var isDisabled: Bool {
+            switch self {
+            case .loading, .loaded:
+                return true
+            case .error, .idle:
+                return false
+            }
+        }
+
     }
 
     let checkout: Checkout

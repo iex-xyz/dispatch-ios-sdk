@@ -59,6 +59,7 @@ struct ContactInformationForm: View {
             }) {
                 Text("Continue")
             }
+            .disabled(viewModel.orderState.isDisabled)
             .buttonStyle(
                 PrimaryButtonStyle(
                     isLoading: viewModel.orderState.shouldShowSpinner
