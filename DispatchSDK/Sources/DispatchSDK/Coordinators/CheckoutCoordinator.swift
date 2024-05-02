@@ -140,6 +140,7 @@ class CheckoutCoordinator: BaseCoordinator {
         )
         
         viewController.navigationItem.rightBarButtonItem = .init(customView: rightBarButtonController.view)
+        // TODO: Once Remote SVG support is added, we should render the logo in the top left for the main CheckoutView
 //        viewController.navigationItem.leftBarButtonItem = .init(customView: leftBarButtonController.view)
         viewController.navigationItem.titleView = navigationTitleController.view
         
@@ -240,7 +241,7 @@ class CheckoutCoordinator: BaseCoordinator {
         )
         
         if let sheet = viewController.sheetPresentationController {
-            sheet.detents = [.large()]
+            sheet.detents = [.medium(), .large()]
             sheet.preferredCornerRadius = 16
             sheet.prefersGrabberVisible = true
             sheet.prefersScrollingExpandsWhenScrolledToEdge = true
