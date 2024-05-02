@@ -88,7 +88,7 @@ struct CheckoutOverviewView: View {
                     }
                     Divider()
                     CheckoutOverviewDetailRow(title: "Delivery", showChevron: false) {
-                        Text(viewModel.shippingMethod.handle)
+                        Text(viewModel.shippingMethod.title)
                             .multilineTextAlignment(.trailing)
                             .lineLimit(3)
                             .minimumScaleFactor(0.8)

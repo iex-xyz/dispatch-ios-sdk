@@ -250,26 +250,38 @@ class CreditCardCoordinator: BaseCoordinator {
         viewModel
             ._onOrderComplete
             .sink { [weak self] order in
-                self?.navigateToOrderCompleteCoordinator(order: order)
+                self?.navigateToOrderCompleteCoordinator(
+                    order: order,
+                    shippingAddress: shippingAddress,
+                    billingInfo: billingInfo
+                )
             }
             .store(in: &cancellables)
         
         router.push(viewController)
     }
     
-    // TODO:
-    // Implement order success screen
-    
     private func showTermsOfSale(for checkout: Checkout) {
-        
+        guard
+            let url = URL(string: checkout.merchantTermsUrl),
+            UIApplication.shared.canOpenURL(url)
+        else {
+            return
+        }
+            
+        UIApplication.shared.open(url)
     }
     
-    private func navigateToOrderCompleteCoordinator(order: InitiateOrder) {
+    private func navigateToOrderCompleteCoordinator(
+        order: InitiateOrder,
+        shippingAddress: Address,
+        billingInfo: BillingInfo
+    ) {
         let viewModel = CheckoutSuccessViewModel(
             checkout: viewModel.checkout,
             orderNumber: order.id,
-            shippingAddress: "mock address",
-            payment: "4242 [MOCK]"
+            shippingAddress: shippingAddress,
+            billingInfo: billingInfo
         )
         let coordinator = CheckoutSuccessCoordinator(
             router: router,

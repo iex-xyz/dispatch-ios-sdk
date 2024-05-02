@@ -129,14 +129,25 @@ struct CheckoutSuccessView: View {
                     } handler: {}
                     Divider()
                     CheckoutOverviewDetailRow(title: "Shipping Address", showChevron: false) {
-                        Text(viewModel.shippingAddress)
+                        Text(viewModel.shippingAddress.formattedString)
                             .multilineTextAlignment(.leading)
                     } handler: {}
                     Divider()
-                    CheckoutOverviewDetailRow(title: "Payment", showChevron: false) {
-                        Text(viewModel.payment)
-                    } handler: {}
-                    Divider()
+                    if let billingInfo = viewModel.billingInfo {
+                        CheckoutOverviewDetailRow(title: "Payment", showChevron: false) {
+                            HStack {
+                                Text(billingInfo.cardPreview)
+                                if let icon = billingInfo.cardType.iconImage {
+                                    Image(uiImage: icon)
+                                        .resizable()
+                                        .scaledToFit()
+                                        .frame(width: 32, height: 16)
+                                }
+                            }
+                            .foregroundStyle(.primary)
+                        } handler: {}
+                        Divider()
+                    }
                 }
             }
             
