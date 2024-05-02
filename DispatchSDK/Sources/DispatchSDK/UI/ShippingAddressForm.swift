@@ -271,7 +271,7 @@ struct ShippingAddressForm: View {
     let viewModel: ShippingAddressViewModel = .init(
         addressLookupService: MockAddressLookupService(),
         apiClient: .init(
-            networkService: RealNetworkService(),
+            networkService: PreviewNetworkService(),
             environment: .staging
         ), 
         order: .mock()

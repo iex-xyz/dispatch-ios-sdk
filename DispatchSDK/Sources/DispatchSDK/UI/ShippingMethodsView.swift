@@ -44,7 +44,7 @@ struct ShippingMethodsView: View {
 
 #Preview {
     let viewModel: ShippingMethodViewModel = ShippingMethodViewModel(
-        apiClient: GraphQLClient(networkService: RealNetworkService(), environment: .staging),
+        apiClient: GraphQLClient(networkService: PreviewNetworkService(), environment: .staging),
         orderId: "123"
     )
     viewModel.state = .loaded([.random(), .random()])

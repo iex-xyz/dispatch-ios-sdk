@@ -198,8 +198,9 @@ class CheckoutCoordinator: BaseCoordinator {
     
     private func showPaymentOptionsPicker(for checkout: Checkout) {
         let viewController = UIHostingController(
-            rootView: PaymentOptionsPickerView(onPaymentMethodSelected: { [weak self] paymentType in
-                self?.viewModel.selectedPaymentMethod = paymentType
+            rootView: PaymentOptionsPickerView(paymentMethods: viewModel.enabledPaymentMethods,
+                                               onPaymentMethodSelected: { [weak self] paymentMethod in
+                self?.viewModel.selectedPaymentMethod = paymentMethod
             })
         )
         if let sheet = viewController.sheetPresentationController {

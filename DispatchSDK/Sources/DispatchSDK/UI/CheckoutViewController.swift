@@ -62,7 +62,7 @@ struct CheckoutView: View {
                     }
                     PayButton(
                         ctaText: "Buy with",
-                        paymentType: viewModel.selectedPaymentMethod,
+                        paymentMethod: viewModel.selectedPaymentMethod,
                         isDisabled: false
                     ) {
                         viewModel.onPaymentCTATapped()

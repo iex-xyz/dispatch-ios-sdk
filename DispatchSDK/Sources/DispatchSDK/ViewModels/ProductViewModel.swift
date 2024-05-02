@@ -21,15 +21,15 @@ internal class ProductViewModel: ObservableObject {
         return Int(quantityAvailable)
     }
 
-    private let apiClient: GraphQLClient = .init(
-        networkService: RealNetworkService(),
-        environment: .staging
-    )
+    private let apiClient: GraphQLClient
     
     init(
-        product: Product
+        product: Product,
+        apiClient: GraphQLClient
     ) {
         self.product = product
+        self.apiClient = apiClient
+
         product.attributes?.values.forEach { attribute in
             if selectedVariantMap[attribute.id] == nil {
                 selectedVariantMap[attribute.id] = AttributeViewModel(

@@ -3,7 +3,7 @@ import SwiftUI
 struct PayButton: View {
     @Preference(\.theme) var theme
     let ctaText: String
-    let paymentType: PaymentType
+    let paymentMethod: PaymentMethods
     @State var isDisabled: Bool
     let onButtonTapped: () -> Void
 
@@ -14,7 +14,7 @@ struct PayButton: View {
             HStack(spacing: 4) {
                 Text(ctaText)
                     .lineLimit(1)
-                switch (paymentType, theme.mode) {
+                switch (paymentMethod, theme.mode) {
                 case (.applePay, .light):
                     Icons.Payment.applePayLight
                 case (.applePay, .dark):
@@ -27,9 +27,9 @@ struct PayButton: View {
                     Icons.Payment.googlePayLight
                 case (.googlePay, .dark):
                     Icons.Payment.googlePayDark
-                case (.paypal, .light):
+                case (.stripeLink, .light):
                     Icons.Payment.cardDark
-                case (.paypal, .dark):
+                case (.stripeLink, .dark):
                     Icons.Payment.cardDark
                 }
             }
@@ -48,17 +48,17 @@ struct PayButton: View {
         VStack {
             ForEach(["Pay with", "Continue with", "Donate with"], id: \.self) { cta in
                     VStack {
-                        PayButton(ctaText: cta, paymentType: .applePay, isDisabled: true) {}
-                        PayButton(ctaText: cta, paymentType: .googlePay, isDisabled: false) {}
-                        PayButton(ctaText: cta, paymentType: .creditCard, isDisabled: true) {}
-                        PayButton(ctaText: cta, paymentType: .paypal, isDisabled: false) {}
+                        PayButton(ctaText: cta, paymentMethod: .applePay, isDisabled: true) {}
+                        PayButton(ctaText: cta, paymentMethod: .googlePay, isDisabled: false) {}
+                        PayButton(ctaText: cta, paymentMethod: .creditCard, isDisabled: true) {}
+                        PayButton(ctaText: cta, paymentMethod: .stripeLink, isDisabled: false) {}
                     }
                     
                     VStack {
-                        PayButton(ctaText: cta, paymentType: .applePay, isDisabled: true) {}
-                        PayButton(ctaText: cta, paymentType: .googlePay, isDisabled: true) {}
-                        PayButton(ctaText: cta, paymentType: .creditCard, isDisabled: false) {}
-                        PayButton(ctaText: cta, paymentType: .paypal, isDisabled: false) {}
+                        PayButton(ctaText: cta, paymentMethod: .applePay, isDisabled: true) {}
+                        PayButton(ctaText: cta, paymentMethod: .googlePay, isDisabled: true) {}
+                        PayButton(ctaText: cta, paymentMethod: .creditCard, isDisabled: false) {}
+                        PayButton(ctaText: cta, paymentMethod: .stripeLink, isDisabled: false) {}
                     }
                     .environment(\.theme, .mock(mode: .dark))
             }

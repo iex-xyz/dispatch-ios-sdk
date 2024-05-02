@@ -86,7 +86,7 @@ struct ContactInformationForm_Preview: PreviewProvider {
                     variant: nil, 
                     quantity: 1,
                     apiClient: GraphQLClient(
-                        networkService: RealNetworkService(),
+                        networkService: PreviewNetworkService(),
                         environment: .staging
                     )
                 )

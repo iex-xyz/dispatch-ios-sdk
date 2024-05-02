@@ -160,7 +160,7 @@ struct CheckoutOverviewView: View {
             VStack(spacing: 16) {
                 PayButton(
                     ctaText: "Pay with",
-                    paymentType: .creditCard,
+                    paymentMethod: .creditCard,
                     isDisabled: !viewModel.state.isEnabled
                 ) {
                     viewModel.onPayButtonTapped()
@@ -181,7 +181,7 @@ struct CheckoutOverviewView: View {
 
 #Preview {
     let viewModel: CheckoutOverviewViewModel = .init(
-        apiClient: .init(networkService: RealNetworkService(), environment: .staging),
+        apiClient: .init(networkService: PreviewNetworkService(), environment: .staging),
         checkout: .mock(),
         order: .mock(),
         email: "test@test.com",

@@ -10,8 +10,19 @@ protocol NetworkService {
 }
 
 class RealNetworkService: NetworkService {
+    
+    private let applicationId: String
+    
+    init(applicationId: String) {
+        self.applicationId = applicationId
+    }
+    
     func performRequest(_ urlRequest: URLRequest) async throws -> Data {
-        let (data, response) = try await URLSession.shared.data(for: urlRequest)
+        var request = urlRequest
+        request.setValue(applicationId, forHTTPHeaderField: "x-application-id")
+        request.setValue("IOS", forHTTPHeaderField: "x-application-context")
+
+        let (data, response) = try await URLSession.shared.data(for: request)
         
         guard let httpResponse = response as? HTTPURLResponse else {
             throw NetworkError.invalidResponse
@@ -24,25 +35,10 @@ class RealNetworkService: NetworkService {
         return data
     }
 }
-//
-//class MockNetworkService: NetworkService {
-//    func performRequest(_ urlRequest: URLRequest) async throws -> Data {
-//        switch urlRequest.url?.absoluteString {
-//        case "https://checkout-api-staging.dispatch.co/graphql":
-//        default:
-//            break
-//        }
-//
-//        let (data, response) = try await URLSession.shared.data(for: urlRequest)
-//        
-//        guard let httpResponse = response as? HTTPURLResponse else {
-//            throw NetworkError.invalidResponse
-//        }
-//        
-//        guard (200...299).contains(httpResponse.statusCode) else {
-//            throw NetworkError.serverError(statusCode: httpResponse.statusCode)
-//        }
-//        
-//        return data
-//    }
-//}
+
+// TODO: Add mock data support
+class PreviewNetworkService: NetworkService {
+    func performRequest(_ urlRequest: URLRequest) async throws -> Data {
+        throw NetworkError.serverError(statusCode: 400)
+    }
+}

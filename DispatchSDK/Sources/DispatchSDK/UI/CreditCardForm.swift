@@ -107,7 +107,7 @@ struct CreditCardForm: View {
 #Preview {
     let viewModel: CreditCardInputViewModel = .init(
         addressLookupService: MockAddressLookupService(),
-        apiClient: GraphQLClient(networkService: RealNetworkService(), environment: .staging),
+        apiClient: GraphQLClient(networkService: PreviewNetworkService(), environment: .staging),
         order: .mock()
     )
     @Preference(\.theme) var theme

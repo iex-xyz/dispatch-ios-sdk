@@ -14,7 +14,7 @@ internal class CheckoutViewModel: ObservableObject {
     let _onSecureCheckoutButtonTapped = PassthroughSubject<Checkout, Never>()
     let _onAttributeTapped = PassthroughSubject<(Attribute, [Variation], Variation, Int), Never>()
     let _onLockButtonTapped = PassthroughSubject<Checkout, Never>()
-    let _onPaymentCTATapped = PassthroughSubject<(Checkout, PaymentType), Never>()
+    let _onPaymentCTATapped = PassthroughSubject<(Checkout, PaymentMethods), Never>()
     let _onCloseButtonTapped = PassthroughSubject<Void, Never>()
     let _onMoreProductInfoButtonTapped = PassthroughSubject<Checkout, Never>()
 
@@ -25,7 +25,10 @@ internal class CheckoutViewModel: ObservableObject {
     @Published var checkout: Checkout? = nil {
         didSet {
             if productViewModel == nil, let product = checkout?.product {
-                self.productViewModel = ProductViewModel(product: product)
+                self.productViewModel = ProductViewModel(
+                    product: product,
+                    apiClient: apiClient
+                )
             }
             guard let checkout else { return }
             self.selectedVariation = checkout.product.variations.first(where: {
@@ -51,7 +54,13 @@ internal class CheckoutViewModel: ObservableObject {
     @Published var selectedVariantMap: [String: AttributeViewModel] = [:]
     @Published var selectedAt: Attribute? = nil
     @Published var selectedVariation: Variation? = nil
-    @Published var selectedPaymentMethod: PaymentType = .creditCard
+    @Published var selectedPaymentMethod: PaymentMethods = .creditCard
+    @Published var enabledPaymentMethods: [PaymentMethods] = []
+    @Published var paymentConfiguration: PaymentConfiguration? = nil {
+        didSet {
+            self.selectedPaymentMethod = paymentConfiguration?.applicationPaymentMethods.first ?? PaymentMethods.creditCard
+        }
+    }
 
     @Published var currentQuantity: Int = 1
     
@@ -70,7 +79,7 @@ internal class CheckoutViewModel: ObservableObject {
     }
 
     private let apiClient: GraphQLClient = .init(
-        networkService: RealNetworkService(),
+        networkService: PreviewNetworkService(),
         environment: .staging
     )
     
@@ -132,7 +141,7 @@ internal class CheckoutViewModel: ObservableObject {
     
     private func updateCheckout(_ checkout: Checkout) {
         self.checkout = checkout
-        self.productViewModel = .init(product: checkout.product)
+        self.productViewModel = .init(product: checkout.product, apiClient: apiClient)
     }
     
     func onMoreProductInfoButtonTapped() {
@@ -165,10 +174,20 @@ internal class CheckoutViewModel: ObservableObject {
             do {
                 let request = GetDistributionRequest(id: id)
                 let distribution = try await apiClient.performOperation(request)
-                
+
                 switch distribution {
                 case .checkout(let checkout):
+                    
+                    let paymentMethodsRequest = GetMerchantPaymentMethodsRequest(
+                        merchantId: checkout.merchantId
+                    )
+                    
+                    let paymentConfiguration = try await apiClient.performOperation(paymentMethodsRequest)
+
                     DispatchQueue.main.async {
+                        // TODO: Do we use applicationPaymentMethods or merchantPaymentMethods here?
+                        self.enabledPaymentMethods = paymentConfiguration.applicationPaymentMethods
+                        self.paymentConfiguration = paymentConfiguration
                         self.updateCheckout(checkout)
                     }
                     print("Checkout: \(checkout.product)")

@@ -97,17 +97,17 @@ struct CheckoutSuccessView: View {
         VStack {
             // TODO: How are we doing headers? UINavigationBar?
             if let imageUrlString = viewModel.checkout.product.baseImages.first, let url = URL(string: imageUrlString) {
-                AsyncImage(url: url, content: { image in
-                    image
+                AsyncImage(url: url, content: { content in
+                    content
                         .resizable()
                         .scaledToFill()
                 }, placeholder: {
                     ProgressView()
                         .foregroundStyle(.primary)
                 })
-                    .frame(maxWidth: .infinity)
-                    .frame(height: 200)
-                    .clipShape(Rectangle())
+                .frame(maxWidth: .infinity)
+                .frame(height: 200)
+                .clipShape(Rectangle())
             }
             
             ScrollView {
