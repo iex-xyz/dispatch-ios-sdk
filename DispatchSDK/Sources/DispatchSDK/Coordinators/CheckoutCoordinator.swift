@@ -23,7 +23,7 @@ class CheckoutCoordinator: BaseCoordinator {
     let apiClient: GraphQLClient
     let checkoutId: String
     var shouldDismissFlow: (() -> Void)?
-    lazy private(set) var viewModel: CheckoutViewModel = .init(id: checkoutId)
+    lazy private(set) var viewModel: CheckoutViewModel = .init(id: checkoutId, apiClient: apiClient)
     
     
     private lazy var rightBarButtonController: UIHostingController<CloseButton> = {

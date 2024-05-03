@@ -54,11 +54,25 @@ internal class CheckoutViewModel: ObservableObject {
     @Published var selectedVariantMap: [String: AttributeViewModel] = [:]
     @Published var selectedAt: Attribute? = nil
     @Published var selectedVariation: Variation? = nil
+
     @Published var selectedPaymentMethod: PaymentMethods = .creditCard
     @Published var enabledPaymentMethods: [PaymentMethods] = []
     @Published var paymentConfiguration: PaymentConfiguration? = nil {
         didSet {
-            self.selectedPaymentMethod = paymentConfiguration?.applicationPaymentMethods.first ?? PaymentMethods.creditCard
+            var paymentMethods: [PaymentMethods] = []
+            if paymentConfiguration?.applePayEnabled == true {
+                paymentMethods.append(.applePay)
+            }
+            
+            if paymentConfiguration?.cardEnabled == true {
+                paymentMethods.append(.creditCard)
+            }
+            self.enabledPaymentMethods = paymentMethods
+            
+            // TODO: We should make selectedPaymentMethod optional but will need to rework some things
+            if !enabledPaymentMethods.contains(selectedPaymentMethod) {
+                selectedPaymentMethod = enabledPaymentMethods.first ?? .creditCard
+            }
         }
     }
 
@@ -78,13 +92,11 @@ internal class CheckoutViewModel: ObservableObject {
         return product.baseQuantity
     }
 
-    private let apiClient: GraphQLClient = .init(
-        networkService: PreviewNetworkService(),
-        environment: .staging
-    )
+    private let apiClient: GraphQLClient
     
-    init(id: String) {
+    init(id: String, apiClient: GraphQLClient) {
         self.id = id
+        self.apiClient = apiClient
 
         Task {
             await fetchDistribution(for: id)
@@ -185,16 +197,13 @@ internal class CheckoutViewModel: ObservableObject {
                     let paymentConfiguration = try await apiClient.performOperation(paymentMethodsRequest)
 
                     DispatchQueue.main.async {
-                        // TODO: Do we use applicationPaymentMethods or merchantPaymentMethods here?
-                        self.enabledPaymentMethods = paymentConfiguration.applicationPaymentMethods
                         self.paymentConfiguration = paymentConfiguration
                         self.updateCheckout(checkout)
                     }
-                    print("Checkout: \(checkout.product)")
                 case let .content(content):
-                    print("Content: \(content)")
+                    break
                 case let .leadgen(leadgen):
-                    print("Leadgen: \(leadgen)")
+                    break
                 }
                 
             } catch {
