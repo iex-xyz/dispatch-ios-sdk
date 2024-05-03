@@ -25,6 +25,19 @@ class InitiateCreditCardCheckoutViewModel: ObservableObject {
                 return false
             }
         }
+        
+        var errorMessage: String? {
+            switch self {
+            case let .error(error):
+                if let error = error as? GraphQLError {
+                    return error.description
+                } else {
+                    return "Something went wrong"
+                }
+            default:
+                return nil
+            }
+        }
 
     }
 
@@ -37,6 +50,8 @@ class InitiateCreditCardCheckoutViewModel: ObservableObject {
     
     @Published var isEmailDirty: Bool = false
     @Published var isEmailValid: Bool = false
+    
+    @Published var showError: Bool = false
     
     let quantity: Int
 
@@ -101,12 +116,18 @@ class InitiateCreditCardCheckoutViewModel: ObservableObject {
                     quantity: quantity
                 )
                 let result = try await apiClient.performOperation(request)
-
+                
                 DispatchQueue.main.async {
                     self.orderState = .loaded(result)
                     self._onOrderInitiated.send((result, self.email))
                 }
-
+                
+            } catch let error as GraphQLError {
+                DispatchQueue.main.async {
+                    print("[ERROR] Unable to initiate order: \(error)")
+                    self.orderState = .error(error)
+                    self.showError = true
+                }
             } catch {
                 DispatchQueue.main.async {
                     print("[ERROR] Unable to initiate order: \(error)")

@@ -10,7 +10,8 @@ public struct GraphQLResult<T: Decodable>: Decodable {
     }
     
     public struct Error: Decodable {
-        public let message: String
+        public let errorCode: Int
+        public let errorMessage: String
     }
     
     public init(from decoder: Decoder) throws {
@@ -23,7 +24,7 @@ public struct GraphQLResult<T: Decodable>: Decodable {
         
         let errors = try container.decodeIfPresent([Error].self, forKey: .errors)
         if let errors = errors {
-            errorMessages.append(contentsOf: errors.map { $0.message })
+            errorMessages.append(contentsOf: errors.map { $0.errorMessage })
         }
         
         self.errorMessages = errorMessages

@@ -1,6 +1,6 @@
 import Foundation
 
-struct InitiateOrder: Codable {
+struct InitiateOrder: Codable, Equatable {
     let id: String
     let status: OrderStatus
     let totalCost: Int

@@ -12,6 +12,14 @@ struct AnyEncodable: Encodable {
     }
 }
 
+struct GraphQLError: Error {
+    var description: String {
+        messages.joined(separator: "\n")
+    }
+    let messages: [String]
+    
+}
+
 protocol GraphQLRequest {
     associatedtype Output: Decodable
     associatedtype Input: Encodable
@@ -29,8 +37,7 @@ extension GraphQLRequest {
         if let object = result.object {
             return object
         } else {
-            let errorDescription = result.errorMessages.joined(separator: "\n")
-            throw NSError(domain: "GraphQL Error", code: 1, userInfo: [NSLocalizedDescriptionKey: errorDescription])
+            throw GraphQLError(messages: result.errorMessages)
         }
     }
 

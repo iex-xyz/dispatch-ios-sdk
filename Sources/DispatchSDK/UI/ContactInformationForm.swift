@@ -7,6 +7,8 @@ struct ContactInformationForm: View {
     @FocusState var isFocused: Bool
     @ObservedObject var viewModel: InitiateCreditCardCheckoutViewModel
     
+    @State private var showError: Bool = false
+    
     init(viewModel: InitiateCreditCardCheckoutViewModel) {
         self.viewModel = viewModel
     }
@@ -69,6 +71,16 @@ struct ContactInformationForm: View {
         .padding()
         .background(theme.backgroundColor)
         .colorScheme(theme.colorScheme)
+        .alert(isPresented: $viewModel.showError) {
+            Alert(
+                title: Text("Error"),
+                message: Text(viewModel.orderState.errorMessage ?? ""),
+                dismissButton: .default(Text("Okay")) {
+                    viewModel.orderState = .idle
+                    viewModel.showError = false
+                }
+            )
+        }
     }
 }
 
