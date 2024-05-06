@@ -40,12 +40,32 @@ struct ContentView: View {
                     Button(action: {
                         handleItemTapped(.testYetiCheckout)
                     }) {
-                        Text("Yeti")
+                        Text("Yeti Cooler")
+                    }
+                    Button(action: {
+                        handleItemTapped(.testYetiMugCheckout)
+                    }) {
+                        Text("Yeti Mug")
                     }
                     Button(action: {
                         handleItemTapped(.testMysteryCheckout)
                     }) {
                         Text("Mystery Box")
+                    }
+                    Button(action: {
+                        handleItemTapped(.testTidePods)
+                    }) {
+                        Text("Tide Pods")
+                    }
+                    Button(action: {
+                        handleItemTapped(.testNanoX)
+                    }) {
+                        Text("Ledger Nano X")
+                    }
+                    Button(action: {
+                        handleItemTapped(.testFaitesUnDonPour)
+                    }) {
+                        Text("Faites un don pour")
                     }
                 }
                 

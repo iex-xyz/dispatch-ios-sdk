@@ -17,7 +17,7 @@ struct ExpirationDateTextField: UIViewRepresentable {
         textField.layer.borderColor = Colors.borderGray.cgColor
         textField.backgroundColor = UIColor(Colors.controlBackground)
         switch theme.inputStyle {
-        case .round:
+        case .round, .rounded:
             textField.layer.cornerRadius = 24
         case .sharp:
             textField.layer.cornerRadius = 0

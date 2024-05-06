@@ -17,8 +17,8 @@ struct PriceLabel: View {
             } else {
                 Text(basePrice)
                     .foregroundStyle(.primary)
-
             }
+            Spacer()
         }
         .font(.headline)
     }

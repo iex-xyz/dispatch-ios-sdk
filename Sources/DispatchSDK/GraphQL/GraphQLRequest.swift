@@ -50,7 +50,6 @@ extension GraphQLRequest {
             "query": AnyEncodable(operationString),
             "variables": AnyEncodable(input)
         ]
-        print("Operation data: \(operationData)")
         request.httpBody = try JSONEncoder().encode(operationData)
         
         return request

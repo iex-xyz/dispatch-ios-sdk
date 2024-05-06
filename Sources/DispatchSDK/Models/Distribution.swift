@@ -1,24 +1,24 @@
 import Foundation
 
-public struct Distribution: Codable, Equatable {
-    public let version: String
-    public let subFolderId: String
-    public let initScreen: InitScreen
-    public let product: Product
-    public let applicationId: String
-    public let theme: Theme
-    public let pspPublishableKey: String
-    public let createdAt: String
-    public let updatedAt: String
-    public let type: String
-    public let merchantName: String
-    public let channel: String
-    public let dispatchIsReseller: Bool
-    public let hiddenPaymentMethods: [String]
-    public let name: String
-    public let psp: String
-    public let merchantId: String
-    public let id: String
+struct Distribution: Codable, Equatable {
+    let version: String
+    let subFolderId: String
+    let initScreen: InitScreen
+    let product: Product
+    let applicationId: String
+    let theme: Theme?
+    let pspPublishableKey: String
+    let createdAt: String
+    let updatedAt: String
+    let type: String
+    let merchantName: String
+    let channel: String
+    let dispatchIsReseller: Bool
+    let hiddenPaymentMethods: [String]
+    let name: String
+    let psp: String
+    let merchantId: String
+    let id: String
 }
 
 extension Distribution {

@@ -26,6 +26,7 @@ internal struct ProductOverviewDetailsCell: View {
                 Text(product.name)
                     .foregroundStyle(.primary)
                     .font(.title3.bold())
+                    .frame(maxWidth: .infinity, alignment: .leading)
                 if let baseComparePrice {
                     PriceLabel(
                         basePrice: CurrencyHelpers.formatCentsToDollars(
@@ -37,6 +38,7 @@ internal struct ProductOverviewDetailsCell: View {
                             currencyCode: product.currencyCode
                         )
                     )
+                    .frame(maxWidth: .infinity)
                 } else {
                     PriceLabel(
                         basePrice: CurrencyHelpers.formatCentsToDollars(
@@ -45,8 +47,10 @@ internal struct ProductOverviewDetailsCell: View {
                         ),
                         currentPrice: nil
                     )
+                    .frame(maxWidth: .infinity)
                 }
             }
+            .frame(maxWidth: .infinity)
 
             ExpandableText(
                 text: product.description,
@@ -54,6 +58,7 @@ internal struct ProductOverviewDetailsCell: View {
             )
         }
         .colorScheme(theme.colorScheme)
+        .frame(maxWidth: .infinity)
     }
 }
 

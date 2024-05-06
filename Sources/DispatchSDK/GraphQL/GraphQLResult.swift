@@ -10,8 +10,27 @@ public struct GraphQLResult<T: Decodable>: Decodable {
     }
     
     public struct Error: Decodable {
-        public let errorCode: Int
+        public var errorCode: String
         public let errorMessage: String
+        
+        public init(from decoder: Decoder) throws {
+            let container = try decoder.container(keyedBy: CodingKeys.self)
+            
+            if let errorCode = try? container.decode(String.self, forKey: .errorCode) {
+                self.errorCode = errorCode
+            } else if let intErrorCode = try? container.decode(Int.self, forKey: .errorCode) {
+                self.errorCode = String(intErrorCode)
+            } else {
+                self.errorCode = "Unknown"
+            }
+            
+            self.errorMessage = try container.decode(String.self, forKey: .errorMessage)
+        }
+        
+        enum CodingKeys: String, CodingKey {
+            case errorCode
+            case errorMessage
+        }
     }
     
     public init(from decoder: Decoder) throws {

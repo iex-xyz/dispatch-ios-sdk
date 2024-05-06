@@ -52,7 +52,7 @@ struct PrimaryButtonStyle: ButtonStyle {
     
     private func cornerRadius(for style: Style?) -> CGFloat {
         switch style {
-        case .round:
+        case .round, .rounded:
             return 30
         case .soft:
             return 10

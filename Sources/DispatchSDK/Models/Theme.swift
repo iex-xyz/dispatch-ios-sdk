@@ -1,7 +1,8 @@
 import Foundation
 
 public enum Style: String, Codable {
-    case round = "ROUNDED"
+    case round = "ROUND"
+    case rounded = "ROUNDED"
     case sharp = "SHARP"
     case soft = "SOFT"
 }
@@ -106,7 +107,7 @@ extension Theme {
     
     public var cornerRadius: CGFloat {
         switch inputStyle {
-        case .round:
+        case .round, .rounded:
             return 24
         case .soft:
             return 4

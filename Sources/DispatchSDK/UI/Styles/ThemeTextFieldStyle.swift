@@ -3,7 +3,7 @@ import SwiftUI
 fileprivate extension Theme {
     var validationAlignment: Alignment {
         switch self.inputStyle {
-        case .round:
+        case .round, .rounded:
             return .trailing
         case .soft, .sharp:
             return .topTrailing
@@ -62,7 +62,7 @@ struct ThemeTextFieldStyle: TextFieldStyle {
             
             if !isValid {
                 switch theme.inputStyle {
-                case .round:
+                case .round, .rounded:
                     Image(systemName: "exclamationmark.circle.fill")
                         .foregroundStyle(.red)
                         .padding(.trailing)
@@ -106,7 +106,7 @@ struct ThemeTextFieldStyle: TextFieldStyle {
     
     private func cornerRadius(for style: Style?) -> CGFloat {
         switch style {
-        case .round:
+        case .round, .rounded:
             return 30
         case .soft:
             return 4

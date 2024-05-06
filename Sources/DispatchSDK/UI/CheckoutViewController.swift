@@ -14,7 +14,7 @@ struct CheckoutView: View {
                 VStack {
                     MediaCarouselView(viewModel: mediaViewModel)
                         .frame(height: 200)
-                    VStack {
+                    VStack(alignment: .leading) {
                         if let productViewModel = viewModel.productViewModel {
                             ProductOverviewDetailsCell(
                                 product: productViewModel.product,
@@ -22,6 +22,7 @@ struct CheckoutView: View {
                                 baseComparePrice: viewModel.selectedVariation?.compareAtPrice ?? productViewModel.product.baseCompareAtPrice) {
                                     viewModel.onMoreProductInfoButtonTapped()
                                 }
+                                .frame(maxWidth: .infinity)
                             if
                                 let checkout = viewModel.checkout,
                                 let selectedVariant = viewModel.selectedVariation,
@@ -61,7 +62,7 @@ struct CheckoutView: View {
                         .frame(minWidth: 120)
                     }
                     PayButton(
-                        ctaText: "Buy with",
+                        productType: viewModel.checkout?.product.type ?? .product,
                         paymentMethod: viewModel.selectedPaymentMethod,
                         isDisabled: false
                     ) {

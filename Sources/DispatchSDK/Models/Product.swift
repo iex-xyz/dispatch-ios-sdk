@@ -1,29 +1,30 @@
 import Foundation
 
-public struct Product: Codable, Equatable {
-    public let name: String
-    public let description: String
-    public let requiresShipping: Bool
-    public let basePrice: Int
-    public let baseCompareAtPrice: Int?
-    public let baseImages: [String]
-    public let pdpUrl: String
-    public let baseQuantity: Int
-    public let currencyCode: String
-    public let attributes: [String: Attribute]?
-    public let variations: [Variation]
-    public let salesEnabled: Bool
-    public let updatedAt: String
-    public let createdAt: String
-    public let descriptionHtml: String
-    public let priceSubtitleText: String
-    public let type: String
-    public let productLanguage: String
-    public let requiresBilling: Bool
-    public let id: String
+
+struct Product: Codable, Equatable {
+    let name: String
+    let description: String
+    let requiresShipping: Bool
+    let basePrice: Int
+    let baseCompareAtPrice: Int?
+    let baseImages: [String]
+    let pdpUrl: String?
+    let baseQuantity: Int
+    let currencyCode: String
+    let attributes: [String: Attribute]?
+    let variations: [Variation]
+    let salesEnabled: Bool
+    let updatedAt: String
+    let createdAt: String
+    let descriptionHtml: String
+    let priceSubtitleText: String
+    let type: ProductType
+    let productLanguage: String
+    let requiresBilling: Bool
+    let id: String
     
-    public var pdpDomain: String? {
-        guard let url = URL(string: pdpUrl) else { return nil }
+    var pdpDomain: String? {
+        guard let pdpUrl, let url = URL(string: pdpUrl) else { return nil }
         return url.host?.replacingOccurrences(of: "www.", with: "")
     }
     
@@ -44,7 +45,7 @@ public struct Product: Codable, Equatable {
         createdAt: String,
         descriptionHtml: String,
         priceSubtitleText: String,
-        type: String,
+        type: ProductType,
         productLanguage: String,
         requiresBilling: Bool,
         id: String
@@ -79,8 +80,8 @@ public struct Product: Codable, Equatable {
         basePrice = try container.decode(Int.self, forKey: .basePrice)
         baseCompareAtPrice = try container.decodeIfPresent(Int.self, forKey: .baseCompareAtPrice)
         baseImages = try container.decode([String].self, forKey: .baseImages)
-        pdpUrl = try container.decode(String.self, forKey: .pdpUrl)
-        baseQuantity = try container.decode(Int.self, forKey: .baseQuantity)
+        pdpUrl = try container.decodeIfPresent(String.self, forKey: .pdpUrl)
+        baseQuantity = try container.decodeIfPresent(Int.self, forKey: .baseQuantity) ?? 1
         currencyCode = try container.decode(String.self, forKey: .currencyCode)
         attributes = try container.decodeIfPresent([String: Attribute].self, forKey: .attributes)
         variations = try container.decode([Variation].self, forKey: .variations)
@@ -89,19 +90,19 @@ public struct Product: Codable, Equatable {
         createdAt = try container.decode(String.self, forKey: .createdAt)
         descriptionHtml = try container.decode(String.self, forKey: .descriptionHtml)
         priceSubtitleText = try container.decode(String.self, forKey: .priceSubtitleText)
-        type = try container.decode(String.self, forKey: .type)
+        type = try container.decode(ProductType.self, forKey: .type)
         productLanguage = try container.decode(String.self, forKey: .productLanguage)
         requiresBilling = try container.decode(Bool.self, forKey: .requiresBilling)
         id = try container.decode(String.self, forKey: .id)
     }
 }
 
-public struct Attribute: Codable, Identifiable, Equatable {
-    public let id: String
-    public let title: String
-    public var options: [String: AttributeOption]
+struct Attribute: Codable, Identifiable, Equatable {
+    let id: String
+    let title: String
+    var options: [String: AttributeOption]
     
-    public init(
+    init(
         id: String,
         title: String,
         options: [String: AttributeOption]
@@ -111,7 +112,7 @@ public struct Attribute: Codable, Identifiable, Equatable {
         self.options = options
     }
 
-    public init(from decoder: Decoder) throws {
+    init(from decoder: Decoder) throws {
         let container = try decoder.container(keyedBy: CodingKeys.self)
         title = try container.decode(String.self, forKey: .title)
         
@@ -139,7 +140,7 @@ public struct Attribute: Codable, Identifiable, Equatable {
         options = optionsDict
     }
 
-    public func encode(to encoder: Encoder) throws {
+    func encode(to encoder: Encoder) throws {
         var container = encoder.container(keyedBy: CodingKeys.self)
         try container.encode(title, forKey: .title)
         
@@ -174,11 +175,11 @@ public struct Attribute: Codable, Identifiable, Equatable {
 }
 
 
-public struct AttributeOption: Codable, Equatable {
-    public var title: String
-    public var images: [String]
+struct AttributeOption: Codable, Equatable {
+    var title: String
+    var images: [String]
     
-    public init(from decoder: any Decoder) throws {
+    init(from decoder: any Decoder) throws {
         let container = try decoder.container(keyedBy: CodingKeys.self)
         self.title = try container.decode(String.self, forKey: .title)
         self.images = try container.decodeIfPresent([String].self, forKey: .images) ?? []
@@ -186,7 +187,7 @@ public struct AttributeOption: Codable, Equatable {
 }
 
 extension Product {
-    public static func mock(
+    static func mock(
         name: String = "Product Name",
         description: String = "Product Description",
         requiresShipping: Bool = true,
@@ -203,7 +204,7 @@ extension Product {
         createdAt: String = "2023-07-20T14:53:54.066Z",
         descriptionHtml: String = "<p>Product Description</p>",
         priceSubtitleText: String = "Price Subtitle",
-        type: String = "PRODUCT",
+        type: ProductType = .product,
         variations: [Variation] = [],
         productLanguage: String = "EN",
         requiresBilling: Bool = true,

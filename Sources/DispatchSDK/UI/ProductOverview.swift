@@ -43,12 +43,21 @@ struct ProductOverview: View {
             .padding(.top)
             .padding(.horizontal)
             
-            HTMLTextView(
-                htmlString: viewModel.product.descriptionHtml,
-                bulletSpacing: 0
-            )
-            .foregroundStyle(.primary)
-            .padding()
+            if !viewModel.product.descriptionHtml.isEmpty {
+                HTMLTextView(
+                    htmlString: viewModel.product.descriptionHtml,
+                    bulletSpacing: 0
+                )
+                .foregroundStyle(.primary)
+                .padding()
+            } else {
+                ScrollView {
+                    Text(viewModel.product.description)
+                        .foregroundStyle(.primary)
+                        .padding()
+                }
+            }
+            Spacer()
         }
         .background(theme.backgroundColor)
         .colorScheme(theme.colorScheme)

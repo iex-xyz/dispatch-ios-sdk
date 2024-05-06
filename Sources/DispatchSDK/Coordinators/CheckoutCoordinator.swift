@@ -143,14 +143,12 @@ class CheckoutCoordinator: BaseCoordinator {
         // TODO: Once Remote SVG support is added, we should render the logo in the top left for the main CheckoutView
 //        viewController.navigationItem.leftBarButtonItem = .init(customView: leftBarButtonController.view)
         viewController.navigationItem.titleView = navigationTitleController.view
-        
+
         viewModel
-            .checkout
-            .publisher.sink { _ in
-                //
-            } receiveValue: { [weak self] _ in
-                self?.navigationTitleController.view.setNeedsLayout()
-                self?.navigationTitleController.view.layoutIfNeeded()
+            .$checkout
+            .sink { [weak self] checkout in
+                viewController.navigationItem.titleView = nil
+                viewController.navigationItem.titleView = self?.navigationTitleController.view
             }
             .store(in: &cancellables)
 
@@ -264,7 +262,6 @@ class CheckoutCoordinator: BaseCoordinator {
         let coordinator = ApplePayCoordinator(
             router: router,
             apiClient: apiClient,
-            orderId: "invalid",
             viewModel: viewModel,
             didCancel: {
                 // TODO:

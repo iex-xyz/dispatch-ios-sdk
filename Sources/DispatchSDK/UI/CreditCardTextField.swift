@@ -41,7 +41,7 @@ struct CreditCardTextField: UIViewRepresentable {
         textField.textContentType = .creditCardNumber
         textField.rightViewMode = .always
         switch theme.inputStyle {
-        case .round:
+        case .round, .rounded:
             textField.layer.cornerRadius = 24
         case .sharp:
             textField.layer.cornerRadius = 0

@@ -159,7 +159,7 @@ struct CheckoutOverviewView: View {
             }
             VStack(spacing: 16) {
                 PayButton(
-                    ctaText: "Pay with",
+                    productType: viewModel.checkout.product.type,
                     paymentMethod: .creditCard,
                     isDisabled: !viewModel.state.isEnabled
                 ) {

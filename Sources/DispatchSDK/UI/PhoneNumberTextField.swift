@@ -21,7 +21,7 @@ struct PhoneNumberTextField: UIViewRepresentable {
         textField.textContentType = .telephoneNumber
         textField.placeholder = PhoneNumberValidator.rules(for: country)?.placeholder ?? Self.fallbackPlaceholder
         switch theme.inputStyle {
-        case .round:
+        case .round, .rounded:
             textField.layer.cornerRadius = theme.cornerRadius
         case .sharp:
             textField.layer.cornerRadius = 0

@@ -46,7 +46,7 @@ internal struct QuantityStepControl : View {
                 case .sharp:
                     RoundedRectangle(cornerRadius: 0)
                         .stroke(Colors.borderGray, lineWidth: 2)
-                case .round:
+                case .round, .rounded:
                     Capsule()
                         .stroke(Colors.borderGray, lineWidth: 2)
                 }
