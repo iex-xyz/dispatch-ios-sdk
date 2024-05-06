@@ -65,7 +65,7 @@ class ApplePayViewModel: NSObject, ObservableObject {
     }
 
 
-    let paymentRequest = PKPaymentRequest()
+    let paymentRequest: PKPaymentRequest
     let content: Checkout
 
     @Published var state: State = .idle
@@ -92,18 +92,15 @@ class ApplePayViewModel: NSObject, ObservableObject {
         self.supportedNetworks = []
         self.order = nil
         
-        super.init()
-        
-        paymentRequest.paymentSummaryItems = self.paymentSummaryItemsGenerator()
+        let paymentRequest = PKPaymentRequest()
         paymentRequest.merchantIdentifier = "merchant.com.dispatch.secondary"
-        paymentRequest.merchantCapabilities = [.capability3DS, .debit, .credit]
+        paymentRequest.merchantCapabilities = [.debit, .credit]
         paymentRequest.countryCode = "US"
         paymentRequest.currencyCode = content.product.currencyCode
 
+
         // TODO: Where should we get these from?
         paymentRequest.supportedNetworks = [.amex, .visa, .masterCard]
-
-
         paymentRequest.requiredBillingContactFields = [
             .postalAddress,
             .emailAddress,
@@ -120,43 +117,22 @@ class ApplePayViewModel: NSObject, ObservableObject {
         
         paymentRequest.shippingMethods = []
         paymentRequest.shippingType = content.product.requiresShipping ? .shipping : .delivery
+        paymentRequest.paymentSummaryItems = [.init(label: "Total", amount: .zero)]
+
+        self.paymentRequest = paymentRequest
+        
+        super.init()
+        paymentRequest.paymentSummaryItems = self.paymentSummaryItemsGenerator()
     }
     
-    func initiateOrder() {
-        state = .initiatingOrder
-        Task { [weak self] in
-            guard let self else { return }
-            do {
-                let request =  InitiateOrderRequest(
-                    email: "apple@dispatch.co",
-                    productId: self.content.product.id,
-                    variantId: self.selectedVariant?.id,
-                    quantity: self.quantity
-                )
-                let order = try await apiClient.performOperation(request)
-                
-                let shippingMethodsRequest = GetShippingMethodsForOrderRequest(orderId: order.id)
-                
-                let shippingMethodsResponse = try await apiClient.performOperation(shippingMethodsRequest)
-                
-                DispatchQueue.main.async {
-                    self.order = order
-                    self.state = .loaded(order, shippingMethodsResponse.availableShippingMethods)
-                }
-                
-            } catch let error as GraphQLError {
-                DispatchQueue.main.async {
-                    print("[ERROR] Unable to initiate order: \(error)")
-                    self.state = .error(error)
-//                    self.showError = true
-                }
-            } catch {
-                DispatchQueue.main.async {
-                    print("[ERROR] Unable to initiate order: \(error)")
-                    self.state = .error(error)
-                }
-            }
-        }
+    private func initiateOrder() async throws -> InitiateOrder {
+        let request =  InitiateOrderRequest(
+            email: "apple@dispatch.co",
+            productId: self.content.product.id,
+            variantId: self.selectedVariant?.id,
+            quantity: self.quantity
+        )
+        return try await apiClient.performOperation(request)
     }
 
     func paymentSummaryItemsGenerator() -> [PKPaymentSummaryItem] {
@@ -234,15 +210,143 @@ class ApplePayViewModel: NSObject, ObservableObject {
             return method
         }
     }
+    
+    // MARK: Model helpers
+    
+    private func firstName(for contact: PKContact) -> String {
+        if let givenName = contact.name?.givenName, !givenName.isEmpty {
+            return givenName
+        } else {
+            return "None"
+        }
+    }
+    
+    private func lastName(for contact: PKContact) -> String {
+        if let familyName = contact.name?.familyName, !familyName.isEmpty {
+            return familyName
+        } else {
+            return "None"
+        }
+    }
+    
 }
 
 extension ApplePayViewModel: PKPaymentAuthorizationViewControllerDelegate {
     func paymentAuthorizationViewControllerDidFinish(
         _ controller: PKPaymentAuthorizationViewController
     ) {
-        // TODO: Call asyncstream
+        controller.dismiss(animated: true)
     }
     
+    func paymentAuthorizationViewControllerDidRequestMerchantSessionUpdate(
+        controller: PKPaymentAuthorizationViewController
+    ) async -> PKPaymentRequestMerchantSessionUpdate {
+        print("[ApplePay] Merchant update requested")
+        return .init(status: .success, merchantSession: .init())
+    }
+    
+    
+    func paymentAuthorizationViewController(
+        _ controller: PKPaymentAuthorizationViewController,
+        didSelectShippingContact contact: PKContact
+    ) async -> PKPaymentRequestShippingContactUpdate {
+        self.selectedContact = contact
+        do {
+            
+            if order == nil {
+                print("[ApplePay] Initiating order (no current order found)")
+                self.order = try await initiateOrder()
+            }
+            
+            guard
+                let order,
+                let address = contact.postalAddress
+            else {
+                // TODO: Error handling
+                print("[ApplePay] Error when updating shipping contact. Missing order or postal address: ", contact.postalAddress ?? "no-address")
+                return .init()
+            }
+
+            let firstName = firstName(for: contact)
+            let lastName = lastName(for: contact)
+            let phoneNumber = contact.phoneNumber?.stringValue ?? "+11112223333"
+
+            // set all the shipping information that we know
+            // the fields hardcoded or set to "None" are things that we do not get until the onpaymentauthorized event
+            // related complaint: https://forums.developer.apple.com/forums/thread/654899
+            let request = UpdateOrderShippingRequest(
+                params: .init(
+                    orderId: order.id,
+                    firstName: firstName,
+                    lastName: lastName,
+                    address1: address.street.isEmpty ? "None" : address.street,
+                    address2: address.subLocality.isEmpty ? "" : address.subLocality,
+                    city: address.city,
+                    state: address.state,
+                    zip: address.postalCode,
+                    phoneNumber: phoneNumber,
+                    country: address.isoCountryCode,
+                    email: contact.emailAddress,
+                    updateType: .shipping
+                )
+            )
+
+            self.order = try await apiClient.performOperation(request)
+            let shippingMethodsRequest = GetShippingMethodsForOrderRequest(orderId: order.id)
+            let shippingMethodsResponse = try await apiClient.performOperation(shippingMethodsRequest)
+            self.updateAvailableShippingMethods(shippingMethodsResponse.availableShippingMethods)
+            return .init(
+                errors: nil,
+                paymentSummaryItems: paymentSummaryItemsGenerator(),
+                shippingMethods: self.paymentRequest.shippingMethods ?? []
+            )
+        } catch {
+            print("[ApplePay] Error when updating selected contact: ", error)
+            return .init(
+                errors: [error],
+                paymentSummaryItems: paymentSummaryItemsGenerator(),
+                shippingMethods: self.paymentRequest.shippingMethods ?? []
+            )
+        }
+    }
+    
+    func paymentAuthorizationViewController(
+        _ controller: PKPaymentAuthorizationViewController,
+        didSelect shippingMethod: PKShippingMethod
+    ) async -> PKPaymentRequestShippingMethodUpdate {
+        guard
+            let orderId = self.order?.id,
+            let shippingMethodId = shippingMethod.identifier
+        else {
+            print("[ApplePay] Error when updating shipping method. Missing order or shippingMethod identifier: ", shippingMethod.identifier ?? "no-identifier")
+            return .init()
+        }
+        let request = UpdateOrderShippingMethodRequest(
+            params: .init(
+                orderId: orderId,
+                shippingMethod: shippingMethodId
+            )
+        )
+        
+        do {
+            let order = try await self.apiClient.performOperation(request)
+            self.selectedShippingMethod = shippingMethod
+            self.order = order
+
+            print("[ApplePay] Order (\(order.id) updated shippingMethod: \(shippingMethodId)")
+            return PKPaymentRequestShippingMethodUpdate(
+                paymentSummaryItems: self.paymentSummaryItemsGenerator()
+            )
+        } catch {
+            print("[ApplePay] Error when updating shipping method: ", error)
+            return .init(paymentSummaryItems: paymentSummaryItemsGenerator())
+        }
+    }
+    
+    func paymentAuthorizationViewControllerWillAuthorizePayment(_ controller: PKPaymentAuthorizationViewController) {
+        print("[ApplePay] Will authorize payment")
+    }
+
     func paymentAuthorizationViewController(
         _ controller: PKPaymentAuthorizationViewController,
         didAuthorizePayment payment: PKPayment
@@ -255,6 +359,7 @@ extension ApplePayViewModel: PKPaymentAuthorizationViewControllerDelegate {
             let billingAddress = billing.postalAddress
         else {
             // TODO: Add errors
+            print("[ApplePay] Error when authorizing payment. Missing billing info or billing contact: ", payment.billingContact ?? "no-billing-contact")
             return .init(status: .failure, errors: [])
         }
         let shipping = payment.shippingContact
@@ -376,126 +481,9 @@ extension ApplePayViewModel: PKPaymentAuthorizationViewControllerDelegate {
 
             return PKPaymentAuthorizationResult(status: .success, errors: nil)
         } catch {
+            print("[ApplePay] Error when authorizing payment: ", error)
             return PKPaymentAuthorizationResult(status: .failure, errors: [error])
         }
-    }
-    
-    func paymentAuthorizationViewController(
-        _ controller: PKPaymentAuthorizationViewController,
-        didSelect shippingMethod: PKShippingMethod
-    ) async -> PKPaymentRequestShippingMethodUpdate {
-        guard
-            let orderId = self.order?.id,
-            let shippingMethodId = shippingMethod.identifier
-        else {
-            return .init()
-        }
-        let request = UpdateOrderShippingMethodRequest(
-            params: .init(
-                orderId: orderId,
-                shippingMethod: shippingMethodId
-            )
-        )
-        
-        do {
-            let order = try await self.apiClient.performOperation(request)
-            self.selectedShippingMethod = shippingMethod
-            self.order = order
-            print("Order (\(order.id) updated shippingMethod: \(shippingMethodId)")
-            return PKPaymentRequestShippingMethodUpdate(
-                paymentSummaryItems: self.paymentSummaryItemsGenerator()
-            )
-        } catch {
-            print("Unable to update shipping method", error)
-            return .init()
-        }
-    }
-    
-    private func firstName(for contact: PKContact) -> String {
-        if let givenName = contact.name?.givenName, !givenName.isEmpty {
-            return givenName
-        } else {
-            return "None"
-        }
-    }
-    
-    private func lastName(for contact: PKContact) -> String {
-        if let familyName = contact.name?.familyName, !familyName.isEmpty {
-            return familyName
-        } else {
-            return "None"
-        }
-    }
-    
-    func paymentAuthorizationViewController(
-        _ controller: PKPaymentAuthorizationViewController,
-        didSelectShippingContact contact: PKContact
-    ) async -> PKPaymentRequestShippingContactUpdate {
-        self.selectedContact = contact
-
-        guard
-            let order,
-            let address = contact.postalAddress
-        else {
-            return .init()
-        }
-        let firstName = firstName(for: contact)
-        let lastName = lastName(for: contact)
-        let phoneNumber = contact.phoneNumber?.stringValue ?? "+11112223333"
-        // set all the shipping information that we know
-        // the fields hardcoded or set to "None" are things that we do not get until the onpaymentauthorized event
-        // related complaint: https://forums.developer.apple.com/forums/thread/654899
-        let request = UpdateOrderShippingRequest(
-            params: .init(
-                orderId: order.id,
-                firstName: firstName,
-                lastName: lastName,
-                address1: address.street.isEmpty ? "None" : address.street,
-                address2: address.subLocality.isEmpty ? "" : address.subLocality,
-                city: address.city,
-                state: address.state,
-                zip: address.postalCode,
-                phoneNumber: phoneNumber,
-                country: address.isoCountryCode,
-                email: contact.emailAddress,
-                updateType: .shipping
-            )
-        )
-        do {
-            let order = try await apiClient.performOperation(request)
-            let shippingMethodsRequest = GetShippingMethodsForOrderRequest(orderId: order.id)
-            let shippingMethodsResponse = try await apiClient.performOperation(shippingMethodsRequest)
-            self.updateAvailableShippingMethods(shippingMethodsResponse.availableShippingMethods)
-            return .init(
-                errors: nil,
-                paymentSummaryItems: paymentSummaryItemsGenerator(),
-                shippingMethods: self.paymentRequest.shippingMethods ?? []
-            )
-        } catch {
-            return .init(
-                errors: [error],
-                paymentSummaryItems: paymentSummaryItemsGenerator(),
-                shippingMethods: self.paymentRequest.shippingMethods ?? []
-            )
-        }
-    }
-    
-    func paymentAuthorizationViewController(
-        _ controller: PKPaymentAuthorizationViewController,
-        didSelect paymentMethod: PKPaymentMethod
-    ) async -> PKPaymentRequestPaymentMethodUpdate {
-        self.selectedPaymentMethod = paymentMethod
-        
-        guard let order else {
-            return .init(errors: [], paymentSummaryItems: paymentSummaryItemsGenerator())
-        }
-        
-        let firstName = paymentMethod.billingAddress?.givenName ?? "None"
-        let lastName = paymentMethod.billingAddress?.familyName ?? "None"
-        let street = paymentMethod.billingAddress?.postalAddresses
-
-        // TODO:
-        return PKPaymentRequestPaymentMethodUpdate(paymentSummaryItems: paymentSummaryItemsGenerator())
     }
     
 }
