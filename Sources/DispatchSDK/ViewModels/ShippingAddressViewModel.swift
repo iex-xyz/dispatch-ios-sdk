@@ -284,6 +284,7 @@ class ShippingAddressViewModel: ObservableObject {
                         zip: self.zip,
                         phoneNumber: self.phone,
                         country: self.country.code,
+                        email: nil,
                         updateType: updateType
                     )
                 )

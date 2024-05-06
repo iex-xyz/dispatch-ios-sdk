@@ -38,8 +38,12 @@ class ApplePayCoordinator: BaseCoordinator {
    
     private func showPaymentView(with viewModel: ApplePayViewModel) {
         if PKPaymentAuthorizationViewController.canMakePayments() {
-            let request = viewModel.generateRequest()
+            let request = viewModel.paymentRequest
             let viewController = PKPaymentAuthorizationViewController(paymentRequest: request)
+            viewController?.delegate = viewModel
+            
+            viewModel.initiateOrder()
+
             router.present(viewController, animated: true) {
                 // TODO:
             }

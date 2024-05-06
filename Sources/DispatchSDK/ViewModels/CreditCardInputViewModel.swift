@@ -127,6 +127,7 @@ class CreditCardInputViewModel: ShippingAddressViewModel {
             zip: zip,
             phoneNumber: phone,
             country: country.code,
+            email: nil,
             updateType: .billing
         )
         let request = UpdateOrderShippingRequest(params: params)

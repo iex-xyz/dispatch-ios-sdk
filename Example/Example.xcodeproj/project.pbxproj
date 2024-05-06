@@ -21,6 +21,7 @@
 		D9004FD52BB384710060A00E /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
 		D9004FD82BB384710060A00E /* Preview Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = "Preview Assets.xcassets"; sourceTree = "<group>"; };
 		DC439B852BE475C4005E5DA1 /* dispatch-sdk */ = {isa = PBXFileReference; lastKnownFileType = wrapper; name = "dispatch-sdk"; path = ..; sourceTree = "<group>"; };
+		DCB770D02BE8022A0025DCE7 /* Example.entitlements */ = {isa = PBXFileReference; lastKnownFileType = text.plist.entitlements; path = Example.entitlements; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -38,6 +39,7 @@
 		D9004FC52BB384700060A00E = {
 			isa = PBXGroup;
 			children = (
+				DCB770D02BE8022A0025DCE7 /* Example.entitlements */,
 				DC439B852BE475C4005E5DA1 /* dispatch-sdk */,
 				D9004FD02BB384700060A00E /* Sources */,
 				D9004FCF2BB384700060A00E /* Products */,
@@ -278,9 +280,11 @@
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
+				CODE_SIGN_ENTITLEMENTS = Example.entitlements;
 				CODE_SIGN_STYLE = Automatic;
 				CURRENT_PROJECT_VERSION = 1;
 				DEVELOPMENT_ASSET_PATHS = "\"Sources/Preview Content\"";
+				DEVELOPMENT_TEAM = L6MGH89M3M;
 				ENABLE_PREVIEWS = YES;
 				GENERATE_INFOPLIST_FILE = YES;
 				INFOPLIST_KEY_UIApplicationSceneManifest_Generation = YES;
@@ -311,9 +315,11 @@
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
+				CODE_SIGN_ENTITLEMENTS = Example.entitlements;
 				CODE_SIGN_STYLE = Automatic;
 				CURRENT_PROJECT_VERSION = 1;
 				DEVELOPMENT_ASSET_PATHS = "\"Sources/Preview Content\"";
+				DEVELOPMENT_TEAM = L6MGH89M3M;
 				ENABLE_PREVIEWS = YES;
 				GENERATE_INFOPLIST_FILE = YES;
 				INFOPLIST_KEY_UIApplicationSceneManifest_Generation = YES;

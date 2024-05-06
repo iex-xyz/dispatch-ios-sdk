@@ -255,7 +255,12 @@ class CheckoutCoordinator: BaseCoordinator {
     }
     
     private func showPayWithApplePay(for checkout: Checkout) {
-        let viewModel = ApplePayViewModel(order: .mock(), merchantId: checkout.merchantId)
+        let viewModel = ApplePayViewModel(
+            content: checkout,
+            quantity: viewModel.currentQuantity,
+            selectedVariant: viewModel.selectedVariation,
+            apiClient: apiClient
+        )
         let coordinator = ApplePayCoordinator(
             router: router,
             apiClient: apiClient,

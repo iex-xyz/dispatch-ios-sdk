@@ -1,17 +1,12 @@
 import Foundation
 
 struct UpdateOrderShippingMethodRequest: GraphQLRequest {
-    struct Response: Codable {
-        let id: String
-        let status: String // TODO: Type with enum?
-    }
-    
     struct RequestParams: Codable {
         let orderId: String
         let shippingMethod: String
     }
 
-    typealias Output = Response
+    typealias Output = InitiateOrder
     typealias Input = [String: AnyEncodable]
     
     var operationString: String {

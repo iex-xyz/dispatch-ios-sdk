@@ -18,6 +18,7 @@ struct UpdateOrderShippingRequest: GraphQLRequest {
         let zip: String
         let phoneNumber: String // TODO: Unformatted?
         let country: String
+        let email: String?
         
         let updateType: UpdateShippingType
     }
