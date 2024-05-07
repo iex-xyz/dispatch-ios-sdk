@@ -94,7 +94,7 @@ fileprivate extension String {
         </html>
         """
         
-        guard let data = htmlTemplate.data(using: .utf8) else {
+        guard let data = htmlTemplate.data(using: .utf16) else {
             return NSAttributedString()
         }
         
