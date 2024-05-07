@@ -12,8 +12,27 @@ struct CheckoutView: View {
         VStack {
             ScrollView {
                 VStack {
-                    MediaCarouselView(viewModel: mediaViewModel)
+                    MediaCarouselView(viewModel: mediaViewModel, isZoomable: false)
                         .frame(minHeight: 200, idealHeight: 300, maxHeight: 360)
+                        .fullScreenCover(item: $mediaViewModel.selectedImage) { selectedImage in
+                            ZStack {
+                                MediaCarouselView(viewModel: mediaViewModel, isZoomable: true)
+                                VStack {
+                                    HStack {
+                                        Spacer()
+                                        CloseButton {
+                                            mediaViewModel.selectedImage = nil
+                                        }
+                                    }
+                                    .padding()
+                                    Spacer()
+                                }
+                            }
+                            .background(theme.backgroundColor)
+                            .colorScheme(theme.colorScheme)
+
+                        }
+
                     VStack(alignment: .leading) {
                         if let productViewModel = viewModel.productViewModel {
                             ProductOverviewDetailsCell(

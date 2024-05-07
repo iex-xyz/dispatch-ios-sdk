@@ -5,8 +5,11 @@ struct MediaCarouselView: View {
     @ObservedObject var viewModel: ProductMediaViewModel
     @State private var fullscreenScale: CGFloat = 1
     
-    init(viewModel: ProductMediaViewModel) {
+    let isZoomable: Bool
+    
+    init(viewModel: ProductMediaViewModel, isZoomable: Bool) {
         self.viewModel = viewModel
+        self.isZoomable = isZoomable
     }
 
     var body: some View {
@@ -14,18 +17,35 @@ struct MediaCarouselView: View {
             ZStack {
                 TabView(selection: $viewModel.currentIndex) {
                     ForEach(viewModel.images.indices, id: \.self) { index in
-                        AsyncImage(url: URL(string: viewModel.images[index])) { image in
-                            image
-                                .resizable()
-                                .scaledToFill()
-                                .frame(width: geometry.size.width)
-                                .frame(minHeight: 200, maxHeight: 360)
-                        } placeholder: {
-                            ProgressView()
+                        if isZoomable {
+                            ZoomableScrollView(scale: $fullscreenScale) {
+                                AsyncImage(url: URL(string: viewModel.images[index])) { image in
+                                    image
+                                        .resizable()
+                                        .scaledToFit()
+                                        .frame(maxWidth: .infinity, maxHeight: .infinity)
+                                } placeholder: {
+                                    ProgressView()
+                                }
+                                .padding()
+                            }
+                            .background(theme.backgroundColor)
+
+                        } else {
+                            AsyncImage(url: URL(string: viewModel.images[index])) { image in
+                                image
+                                    .resizable()
+                                    .scaledToFit()
+                                    .frame(width: geometry.size.width)
+                                    .frame(minHeight: 200, maxHeight: 360)
+                            } placeholder: {
+                                ProgressView()
+                            }
+                            .onTapGesture {
+                                viewModel.onImageTapped(at: index)
+                            }
                         }
-                        .onTapGesture {
-                            viewModel.onImageTapped(at: index)
-                        }
+                        
                     }
                 }
                 .tabViewStyle(PageTabViewStyle(indexDisplayMode: .never))
@@ -101,37 +121,8 @@ struct MediaCarouselView: View {
                 .padding(.bottom)
             }
             .frame(width: geometry.size.width)
-            .frame(minHeight: 200, maxHeight: 360)
+            .frame(minHeight: 200, maxHeight: isZoomable ? .infinity : 360)
             .clipped()
-            .fullScreenCover(item: $viewModel.selectedImage) { selectedImage in
-                ZStack {
-
-                    ZoomableScrollView(scale: $fullscreenScale) {
-                        AsyncImage(url: URL(string: selectedImage.url)) { image in
-                            image
-                                .resizable()
-                                .scaledToFit()
-                                .frame(maxWidth: .infinity, maxHeight: .infinity)
-                        } placeholder: {
-                            ProgressView()
-                        }
-                        .padding()
-                    }
-                    .background(theme.backgroundColor)
-                    VStack {
-                        HStack {
-                            Spacer()
-                            CloseButton {
-                                viewModel.selectedImage = nil
-                            }
-                        }
-                        .padding()
-                        Spacer()
-                    }
-                }
-
-            }
-
         }
     }
 
@@ -139,5 +130,5 @@ struct MediaCarouselView: View {
 
 #Preview {
     let viewModel: ProductMediaViewModel = .init(images: [])
-    return MediaCarouselView(viewModel: viewModel)
+    return MediaCarouselView(viewModel: viewModel, isZoomable: false)
 }
