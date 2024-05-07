@@ -70,12 +70,14 @@ struct CheckoutView: View {
                         viewModel.onPaymentCTATapped()
                     }
                 }
-                Button(action: {
-                    viewModel.onMorePaymentMethodsButtonTapped()
-                }) {
-                    Text("More payment options ") + Text(Image(systemName: "arrow.right"))
+                if viewModel.enabledPaymentMethods.count > 1 {
+                    Button(action: {
+                        viewModel.onMorePaymentMethodsButtonTapped()
+                    }) {
+                        Text("More payment options ") + Text(Image(systemName: "arrow.right"))
+                    }
+                    .buttonStyle(SecondaryButtonStyle())
                 }
-                .buttonStyle(SecondaryButtonStyle())
             }
             .padding()
         }

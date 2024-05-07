@@ -166,12 +166,14 @@ struct CheckoutOverviewView: View {
                 ) {
                     viewModel.onPayButtonTapped()
                 }
-                Button(action: {
-                    viewModel.onMorePaymentOptionsButtonTapped()
-                }) {
-                    Text("More payment options ") + Text(Image(systemName: "arrow.right"))
+                if viewModel.paymentMethods.count > 1 {
+                    Button(action: {
+                        viewModel.onMorePaymentOptionsButtonTapped()
+                    }) {
+                        Text("More payment options ") + Text(Image(systemName: "arrow.right"))
+                    }
+                    .font(.subheadline.bold())
                 }
-                .font(.subheadline.bold())
             }
             .padding()
         }
@@ -192,6 +194,7 @@ struct CheckoutOverviewView: View {
         billingAddress: Address.mock(),
         billingInfo: BillingInfo.mock(),
         shippingMethod: .random(),
+        paymentMethods: [.applePay, .creditCard],
         tokenizedPayment: UUID().uuidString
     )
     return CheckoutOverviewView(viewModel: viewModel)

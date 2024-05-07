@@ -280,6 +280,7 @@ class CheckoutCoordinator: BaseCoordinator {
             router: router,
             apiClient: apiClient,
             viewModel: viewModel,
+            paymentMethods: self.viewModel.enabledPaymentMethods,
             config: config
         ) {
             // TODO: Add cancel handler

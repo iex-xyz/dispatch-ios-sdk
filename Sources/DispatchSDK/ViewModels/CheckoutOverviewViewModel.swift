@@ -35,6 +35,7 @@ class CheckoutOverviewViewModel: ObservableObject {
     let billingInfo: BillingInfo
     let shippingMethod: ShippingMethod
     let tokenizedPayment: String
+    let paymentMethods: [PaymentMethods]
     let order: InitiateOrder
     
     let _onShippingMethodTapped = PassthroughSubject<(ShippingMethod), Never>()
@@ -56,6 +57,7 @@ class CheckoutOverviewViewModel: ObservableObject {
         billingAddress: Address?,
         billingInfo: BillingInfo,
         shippingMethod: ShippingMethod,
+        paymentMethods: [PaymentMethods],
         tokenizedPayment: String
     ) {
         self.apiClient = apiClient
@@ -68,11 +70,14 @@ class CheckoutOverviewViewModel: ObservableObject {
         self.billingAddress = billingAddress
         self.billingInfo = billingInfo
         self.shippingMethod = shippingMethod
+        self.paymentMethods = paymentMethods
         self.tokenizedPayment = tokenizedPayment
     }
     
     func onPayButtonTapped() {
-        self.state = .loading
+        DispatchQueue.main.async {
+            self.state = .loading
+        }
         Task {
             do {
                 let order = try await completeOrder()

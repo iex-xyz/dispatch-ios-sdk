@@ -27,6 +27,7 @@ class CreditCardCoordinator: BaseCoordinator {
     private let apiClient: GraphQLClient
     private var order: InitiateOrder?
     private let config: DispatchConfig
+    private let paymentMethods: [PaymentMethods]
     private var cancellables: Set<AnyCancellable> = .init()
     
     private let viewModel: InitiateCreditCardCheckoutViewModel
@@ -67,6 +68,7 @@ class CreditCardCoordinator: BaseCoordinator {
         router: Router,
         apiClient: GraphQLClient,
         viewModel: InitiateCreditCardCheckoutViewModel,
+        paymentMethods: [PaymentMethods],
         config: DispatchConfig,
         didCancel: @escaping () -> Void
     ) {
@@ -74,6 +76,7 @@ class CreditCardCoordinator: BaseCoordinator {
         self.apiClient = apiClient
         self.viewModel = viewModel
         self.config = config
+        self.paymentMethods = paymentMethods
         self.didCancel = didCancel
         super.init()
     }
@@ -247,6 +250,7 @@ class CreditCardCoordinator: BaseCoordinator {
             billingAddress: billingAddress,
             billingInfo: billingInfo,
             shippingMethod: shippingMethod,
+            paymentMethods: paymentMethods,
             tokenizedPayment: paymentToken
         )
         
