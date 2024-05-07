@@ -2,29 +2,15 @@ import UIKit
 import SwiftUI
 import Combine
 
-struct CheckoutNavigationTitle: View {
-    @ObservedObject var viewModel: CheckoutViewModel
-    
-    let tapHandler: (Checkout) -> Void
-    
-    var body: some View {
-        Group {
-            if let checkout = viewModel.checkout, let domain = checkout.product.pdpDomain {
-                MerchantSecurityTag(domain: domain, tapHandler: {
-                    tapHandler(checkout)
-                })
-            }
-        }
-    }
-}
-
 class CheckoutCoordinator: BaseCoordinator {
     let router: Router
     let apiClient: GraphQLClient
     let checkoutId: String
+    let config: DispatchConfig
+
     var shouldDismissFlow: (() -> Void)?
+
     lazy private(set) var viewModel: CheckoutViewModel = .init(id: checkoutId, apiClient: apiClient)
-    
     
     private lazy var rightBarButtonController: UIHostingController<CloseButton> = {
         let controller = UIHostingController<CloseButton>(rootView: CloseButton { [weak self] in
@@ -62,11 +48,13 @@ class CheckoutCoordinator: BaseCoordinator {
         router: Router,
         apiClient: GraphQLClient,
         checkoutId: String,
+        config: DispatchConfig,
         shouldDismiss: (() -> Void)? = nil
     ) {
         self.router = router
         self.apiClient = apiClient
         self.checkoutId = checkoutId
+        self.config = config
         self.shouldDismissFlow = shouldDismiss
     }
     
@@ -160,8 +148,9 @@ class CheckoutCoordinator: BaseCoordinator {
         router.presentSelf(completion: nil)
     }
     
-    override func start(with route: DeepLinkRoute) {
-        
+    override func start(with route: DispatchRoute) {
+        print("[WARNING] Invalid deep link coordinator. Cannot handle deep link route")
+        start()
     }
     
     private func showVariantPicker(for attribute: Attribute, variations: [Variation], selectedVariation: Variation, quantity: Int) {
@@ -206,7 +195,7 @@ class CheckoutCoordinator: BaseCoordinator {
             sheet.preferredCornerRadius = 16
         }
         router.present(viewController, animated: true, completion: {
-            print("Sheet Dismissed")
+            //
         })
     }
     
@@ -220,7 +209,7 @@ class CheckoutCoordinator: BaseCoordinator {
             sheet.prefersGrabberVisible = true
         }
         router.present(viewController, animated: true, completion: {
-            print("Sheet Dismissed")
+            //
         })
 
     }
@@ -246,7 +235,6 @@ class CheckoutCoordinator: BaseCoordinator {
             sheet.prefersScrollingExpandsWhenScrolledToEdge = true
         }
         
-//        viewController.modalPresentationStyle = .fullScreen
         router.present(viewController, animated: true) {
             //
         }
@@ -263,6 +251,7 @@ class CheckoutCoordinator: BaseCoordinator {
             router: router,
             apiClient: apiClient,
             viewModel: viewModel,
+            config: config,
             didCancel: {
                 // TODO:
             }
@@ -282,9 +271,10 @@ class CheckoutCoordinator: BaseCoordinator {
         let coordinator = CreditCardCoordinator(
             router: router,
             apiClient: apiClient,
-            viewModel: viewModel
+            viewModel: viewModel,
+            config: config
         ) {
-            // TODO:
+            // TODO: Add cancel handler
         }
         
         addDependency(coordinator)

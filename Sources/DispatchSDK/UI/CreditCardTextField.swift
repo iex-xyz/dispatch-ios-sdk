@@ -54,22 +54,23 @@ struct CreditCardTextField: UIViewRepresentable {
     }
     
     func updateUIView(_ uiView: CardTypeUITextField, context: Context) {
-        print("updateUIView: current text = \(uiView.text ?? "nil"), new text = \(text)")
-        if uiView.text != text {
-            uiView.text = text
-        }
-        
-        if uiView.cardImageView.image != cardIcon {
-            UIView.transition(with: uiView.cardImageView, duration: 0.35, options: [.transitionFlipFromTop], animations: {
-                uiView.cardImageView.image = cardIcon
-            }, completion: nil)
-        }
-        if isFocused {
-            uiView.layer.borderColor = Color.dispatchBlue.cgColor
-        } else if !isValid {
-            uiView.layer.borderColor = Color.dispatchRed.cgColor
-        } else {
-            uiView.layer.borderColor = Colors.borderGray.cgColor
+        DispatchQueue.main.async {
+            if uiView.text != self.text {
+                uiView.text = self.text
+            }
+            
+            if uiView.cardImageView.image != self.cardIcon {
+                UIView.transition(with: uiView.cardImageView, duration: 0.35, options: [.transitionFlipFromTop], animations: {
+                    uiView.cardImageView.image = self.cardIcon
+                }, completion: nil)
+            }
+            if self.isFocused {
+                uiView.layer.borderColor = Color.dispatchBlue.cgColor
+            } else if !self.isValid {
+                uiView.layer.borderColor = Color.dispatchRed.cgColor
+            } else {
+                uiView.layer.borderColor = Colors.borderGray.cgColor
+            }
         }
     }
     
@@ -89,7 +90,6 @@ struct CreditCardTextField: UIViewRepresentable {
             let newText = (currentText as NSString).replacingCharacters(in: range, with: string)
             let formattedText = newText.formatAsCreditCard()
             
-            print("Formatted: \(formattedText)")
             textField.text = formattedText
             parent.text = formattedText // Update the SwiftUI state
             

@@ -1,6 +1,6 @@
 import Foundation
 
-public enum Style: String, Codable {
+enum Style: String, Codable {
     case round = "ROUND"
     case rounded = "ROUNDED"
     case sharp = "SHARP"
@@ -8,21 +8,21 @@ public enum Style: String, Codable {
 }
 
 
-public enum Mode: String, Codable {
+enum Mode: String, Codable {
     case light = "LIGHT"
     case dark = "DARK"
 }
 
-public struct Theme: Codable, Equatable {
-    public let buttonStyle: Style?
-    public let successButtonText: String?
-    public let applyThemeToCheckout: Bool?
-    public let isDynamic: Bool?
-    public let ctaStyle: Style
-    public let inputStyle: Style
-    public let mode: Mode
+struct Theme: Codable, Equatable {
+    let buttonStyle: Style?
+    let successButtonText: String?
+    let applyThemeToCheckout: Bool?
+    let isDynamic: Bool?
+    let ctaStyle: Style
+    let inputStyle: Style
+    let mode: Mode
     private let _primaryColor: String
-    public var primaryColor: Color {
+    var primaryColor: Color {
         Color(hex: _primaryColor)
     }
     
@@ -47,7 +47,7 @@ public struct Theme: Codable, Equatable {
     }
     
     // Write custom decoer
-    public init(from decoder: Decoder) throws {
+    init(from decoder: Decoder) throws {
         let container = try decoder.container(keyedBy: CodingKeys.self)
         buttonStyle = try container.decodeIfPresent(Style.self, forKey: .buttonStyle)
         successButtonText = try container.decodeIfPresent(String.self, forKey: .successButtonText)
@@ -72,7 +72,7 @@ public struct Theme: Codable, Equatable {
 }
 
 extension Theme {
-    public static func mock(
+    static func mock(
         buttonStyle: Style? = .round,
         successButtonText: String? = "Order Status",
         applyThemeToCheckout: Bool = false,
@@ -97,15 +97,15 @@ extension Theme {
 
 import SwiftUI
 extension Theme {
-    public var colorScheme: ColorScheme {
+    var colorScheme: ColorScheme {
         return mode == .dark ? .dark : .light
     }
     
-    public var backgroundColor: Color {
+    var backgroundColor: Color {
         return mode == .dark ? .black : .white
     }
     
-    public var cornerRadius: CGFloat {
+    var cornerRadius: CGFloat {
         switch inputStyle {
         case .round, .rounded:
             return 24
@@ -119,10 +119,10 @@ extension Theme {
 }
 
 extension Theme {
-    public static let soft = Theme.mock(ctaStyle: .soft, inputStyle: .soft)
-    public static let sharp = Theme.mock(ctaStyle: .sharp, inputStyle: .sharp)
-    public static let round = Theme.mock(ctaStyle: .round, inputStyle: .round)
-    public static let `default` = Theme.init(
+    static let soft = Theme.mock(ctaStyle: .soft, inputStyle: .soft)
+    static let sharp = Theme.mock(ctaStyle: .sharp, inputStyle: .sharp)
+    static let round = Theme.mock(ctaStyle: .round, inputStyle: .round)
+    static let `default` = Theme.init(
         buttonStyle: .round,
         successButtonText: nil,
         applyThemeToCheckout: nil,
@@ -134,7 +134,28 @@ extension Theme {
     )
 }
 
-// TODO: These are just for testing and can be refactored or removde
+
+struct ThemeInput: Codable {
+    let applyThemeToCheckout: Bool?
+    let ctaStyle: Style?
+    let googleFont: String?
+    let inputStyle: Style?
+    let isDynamic: Bool?
+    let mode: Mode?
+    let primaryColor: String?
+    
+    enum CodingKeys: String, CodingKey {
+        case applyThemeToCheckout
+        case ctaStyle
+        case googleFont
+        case inputStyle
+        case isDynamic
+        case mode
+        case primaryColor
+    }
+}
+
+// NOTE: These are just for testing and can be removed
 extension Theme {
     func toggle() -> Theme {
         return mode == .light ? darkMode() : lightMode()
@@ -175,28 +196,8 @@ extension Theme {
             isDynamic: isDynamic,
             ctaStyle: ctaStyle,
             inputStyle: inputStyle,
-            mode: .light, 
+            mode: .light,
             primaryColor: "#000000"
         )
-    }
-}
-
-public struct ThemeInput: Codable {
-    public let applyThemeToCheckout: Bool?
-    public let ctaStyle: Style?
-    public let googleFont: String?
-    public let inputStyle: Style?
-    public let isDynamic: Bool?
-    public let mode: Mode?
-    public let primaryColor: String?
-    
-    enum CodingKeys: String, CodingKey {
-        case applyThemeToCheckout
-        case ctaStyle
-        case googleFont
-        case inputStyle
-        case isDynamic
-        case mode
-        case primaryColor
     }
 }

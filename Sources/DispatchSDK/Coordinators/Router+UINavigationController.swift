@@ -11,7 +11,6 @@ final class RouterImp: NSObject, Router {
         self.completions = [:]
         super.init()
         self.rootController?.delegate = self
-        self.rootController?.modalPresentationStyle = .fullScreen
         
 //        self.rootController?.navigationBar.barTintColor = UIColor.yellow
 //        self.rootController?.navigationBar.isTranslucent = false
@@ -24,6 +23,14 @@ final class RouterImp: NSObject, Router {
     func presentSelf(completion: (() -> Void)?) {
         guard let rootController else {
             return
+        }
+        
+        if let sheet = rootController.sheetPresentationController {
+            sheet.detents = [.large()]
+            sheet.preferredCornerRadius = 16
+            sheet.prefersGrabberVisible = true
+            sheet.prefersScrollingExpandsWhenScrolledToEdge = true
+            rootController.isModalInPresentation = true
         }
 
         UIApplication.shared.connectedScenes

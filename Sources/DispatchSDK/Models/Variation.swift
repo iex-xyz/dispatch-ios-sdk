@@ -1,16 +1,16 @@
 import Foundation
 
-public struct Variation: Codable, Equatable, Identifiable, Hashable {
-    public let attributes: [String: String]?
-    public let compareAtPrice: Int?
-    public let externalVariantId: String?
-    public let id: String
-    public let maxPrice: Float?
-    public let price: Int?
-    public let quantityAvailable: Float?
-    public let strikethroughPrice: Float?
+struct Variation: Codable, Equatable, Identifiable, Hashable {
+    let attributes: [String: String]?
+    let compareAtPrice: Int?
+    let externalVariantId: String?
+    let id: String
+    let maxPrice: Float?
+    let price: Int?
+    let quantityAvailable: Float?
+    let strikethroughPrice: Float?
     
-    public init(
+    init(
         attributes: [String : String]? = nil,
         compareAtPrice: Int? = nil,
         externalVariantId: String? = nil,
@@ -32,7 +32,7 @@ public struct Variation: Codable, Equatable, Identifiable, Hashable {
 }
 
 extension Variation {
-    public static func random(id: String = UUID().uuidString, quantityAvailable: Float = 10) -> Self {
+    static func random(id: String = UUID().uuidString, quantityAvailable: Float = 10) -> Self {
         return Variation(
             attributes: ["color": "blue", "size": "large"],
             compareAtPrice: 100,

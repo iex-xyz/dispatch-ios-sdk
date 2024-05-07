@@ -10,7 +10,7 @@ struct GetApplePayPaymentTokenRequest: GraphQLRequest {
     
     struct OrderInput: Encodable {
         let data: String
-        let header: String
+        let header: PaymentJson.Header
         let signature: String
         let version: String
         let orderId: String
@@ -19,17 +19,43 @@ struct GetApplePayPaymentTokenRequest: GraphQLRequest {
 
     var operationString: String {
         """
-        query tokenizeApplePayPayment(
-            data: \"\(input.data)\",
-            header: \"\(input.header)\",
-            signature: \"\(input.signature)\",
-            version: \"\(input.version)\",
-            orderId: \"\(input.orderId)\",
-            \(input.accountId != nil ? "stripeAccountId: \"\(input.accountId ?? "")\"" : "")
-          ) {
-            paymentToken
-          }
-        """
+          query tokenizeApplePayPayment(
+              $data: String!
+              $header: JSONObject!
+              $signature: String!
+              $version: String!
+              $orderId: String!
+              $stripeAccountId: String
+            ) {
+              tokenizeApplePayPayment(
+                data: $data
+                header: $header
+                signature: $signature
+                version: $version
+                orderId: $orderId
+                stripeAccountId: $stripeAccountId
+              ) {
+                paymentToken
+              }
+            }
+    """
+    }
+
+    var variables: [String: Any] {
+        var variables: [String: Any] = [
+            "data": input.data,
+            "header": input.header,
+            "signature": input.signature,
+            "version": input.version,
+            "orderId": input.orderId,
+            "stripeAccountId": ""
+        ]
+        
+        if let accountId = input.accountId {
+            variables["stripeAccountId"] = accountId
+        }
+        
+        return variables
     }
 
     var input: Input

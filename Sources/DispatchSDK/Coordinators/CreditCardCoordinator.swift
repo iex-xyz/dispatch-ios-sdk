@@ -26,6 +26,7 @@ class CreditCardCoordinator: BaseCoordinator {
     private let router: Router
     private let apiClient: GraphQLClient
     private var order: InitiateOrder?
+    private let config: DispatchConfig
     private var cancellables: Set<AnyCancellable> = .init()
     
     private let viewModel: InitiateCreditCardCheckoutViewModel
@@ -62,11 +63,13 @@ class CreditCardCoordinator: BaseCoordinator {
         router: Router,
         apiClient: GraphQLClient,
         viewModel: InitiateCreditCardCheckoutViewModel,
+        config: DispatchConfig,
         didCancel: @escaping () -> Void
     ) {
         self.router = router
         self.apiClient = apiClient
         self.viewModel = viewModel
+        self.config = config
         self.didCancel = didCancel
         super.init()
     }
@@ -75,7 +78,7 @@ class CreditCardCoordinator: BaseCoordinator {
         showEmailCaptureForm()
     }
     
-    override func start(with route: DeepLinkRoute) {
+    override func start(with route: DispatchRoute) {
         print("[WARNING] Invalid deep link coordinator. Cannot handle deep link route")
         start()
     }

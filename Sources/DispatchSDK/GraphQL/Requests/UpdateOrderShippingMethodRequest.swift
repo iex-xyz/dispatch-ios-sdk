@@ -25,7 +25,6 @@ struct UpdateOrderShippingMethodRequest: GraphQLRequest {
                 shippingCost
                 taxCost
              }
-           
           }
         """
     }

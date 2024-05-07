@@ -1,8 +1,6 @@
-import UIKit
-import SwiftUI
 import Foundation
 
 protocol Coordinator: AnyObject {
     func start()
-    func start(with route: DeepLinkRoute)
+    func start(with route: DispatchRoute)
 }

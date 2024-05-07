@@ -49,7 +49,7 @@ class CountriesViewModel: ObservableObject {
                     self.state = .complete(response.countries)
                 }
             } catch {
-                print("Unable to fetch countries list: ", error)
+                print("[DispatchSDK] Unable to fetch countries list: ", error)
                 DispatchQueue.main.async {
                     self.state = .failed(error)
                 }
@@ -307,7 +307,7 @@ class ShippingAddressViewModel: ObservableObject {
                 DispatchQueue.main.async {
                     self.isUpdatingOrder = false
                 }
-                print("Error updating order address: \(error)")
+                print("[DispatchSDK] Error updating order address: \(error)")
             }
         }
     }

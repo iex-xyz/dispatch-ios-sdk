@@ -36,7 +36,7 @@ struct MemoryStored {
         self.key = key
     }
 
-    public static subscript(
+    static subscript(
         _enclosingInstance instance: Preferences,
         wrapped wrappedKeyPath: ReferenceWritableKeyPath<Preferences, Value>,
         storage storageKeyPath: ReferenceWritableKeyPath<Preferences, Self>

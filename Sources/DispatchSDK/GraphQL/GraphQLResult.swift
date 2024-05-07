@@ -1,19 +1,19 @@
 import Foundation
 
-public struct GraphQLResult<T: Decodable>: Decodable {
-    public let object: T?
-    public let errorMessages: [String]
+struct GraphQLResult<T: Decodable>: Decodable {
+    let object: T?
+    let errorMessages: [String]
     
-    public enum CodingKeys: String, CodingKey {
+    enum CodingKeys: String, CodingKey {
         case data
         case errors
     }
     
-    public struct Error: Decodable {
-        public var errorCode: String
-        public let errorMessage: String
+    struct Error: Decodable {
+        var errorCode: String
+        let errorMessage: String
         
-        public init(from decoder: Decoder) throws {
+        init(from decoder: Decoder) throws {
             let container = try decoder.container(keyedBy: CodingKeys.self)
             
             if let errorCode = try? container.decode(String.self, forKey: .errorCode) {
@@ -33,7 +33,7 @@ public struct GraphQLResult<T: Decodable>: Decodable {
         }
     }
     
-    public init(from decoder: Decoder) throws {
+    init(from decoder: Decoder) throws {
         let container = try decoder.container(keyedBy: CodingKeys.self)
         
         let dataDict = try container.decodeIfPresent([String: T].self, forKey: .data)

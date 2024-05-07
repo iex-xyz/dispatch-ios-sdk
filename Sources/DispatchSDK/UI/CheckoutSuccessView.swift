@@ -158,7 +158,7 @@ struct CheckoutSuccessView: View {
                 Button(action: {
                     viewModel.onMainCtaButtonTapped()
                 }) {
-                    Text("Keep Shopping") // TODO: Where does this come from?
+                    Text("Keep Shopping")
                 }
                 .buttonStyle(PrimaryButtonStyle())
                 FooterView()

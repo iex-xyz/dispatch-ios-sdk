@@ -1,6 +1,6 @@
 import Foundation
 
-public enum DeepLinkRoute {
+public enum DispatchRoute {
     public enum Mock {
         case orderSuccess
     }
@@ -9,7 +9,7 @@ public enum DeepLinkRoute {
     case mock(_ mock: Mock)
 }
 
-extension DeepLinkRoute {
+extension DispatchRoute {
     public static var testYetiCheckout: Self {
         return .checkout("652ef22e5599070b1b8b9986")
     }

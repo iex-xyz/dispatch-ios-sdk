@@ -93,11 +93,10 @@ class ApplePayViewModel: NSObject, ObservableObject {
         self.order = nil
         
         let paymentRequest = PKPaymentRequest()
-        paymentRequest.merchantIdentifier = "merchant.com.dispatch.secondary"
-        paymentRequest.merchantCapabilities = [.debit, .credit]
+        paymentRequest.merchantIdentifier = "merchant.co.dispatch.checkout"
+        paymentRequest.merchantCapabilities = [.debit, .credit, .threeDSecure]
         paymentRequest.countryCode = "US"
         paymentRequest.currencyCode = content.product.currencyCode
-
 
         // TODO: Where should we get these from?
         paymentRequest.supportedNetworks = [.amex, .visa, .masterCard]
@@ -373,7 +372,7 @@ extension ApplePayViewModel: PKPaymentAuthorizationViewControllerDelegate {
                         address1: billingAddress.street,
                         address2: billingAddress.subLocality,
                         city: billingAddress.city,
-                        state: billingAddress.street,
+                        state: billingAddress.state,
                         zip: billingAddress.postalCode,
                         phoneNumber: billing.phoneNumber?.stringValue ?? "",
                         country: billingAddress.isoCountryCode,
@@ -403,7 +402,7 @@ extension ApplePayViewModel: PKPaymentAuthorizationViewControllerDelegate {
                             address1: address.street,
                             address2: address.subLocality,
                             city: address.city,
-                            state: address.street,
+                            state: address.state,
                             zip: address.postalCode,
                             phoneNumber: shippingPhone,
                             country: address.isoCountryCode,
@@ -422,7 +421,7 @@ extension ApplePayViewModel: PKPaymentAuthorizationViewControllerDelegate {
                             address1: billingAddress.street,
                             address2: billingAddress.subLocality,
                             city: billingAddress.city,
-                            state: billingAddress.street,
+                            state: billingAddress.state,
                             zip: billingAddress.postalCode,
                             phoneNumber: shippingPhone,
                             country: billingAddress.isoCountryCode,
@@ -441,7 +440,7 @@ extension ApplePayViewModel: PKPaymentAuthorizationViewControllerDelegate {
                             address1: address.street,
                             address2: address.subLocality,
                             city: address.city,
-                            state: address.street,
+                            state: address.state,
                             zip: address.postalCode,
                             phoneNumber: shippingPhone,
                             country: address.isoCountryCode,
@@ -457,20 +456,17 @@ extension ApplePayViewModel: PKPaymentAuthorizationViewControllerDelegate {
             let tokenizeApplePayRequest = GetApplePayPaymentTokenRequest(
                 input: .init(
                     data: paymentJson.data,
-                    header: paymentJson.header.stringValue,
+                    header: paymentJson.header,
                     signature: paymentJson.signature,
                     version: paymentJson.version,
                     orderId: order.id,
-                    accountId: nil // TODO: Do we get the stripe account id somewhere?
+                    accountId: content.pspAccountId.isEmpty ? nil : content.pspAccountId
                 )
             )
 
             
             let tokenizeApplePayResponse = try await apiClient.performOperation(tokenizeApplePayRequest)
             
-            
-            // TODO: How do we check if PSP is stripe?
-//            let tokenizeRequest = CompleteOrderRequest(orderId: order.id, applePayEncryptedPaymentData: paymentData)
             let tokenizeRequest = CompleteOrderRequest(
                 orderId: order.id,
                 tokenizedPayment: tokenizeApplePayResponse.paymentToken

@@ -12,7 +12,7 @@ class MapKitAddressLookupService: AddressLookupService {
                 AddressLookupResult(placemark: item.placemark)
             }
         } catch {
-            print("Failed to lookup address: \(error)")
+            print("[DispatchSDK] Failed to lookup address: \(error)")
             throw AddressLookupError.unableToSearch(error)
         }
     }
@@ -55,51 +55,6 @@ class CompleterDelegate: NSObject, MKLocalSearchCompleterDelegate {
         completionHandler(nil, error)
     }
 }
-
-
-class LocalMapKitAddressLookupService: NSObject, AddressLookupService {
-    var continuation: CheckedContinuation<[AddressLookupResult], Error>?
-
-    func query(for address: String) async throws -> [AddressLookupResult] {
-        
-        return try await withCheckedThrowingContinuation { continuation in
-            // Store the continuation to be resumed later
-            self.continuation = continuation
-            
-            let completer = MKLocalSearchCompleter()
-            completer.queryFragment = address
-        }
-
-//        let completions = try await completer.results(for: address)
-//        var results: [AddressLookupResult] = []
-
-//        for completion in completions {
-//            let searchRequest = MKLocalSearch.Request(completion: completion)
-//            let search = MKLocalSearch(request: searchRequest)
-//            do {
-//                let response = try await search.start()
-//                results.append(contentsOf: response.mapItems.map { item in
-//                    AddressLookupResult(placemark: item.placemark)
-//                })
-//            } catch {
-//                print("Failed to complete details for completion: \(error)")
-//                continue
-//            }
-//        }
-//        return results
-    }
-}
-
-extension LocalMapKitAddressLookupService: MKLocalSearchCompleterDelegate {
-    func completerDidUpdateResults(_ completer : MKLocalSearchCompleter) {
-//        completer.results.map { }
-    }
-
-    func completer(_ completer: MKLocalSearchCompleter, didFailWithError error: Error) {
-
-    }
-}
-
 
 extension AddressLookupResult {
     init(placemark: MKPlacemark) {

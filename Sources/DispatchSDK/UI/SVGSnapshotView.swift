@@ -36,16 +36,16 @@ struct SVGTestView: View {
     }
 }
 
-public struct SVGWebView2: View {
+struct SVGWebView2: View {
     
     private let url: URL
     @State private var svg: String = ""
     
-    public init(url: URL) {
+    init(url: URL) {
         self.url = url
     }
     
-    public var body: some View {
+    var body: some View {
         WebView(html: "<div style=\"width: 100%; height: 100%;\">\(rewriteSVGSize(svg))</div>")
             .onAppear {
                 downloadSVG()
@@ -55,7 +55,7 @@ public struct SVGWebView2: View {
     private func downloadSVG() {
         URLSession.shared.dataTask(with: url) { data, response, error in
             guard let data = data, error == nil else {
-                print("Error downloading SVG: \(error?.localizedDescription ?? "Unknown error")")
+                print("[DispatchSDK] Error downloading SVG: \(error?.localizedDescription ?? "Unknown error")")
                 return
             }
             
@@ -201,13 +201,13 @@ import WebKit
  * Xcode Previews do not work quite right with the iOS variant, best to test in
  * a real simulator.
  */
-public struct SVGWebView: View {
+struct SVGWebView: View {
   
   private let svg: String
   
-  public init(svg: String) { self.svg = svg }
+  init(svg: String) { self.svg = svg }
   
-  public var body: some View {
+  var body: some View {
     WebView(html:
       "<div style=\"width: 100%; height: 100%;\">\(rewriteSVGSize(svg))</div>"
     )

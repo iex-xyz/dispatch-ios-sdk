@@ -1,6 +1,6 @@
 import Foundation
 
-public struct InitScreen: Codable, Equatable {
+struct InitScreen: Codable, Equatable {
     let buttonText: String
     let imageUrls: [String]
     let linkoutUrl: String?

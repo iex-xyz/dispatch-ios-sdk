@@ -4,7 +4,7 @@ class BaseCoordinator: Coordinator {
     
     func start() { }
     
-    func start(with route: DeepLinkRoute) { }
+    func start(with route: DispatchRoute) { }
     
     func addDependency(_ coordinator: Coordinator) {
         guard !childCoordinators.contains(where: { $0 === coordinator }) else { return }

@@ -1,10 +1,10 @@
 import Foundation
 
-public struct CollectionStepsInput: Codable {
-    public let legalText: String?
-    public let promoCodes: [PromoCode]?
-    public let recommendedProducts: [String]?
-    public let type: CollectionStep
+struct CollectionStepsInput: Codable {
+    let legalText: String?
+    let promoCodes: [PromoCode]?
+    let recommendedProducts: [String]?
+    let type: CollectionStep
 
     enum CodingKeys: String, CodingKey {
         case legalText

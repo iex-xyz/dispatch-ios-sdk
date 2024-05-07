@@ -13,7 +13,7 @@ struct CheckoutView: View {
             ScrollView {
                 VStack {
                     MediaCarouselView(viewModel: mediaViewModel)
-                        .frame(height: 200)
+                        .frame(minHeight: 200, idealHeight: 300, maxHeight: 360)
                     VStack(alignment: .leading) {
                         if let productViewModel = viewModel.productViewModel {
                             ProductOverviewDetailsCell(

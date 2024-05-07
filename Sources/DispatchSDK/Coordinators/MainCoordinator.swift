@@ -4,17 +4,19 @@ final class MainCoordinator: BaseCoordinator {
     
     private let router: Router
     private let apiClient: GraphQLClient
+    private let config: DispatchConfig
 
-    init(router: Router, apiClient: GraphQLClient) {
+    init(router: Router, apiClient: GraphQLClient, config: DispatchConfig) {
         self.router = router
         self.apiClient = apiClient
+        self.config = config
     }
     
     override func start() {
         print("[WARNING] Invalid coordinator invocation. Must use deep link route to start flow")
     }
     
-    override func start(with route: DeepLinkRoute) {
+    override func start(with route: DispatchRoute) {
         switch route {
         case let .checkout(id):
             runCheckoutFlow(for: id)
@@ -47,7 +49,8 @@ final class MainCoordinator: BaseCoordinator {
         let coordinator = CheckoutCoordinator(
             router: router,
             apiClient: apiClient,
-            checkoutId: id
+            checkoutId: id,
+            config: config
         )
         coordinator.shouldDismissFlow = { [weak self, weak coordinator] in
             self?.removeDependency(coordinator)

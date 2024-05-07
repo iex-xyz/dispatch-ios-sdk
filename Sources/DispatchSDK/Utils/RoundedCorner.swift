@@ -1,11 +1,11 @@
 import SwiftUI
 
-public struct RoundedCorner: Shape {
+struct RoundedCorner: Shape {
     
-    public var radius: CGFloat = .infinity
-    public var corners: UIRectCorner = .allCorners
+    var radius: CGFloat = .infinity
+    var corners: UIRectCorner = .allCorners
     
-    public init(
+    init(
         radius: CGFloat = .infinity,
         corners: UIRectCorner = .allCorners
     ) {
@@ -13,13 +13,13 @@ public struct RoundedCorner: Shape {
         self.corners = corners
     }
     
-    public func path(in rect: CGRect) -> Path {
+    func path(in rect: CGRect) -> Path {
         let path = UIBezierPath(roundedRect: rect, byRoundingCorners: corners, cornerRadii: CGSize(width: radius, height: radius))
         return Path(path.cgPath)
     }
 }
 
-public extension View {
+extension View {
     func cornerRadius(_ radius: CGFloat, corners: UIRectCorner) -> some View {
         clipShape( RoundedCorner(radius: radius, corners: corners) )
     }

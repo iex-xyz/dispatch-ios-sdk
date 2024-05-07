@@ -6,6 +6,7 @@ import PassKit
 class ApplePayCoordinator: BaseCoordinator {
     private let router: Router
     private let apiClient: GraphQLClient
+    private let config: DispatchConfig
     private var cancellables: Set<AnyCancellable> = .init()
     
     private let viewModel: ApplePayViewModel
@@ -15,11 +16,13 @@ class ApplePayCoordinator: BaseCoordinator {
         router: Router,
         apiClient: GraphQLClient,
         viewModel: ApplePayViewModel,
+        config: DispatchConfig,
         didCancel: @escaping () -> Void
     ) {
         self.router = router
         self.apiClient = apiClient
         self.viewModel = viewModel
+        self.config = config
         self.didCancel = didCancel
         super.init()
     }
@@ -28,7 +31,7 @@ class ApplePayCoordinator: BaseCoordinator {
         showPaymentView(with: viewModel)
     }
     
-    override func start(with route: DeepLinkRoute) {
+    override func start(with route: DispatchRoute) {
         print("[WARNING] Invalid deep link coordinator. Cannot handle deep link route")
         start()
     }
@@ -40,7 +43,7 @@ class ApplePayCoordinator: BaseCoordinator {
             viewController?.delegate = viewModel
             
             router.present(viewController, animated: true) {
-                // TODO:
+                //
             }
         }
     }

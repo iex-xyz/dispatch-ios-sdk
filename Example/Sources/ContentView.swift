@@ -95,8 +95,13 @@ struct ContentView: View {
             .listStyle(.insetGrouped)
     }
     
-    func handleItemTapped(_ route: DeepLinkRoute) {
-        DispatchSDK.shared.setEnvironment(environment)
+    func handleItemTapped(_ route: DispatchRoute) {
+        let config: DispatchConfig = DispatchConfig(
+            applicationId: "64b86c02453510acde70250f",
+            environment: .staging,
+            merchantId: "merchant.co.dispatch.checkout"
+        )
+        DispatchSDK.shared.setup(using: config)
         DispatchSDK.shared.present(with: route)
 
     }

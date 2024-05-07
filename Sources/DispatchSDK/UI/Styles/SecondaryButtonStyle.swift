@@ -4,7 +4,7 @@ struct SecondaryButtonStyle: ButtonStyle {
     @Preference(\.theme) var theme
 
     
-    public func makeBody(configuration: Configuration) -> some View {
+    func makeBody(configuration: Configuration) -> some View {
         HStack(alignment: .firstTextBaseline) {
             configuration.label
                 .font(.footnote.bold())

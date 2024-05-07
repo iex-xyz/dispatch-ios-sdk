@@ -74,6 +74,10 @@ struct CompleteOrderRequest: GraphQLRequest {
     }
     
     init(orderId: String, applePayEncryptedPaymentData: String) {
-        self.input = .init(applePayEncryptedPaymentData: applePayEncryptedPaymentData, orderId: orderId, tokenizedPayment: "")
+        self.input = .init(
+            applePayEncryptedPaymentData: applePayEncryptedPaymentData,
+            orderId: orderId,
+            tokenizedPayment: ""
+        )
     }
 }

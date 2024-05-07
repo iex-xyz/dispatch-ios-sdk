@@ -203,14 +203,16 @@ internal class CheckoutViewModel: ObservableObject {
                         self.paymentConfiguration = paymentConfiguration
                         self.updateCheckout(checkout)
                     }
-                case let .content(content):
+                case .content:
+                    // TODO: Add support for 'content'
                     break
-                case let .leadgen(leadgen):
+                case .leadgen:
+                    // TODO: Add support for leadgen
                     break
                 }
                 
             } catch {
-                print("Error fetching distribution: \(error)")
+                print("[DispatchSDK] Error fetching distribution: \(error)")
             }
         }
     }

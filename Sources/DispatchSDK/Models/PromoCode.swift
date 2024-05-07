@@ -1,6 +1,6 @@
 import Foundation
 
-public struct PromoCode: Codable {
+struct PromoCode: Codable {
     let code: String
     let description: String?
 

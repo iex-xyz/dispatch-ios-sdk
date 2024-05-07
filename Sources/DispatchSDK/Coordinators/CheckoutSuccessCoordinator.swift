@@ -25,7 +25,7 @@ class CheckoutSuccessCoordinator: BaseCoordinator {
         showSuccessScreen()
     }
     
-    override func start(with route: DeepLinkRoute) {
+    override func start(with route: DispatchRoute) {
         print("[WARNING] Invalid deep link coordinator. Cannot handle deep link route")
         start()
     }

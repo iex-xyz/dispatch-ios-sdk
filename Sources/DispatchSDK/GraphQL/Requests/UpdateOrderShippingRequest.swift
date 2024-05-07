@@ -1,4 +1,13 @@
 import Foundation
+extension String {
+    func escapedForGraphQL() -> String {
+        return self
+            .replacingOccurrences(of: "\\", with: "\\\\")
+            .replacingOccurrences(of: "\"", with: "\\\"")
+            .replacingOccurrences(of: "\n", with: "\\n")
+            .replacingOccurrences(of: "\\/", with: "\\\\/")
+    }
+}
 
 struct UpdateOrderShippingRequest: GraphQLRequest {
     enum UpdateShippingType: String, Codable {
@@ -16,7 +25,7 @@ struct UpdateOrderShippingRequest: GraphQLRequest {
         let city: String
         let state: String
         let zip: String
-        let phoneNumber: String // TODO: Unformatted?
+        let phoneNumber: String
         let country: String
         let email: String?
         
@@ -32,7 +41,7 @@ struct UpdateOrderShippingRequest: GraphQLRequest {
                updateOrderInformation(
                  orderId: \"\(params.orderId)\",
                  updateType: \(params.updateType.rawValue),
-                   address1: \"\(params.address1)\",
+                   address1: \"\(params.address1.escapedForGraphQL())\",
                    address2: \"\(params.address2)\",
                    city: \"\(params.city)\",
                    country: \"\(params.country)\",

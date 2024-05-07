@@ -1,7 +1,7 @@
 import Foundation
 
 extension Collection {
-    public func chunked(into chunkSize: Int) -> [[Element]] {
+    func chunked(into chunkSize: Int) -> [[Element]] {
         var result = [[Element]]()
         var currentIndex = startIndex
         

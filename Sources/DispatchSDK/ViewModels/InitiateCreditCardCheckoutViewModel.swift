@@ -85,7 +85,7 @@ class InitiateCreditCardCheckoutViewModel: ObservableObject {
                 do {
                     return try EmailValidator.validateEmail($0)
                 } catch {
-                    print("Unable to validate email", error)
+                    print("[DispatchSDK] Unable to validate email", error)
                     return false
                 }
             }

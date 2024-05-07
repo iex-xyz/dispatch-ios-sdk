@@ -72,7 +72,7 @@ struct Product: Codable, Equatable {
         self.id = id
     }
     
-    public init(from decoder: Decoder) throws {
+    init(from decoder: Decoder) throws {
         let container = try decoder.container(keyedBy: CodingKeys.self)
         name = try container.decode(String.self, forKey: .name)
         description = try container.decode(String.self, forKey: .description)

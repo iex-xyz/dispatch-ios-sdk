@@ -30,7 +30,9 @@ class ShippingMethodViewModel: ObservableObject {
     }
     
     func fetchShippingMethods() async {
-        self.state = .loading
+        DispatchQueue.main.async {
+            self.state = .loading
+        }
 
         Task { [weak self] in
             guard let self else { return }
@@ -41,7 +43,7 @@ class ShippingMethodViewModel: ObservableObject {
                     self.state = .loaded(response.availableShippingMethods)
                 }
             } catch {
-                print("Error fetching shipping methods: \(error)")
+                print("[DispatchSDK] Error fetching shipping methods: \(error)")
                 DispatchQueue.main.async {
                     self.state = .error(error)
                 }
@@ -69,7 +71,7 @@ class ShippingMethodViewModel: ObservableObject {
                 self._onShippingMethodTapped.send(shippingMethod)
             }
         } catch {
-            print("Error updating shipping method (\(shippingMethod.id) for \(orderId)")
+            print("[DispatchSDK] Error updating shipping method (\(shippingMethod.id) for \(orderId)")
         }
         
     }

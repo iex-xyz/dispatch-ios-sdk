@@ -17,7 +17,8 @@ struct MediaCarouselView: View {
                             image
                                 .resizable()
                                 .scaledToFill()
-                                .frame(width: geometry.size.width, height: 200)
+                                .frame(width: geometry.size.width)
+                                .frame(minHeight: 200, maxHeight: 360)
                         } placeholder: {
                             ProgressView()
                         }
@@ -95,7 +96,8 @@ struct MediaCarouselView: View {
                 .padding(.trailing)
                 .padding(.bottom)
             }
-            .frame(width: geometry.size.width, height: 200)
+            .frame(width: geometry.size.width)
+            .frame(minHeight: 200, maxHeight: 360)
             .clipped()
         }
     }

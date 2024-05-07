@@ -1,16 +1,16 @@
 import SwiftUI
 
-public struct VariantPickerCell: View {
+struct VariantPickerCell: View {
     @Preference(\.theme) var theme
-    public let text: String
-    public let isSelected: Bool
+    let text: String
+    let isSelected: Bool
     
     init(text: String, isSelected: Bool) {
         self.text = text
         self.isSelected = isSelected
     }
     
-    public var body: some View {
+    var body: some View {
         ZStack(alignment: .topTrailing) {
             Text(text)
                 .foregroundStyle(.primary)

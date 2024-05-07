@@ -85,7 +85,6 @@ extension String {
             }
         }
 
-        print("formatAsCreditCard: original text = \(formattedString)")
         return formattedString
     }
     

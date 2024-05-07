@@ -1,11 +1,10 @@
 import SwiftUI
 
-
-public struct ThemeKey: EnvironmentKey {
-    public static var defaultValue: Theme = .default
+struct ThemeKey: EnvironmentKey {
+    static var defaultValue: Theme = .default
 }
 extension EnvironmentValues {
-    public var theme: Theme {
+    var theme: Theme {
         get { self[ThemeKey.self] }
         set { self[ThemeKey.self] = newValue }
     }

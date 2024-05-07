@@ -23,8 +23,8 @@ class CheckoutOverviewViewModel: ObservableObject {
     let email: String
     let variant: Variation?
     let phone: String
-    let shippingAddress: Address // TODO: Model address
-    let billingAddress: Address? // TODO: Model address
+    let shippingAddress: Address
+    let billingAddress: Address?
     let billingInfo: BillingInfo
     let shippingMethod: ShippingMethod
     let tokenizedPayment: String
@@ -75,7 +75,7 @@ class CheckoutOverviewViewModel: ObservableObject {
                 }
             } catch {
                 // TODO: Error handling
-                print("Unable to complete order", error)
+                print("[DispatchSDK] Unable to complete order", error)
                 DispatchQueue.main.async {
                     self.state = .failed(error)
                 }
@@ -100,7 +100,6 @@ class CheckoutOverviewViewModel: ObservableObject {
     }
     
     func onShippingAddressButtonTapped() {
-        // TODO:
 //        _onShippingMethodTapped.send(shippingAddress)
     }
     
@@ -109,7 +108,6 @@ class CheckoutOverviewViewModel: ObservableObject {
     }
     
     func onPaymentDetailsButtonTapped() {
-//         TODO:
 //        _onPaymentDetailsTapped.send()
     }
     

@@ -1,14 +1,14 @@
 import SwiftUI
 import UIKit
 
-public struct UIHostingConfigurationBackport<Content, Background>: UIContentConfiguration where Content: View, Background: View {
+struct UIHostingConfigurationBackport<Content, Background>: UIContentConfiguration where Content: View, Background: View {
     let content: Content
     let background: Background
     let margins: NSDirectionalEdgeInsets
     let minWidth: CGFloat?
     let minHeight: CGFloat?
     
-    public init(@ViewBuilder content: () -> Content) where Background == EmptyView {
+    init(@ViewBuilder content: () -> Content) where Background == EmptyView {
         self.content = content()
         background = .init()
         margins = .zero
@@ -24,15 +24,15 @@ public struct UIHostingConfigurationBackport<Content, Background>: UIContentConf
         self.minHeight = minHeight
     }
     
-    public func makeContentView() -> UIView & UIContentView {
+    func makeContentView() -> UIView & UIContentView {
         return UIHostingContentViewBackport<Content, Background>(configuration: self)
     }
     
-    public func updated(for state: UIConfigurationState) -> UIHostingConfigurationBackport {
+    func updated(for state: UIConfigurationState) -> UIHostingConfigurationBackport {
         return self
     }
     
-    public func background<S>(_ style: S) -> UIHostingConfigurationBackport<Content, _UIHostingConfigurationBackgroundViewBackport<S>> where S: ShapeStyle {
+    func background<S>(_ style: S) -> UIHostingConfigurationBackport<Content, _UIHostingConfigurationBackgroundViewBackport<S>> where S: ShapeStyle {
         return UIHostingConfigurationBackport<Content, _UIHostingConfigurationBackgroundViewBackport<S>>(
             content: content,
             background: .init(style: style),
@@ -42,7 +42,7 @@ public struct UIHostingConfigurationBackport<Content, Background>: UIContentConf
         )
     }
     
-    public func background<B>(@ViewBuilder content: () -> B) -> UIHostingConfigurationBackport<Content, B> where B: View {
+    func background<B>(@ViewBuilder content: () -> B) -> UIHostingConfigurationBackport<Content, B> where B: View {
         return UIHostingConfigurationBackport<Content, B>(
             content: self.content,
             background: content(),
@@ -52,7 +52,7 @@ public struct UIHostingConfigurationBackport<Content, Background>: UIContentConf
         )
     }
     
-    public func margins(_ insets: EdgeInsets) -> UIHostingConfigurationBackport<Content, Background> {
+    func margins(_ insets: EdgeInsets) -> UIHostingConfigurationBackport<Content, Background> {
         return UIHostingConfigurationBackport<Content, Background>(
             content: content,
             background: background,
@@ -62,7 +62,7 @@ public struct UIHostingConfigurationBackport<Content, Background>: UIContentConf
         )
     }
     
-    public func margins(_ edges: Edge.Set = .all, _ length: CGFloat) -> UIHostingConfigurationBackport<Content, Background> {
+    func margins(_ edges: Edge.Set = .all, _ length: CGFloat) -> UIHostingConfigurationBackport<Content, Background> {
         return UIHostingConfigurationBackport<Content, Background>(
             content: content,
             background: background,
@@ -77,7 +77,7 @@ public struct UIHostingConfigurationBackport<Content, Background>: UIContentConf
         )
     }
     
-    public func minSize(width: CGFloat? = nil, height: CGFloat? = nil) -> UIHostingConfigurationBackport<Content, Background> {
+    func minSize(width: CGFloat? = nil, height: CGFloat? = nil) -> UIHostingConfigurationBackport<Content, Background> {
         return UIHostingConfigurationBackport<Content, Background>(
             content: content,
             background: background,
@@ -151,10 +151,10 @@ final class UIHostingContentViewBackport<Content, Background>: UIView, UIContent
     }
 }
 
-public struct _UIHostingConfigurationBackgroundViewBackport<S>: View where S: ShapeStyle {
+struct _UIHostingConfigurationBackgroundViewBackport<S>: View where S: ShapeStyle {
     let style: S
     
-    public var body: some View {
+    var body: some View {
         Rectangle().fill(style)
     }
 }

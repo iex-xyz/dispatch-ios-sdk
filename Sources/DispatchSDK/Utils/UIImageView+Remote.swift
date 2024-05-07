@@ -8,12 +8,12 @@ extension UIImageView {
             guard let self = self else { return }
             
             if let error = error {
-                print("Error loading image: \(error.localizedDescription)")
+                print("[DispatchSDK] Error loading image: \(error.localizedDescription)")
                 return
             }
             
             guard let data = data, let loadedImage = UIImage(data: data) else {
-                print("Invalid image data")
+                print("[DispatchSDK] Invalid image data")
                 return
             }
             

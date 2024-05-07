@@ -92,7 +92,6 @@ class CreditCardInputViewModel: ShippingAddressViewModel {
                 isPhoneValid
             ))
         else {
-            // TODO: Handle invalid state
             return
         }
         
@@ -132,8 +131,6 @@ class CreditCardInputViewModel: ShippingAddressViewModel {
         )
         let request = UpdateOrderShippingRequest(params: params)
         _ = try await apiClient.performOperation(request)
-
-        // TODO: Do we need to check status at any point?
     }
     
     private func generatePaymentToken() async throws {

@@ -28,15 +28,16 @@ struct ExpirationDateTextField: UIViewRepresentable {
     }
     
     func updateUIView(_ uiView: UITextField, context: Context) {
-        uiView.text = text
-        if isFocused {
-            uiView.layer.borderColor = Color.dispatchBlue.cgColor
-        } else if !isValid {
-            uiView.layer.borderColor = Color.dispatchRed.cgColor
-        } else {
-            uiView.layer.borderColor = Colors.borderGray.cgColor
+        DispatchQueue.main.async {
+            uiView.text = self.text
+            if self.isFocused {
+                uiView.layer.borderColor = Color.dispatchBlue.cgColor
+            } else if !self.isValid {
+                uiView.layer.borderColor = Color.dispatchRed.cgColor
+            } else {
+                uiView.layer.borderColor = Colors.borderGray.cgColor
+            }
         }
-
     }
 
     func makeCoordinator() -> Coordinator {
