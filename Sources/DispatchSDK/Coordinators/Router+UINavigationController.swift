@@ -139,7 +139,6 @@ final class RouterImp: NSObject, Router {
 extension RouterImp: UIAdaptivePresentationControllerDelegate {
     
     func presentationControllerDidDismiss(_ presentationController: UIPresentationController) {
-        print("Did dismiss \(presentationController.presentedViewController)")
         runCompletion(for: presentationController.presentedViewController)
     }
 }
