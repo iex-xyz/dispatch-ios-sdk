@@ -17,9 +17,11 @@ struct SecureCheckoutOverview: View {
                     MerchantSecurityTag(domain: domain, tapHandler: {})
                 }
                 HStack {
-                    Circle()
-                        .fill()
-                        .frame(width: 40, height: 40)
+                    if let url = checkout.merchantLogoUrl {
+                        LogoImageView(logoUrl: url)
+                            .frame(width: 40, height: 40)
+                            .clipShape(Circle())
+                    }
                     Spacer()
                     CloseButton {
                         dismiss()

@@ -1,21 +1,5 @@
 import SwiftUI
-
 import Combine
-internal class ProductOverviewViewModel: ObservableObject {
-    let product: Product
-
-    let _onCloseButtonTapped = PassthroughSubject<Void, Never>()
-
-    init(product: Product) {
-        self.product = product
-    }
-    
-    func onCloseButtonTapped() {
-        _onCloseButtonTapped.send()
-    }
-
-}
-
 
 struct ProductOverview: View {
     @Preference(\.theme) var theme
@@ -25,12 +9,6 @@ struct ProductOverview: View {
         self.viewModel = viewModel
     }
     
-    let svg = """
-    <svg width="23" height="8" viewBox="0 0 23 8" fill="none" xmlns="http://www.w3.org/2000/svg">
-    <path fill-rule="evenodd" clip-rule="evenodd" d="M23 0L6.17976 7.11224C4.77935 7.70451 3.60126 8 2.6519 8C1.5837 8 0.805557 7.62426 0.32768 6.87406C-0.292027 5.90607 -0.0211445 4.34963 1.04194 2.70658C1.67315 1.74622 2.47557 0.864831 3.25755 0.0216529C3.07356 0.319695 1.44954 3.01353 3.22561 4.28212C3.57699 4.53686 4.07659 4.66168 4.69118 4.66168C5.18439 4.66168 5.75043 4.58144 6.37269 4.41968L23 0Z" fill="white"/>
-    </svg>
-
-    """
     var body: some View {
         VStack {
             HStack {

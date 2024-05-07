@@ -2,6 +2,19 @@ import UIKit
 import SwiftUI
 import Combine
 
+struct CheckoutLogoImageView: View {
+    @ObservedObject var viewModel: CheckoutViewModel
+    
+    var body: some View {
+        if let url = viewModel.checkout?.merchantLogoUrl {
+            LogoImageView(logoUrl: url)
+                .frame(width: 40, height: 40)
+                .clipShape(Circle())
+            
+        }
+    }
+}
+
 class CheckoutCoordinator: BaseCoordinator {
     let router: Router
     let apiClient: GraphQLClient
@@ -31,16 +44,13 @@ class CheckoutCoordinator: BaseCoordinator {
         return controller
     }()
 
-    // TODO: We need logo image support
-//    private lazy var leftBarButtonController: UIHostingController<CloseButton> = {
-//        let controller = UIHostingController<CloseButton>(rootView: CloseButton { [weak self] in
-//            self?.didCancel()
-//        })
-//        
-//        controller.view.backgroundColor = .clear
-//        controller.view.translatesAutoresizingMaskIntoConstraints = false
-//        return controller
-//    }()
+    private lazy var leftBarButtonController: UIHostingController<CheckoutLogoImageView> = {
+        let controller = UIHostingController<CheckoutLogoImageView>(rootView: CheckoutLogoImageView(viewModel: viewModel))
+        
+        controller.view.backgroundColor = .clear
+        controller.view.translatesAutoresizingMaskIntoConstraints = false
+        return controller
+    }()
 
     private var cancellables: Set<AnyCancellable> = .init()
     
@@ -128,8 +138,7 @@ class CheckoutCoordinator: BaseCoordinator {
         )
         
         viewController.navigationItem.rightBarButtonItem = .init(customView: rightBarButtonController.view)
-        // TODO: Once Remote SVG support is added, we should render the logo in the top left for the main CheckoutView
-//        viewController.navigationItem.leftBarButtonItem = .init(customView: leftBarButtonController.view)
+        viewController.navigationItem.leftBarButtonItem = .init(customView: leftBarButtonController.view)
         viewController.navigationItem.titleView = navigationTitleController.view
 
         viewModel
@@ -208,6 +217,7 @@ class CheckoutCoordinator: BaseCoordinator {
             sheet.preferredCornerRadius = 16
             sheet.prefersGrabberVisible = true
         }
+        viewController.navigationItem.leftBarButtonItem = .init(customView: leftBarButtonController.view)
         router.present(viewController, animated: true, completion: {
             //
         })
