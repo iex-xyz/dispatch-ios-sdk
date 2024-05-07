@@ -2,6 +2,14 @@ import Foundation
 import Combine
 
 class ProductMediaViewModel: ObservableObject {
+    
+    struct Image: Identifiable {
+        var id: String {
+            url
+        }
+        let url: String
+    }
+
     @Published var product: Product? {
         didSet {
             self.images = product?.baseImages ?? []
@@ -10,6 +18,7 @@ class ProductMediaViewModel: ObservableObject {
     }
     @Published private(set) var images: [String]
     @Published var currentIndex: Int
+    @Published var selectedImage: Image?
     
     var isPreviousButtonEnabled: Bool {
         return currentIndex > 0
@@ -23,6 +32,10 @@ class ProductMediaViewModel: ObservableObject {
     init(images: [String], currentIndex: Int = 0) {
         self.images = images
         self.currentIndex = currentIndex
+    }
+    
+    func onImageTapped(at index: Int) {
+        self.selectedImage = .init(url: images[index])
     }
     
     func onNextButtonTapped() {

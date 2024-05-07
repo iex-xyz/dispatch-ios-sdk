@@ -3,6 +3,7 @@ import SwiftUI
 struct MediaCarouselView: View {
     @Preference(\.theme) var theme
     @ObservedObject var viewModel: ProductMediaViewModel
+    @State private var fullscreenScale: CGFloat = 1
     
     init(viewModel: ProductMediaViewModel) {
         self.viewModel = viewModel
@@ -21,6 +22,9 @@ struct MediaCarouselView: View {
                                 .frame(minHeight: 200, maxHeight: 360)
                         } placeholder: {
                             ProgressView()
+                        }
+                        .onTapGesture {
+                            viewModel.onImageTapped(at: index)
                         }
                     }
                 }
@@ -99,6 +103,35 @@ struct MediaCarouselView: View {
             .frame(width: geometry.size.width)
             .frame(minHeight: 200, maxHeight: 360)
             .clipped()
+            .fullScreenCover(item: $viewModel.selectedImage) { selectedImage in
+                ZStack {
+
+                    ZoomableScrollView(scale: $fullscreenScale) {
+                        AsyncImage(url: URL(string: selectedImage.url)) { image in
+                            image
+                                .resizable()
+                                .scaledToFit()
+                                .frame(maxWidth: .infinity, maxHeight: .infinity)
+                        } placeholder: {
+                            ProgressView()
+                        }
+                        .padding()
+                    }
+                    .background(theme.backgroundColor)
+                    VStack {
+                        HStack {
+                            Spacer()
+                            CloseButton {
+                                viewModel.selectedImage = nil
+                            }
+                        }
+                        .padding()
+                        Spacer()
+                    }
+                }
+
+            }
+
         }
     }
 
