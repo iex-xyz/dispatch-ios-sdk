@@ -55,7 +55,7 @@ struct Theme: Codable, Equatable {
         isDynamic = try container.decodeIfPresent(Bool.self, forKey: .isDynamic)
         ctaStyle = try container.decode(Style.self, forKey: .ctaStyle)
         inputStyle = try container.decode(Style.self, forKey: .inputStyle)
-        mode = try container.decode(Mode.self, forKey: .mode)
+        mode = try container.decodeIfPresent(Mode.self, forKey: .mode) ?? .light
         _primaryColor = try container.decodeIfPresent(String.self, forKey: ._primaryColor) ?? "#158AFF"
     }
 
