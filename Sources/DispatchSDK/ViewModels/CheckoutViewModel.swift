@@ -73,9 +73,7 @@ internal class CheckoutViewModel: ObservableObject {
             self.enabledPaymentMethods = paymentMethods
             
             // TODO: We should make selectedPaymentMethod optional but will need to rework some things
-            if !enabledPaymentMethods.contains(selectedPaymentMethod) {
-                selectedPaymentMethod = enabledPaymentMethods.first ?? .creditCard
-            }
+            selectedPaymentMethod = enabledPaymentMethods.first ?? .creditCard
         }
     }
 
