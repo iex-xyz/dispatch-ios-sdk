@@ -37,9 +37,9 @@ struct ContentView: View {
                         Text("Yeti Cooler")
                     }
                     Button(action: {
-                        handleItemTapped(.testYetiMugCheckout)
+                        handleItemTapped(.testStanleyCheckout)
                     }) {
-                        Text("Yeti Mug")
+                        Text("Stanley Cup")
                     }
                     Button(action: {
                         handleItemTapped(.testMysteryCheckout)
@@ -92,7 +92,7 @@ struct ContentView: View {
     func handleItemTapped(_ route: DispatchRoute) {
         let config: DispatchConfig = DispatchConfig(
             applicationId: "64b86c02453510acde70250f",
-            environment: .staging,
+            environment: environment,
             merchantId: "merchant.co.dispatch.checkout"
         )
         DispatchSDK.shared.setup(using: config)
