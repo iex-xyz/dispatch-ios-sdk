@@ -131,11 +131,13 @@ struct CheckoutSuccessView: View {
                             .lineLimit(1)
                     } handler: {}
                     Divider()
-                    CheckoutOverviewDetailRow(title: "Shipping Address", showChevron: false) {
-                        Text(viewModel.shippingAddress.formattedString)
-                            .multilineTextAlignment(.trailing)
-                    } handler: {}
-                    Divider()
+                    if let shippingAddress = viewModel.shippingAddress {
+                        CheckoutOverviewDetailRow(title: "Shipping Address", showChevron: false) {
+                            Text(shippingAddress.formattedString)
+                                .multilineTextAlignment(.trailing)
+                        } handler: {}
+                        Divider()
+                    }
                     if let billingInfo = viewModel.billingInfo {
                         CheckoutOverviewDetailRow(title: "Payment", showChevron: false) {
                             HStack {

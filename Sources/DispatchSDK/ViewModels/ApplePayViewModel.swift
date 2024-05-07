@@ -1,5 +1,6 @@
 import Foundation
 import PassKit
+import Combine
 
 struct PaymentJson: Codable {
     let signature: String
@@ -78,10 +79,13 @@ class ApplePayViewModel: NSObject, ObservableObject {
     private var selectedContact: PKContact?
     private var selectedPaymentMethod: PKPaymentMethod?
     private var selectedShippingMethod: PKShippingMethod?
-
+    
+    private var authorizedPayment: PKPayment?
 
     private(set) var supportedNetworks: [PKPaymentNetwork] = []
     private(set) var shippingMethods: [PKShippingMethod] = []
+
+    let _onOrderCompleted = PassthroughSubject<(InitiateOrder, Address?, BillingInfo?), Never>()
 
     // TODO: Checkout -> Content?
     init(content: Checkout, quantity: Int, selectedVariant: Variation?, apiClient: GraphQLClient) {
@@ -234,7 +238,29 @@ extension ApplePayViewModel: PKPaymentAuthorizationViewControllerDelegate {
     func paymentAuthorizationViewControllerDidFinish(
         _ controller: PKPaymentAuthorizationViewController
     ) {
-        controller.dismiss(animated: true)
+        guard let order, let payment = self.authorizedPayment else {
+            controller.dismiss(animated: true)
+            return
+        }
+        
+        let shippingAddress: Address?
+        
+        if let postalAddress = payment.shippingContact?.postalAddress {
+            shippingAddress = Address(
+                address1: postalAddress.street,
+                address2: postalAddress.subLocality,
+                city: postalAddress.city,
+                state: postalAddress.street,
+                zip: postalAddress.postalCode,
+                country: postalAddress.isoCountryCode
+            )
+        } else {
+            shippingAddress = nil
+        }
+
+        DispatchQueue.main.async {
+            self._onOrderCompleted.send((order, shippingAddress, nil))
+        }
     }
     
     func paymentAuthorizationViewControllerDidRequestMerchantSessionUpdate(
@@ -474,6 +500,8 @@ extension ApplePayViewModel: PKPaymentAuthorizationViewControllerDelegate {
             
             let response = try await apiClient.performOperation(tokenizeRequest)
             self.order = response
+
+            self.authorizedPayment = payment
 
             return PKPaymentAuthorizationResult(status: .success, errors: nil)
         } catch {

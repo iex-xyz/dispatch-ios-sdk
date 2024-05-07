@@ -254,6 +254,14 @@ class CheckoutCoordinator: BaseCoordinator {
             config: config,
             didCancel: {
                 // TODO:
+            },
+            didComplete: { [weak self] order, address, billingInfo in
+                self?.navigateToOrderCompleteCoordinator(
+                    order: order,
+                    checkout: checkout,
+                    shippingAddress: address,
+                    billingInfo: billingInfo
+                )
             }
         )
         
@@ -276,6 +284,29 @@ class CheckoutCoordinator: BaseCoordinator {
         ) {
             // TODO: Add cancel handler
         }
+        
+        addDependency(coordinator)
+        coordinator.start()
+    }
+    
+    
+    private func navigateToOrderCompleteCoordinator(
+        order: InitiateOrder,
+        checkout: Checkout,
+        shippingAddress: Address?,
+        billingInfo: BillingInfo?
+    ) {
+        let viewModel = CheckoutSuccessViewModel(
+            checkout: checkout,
+            orderNumber: order.id,
+            shippingAddress: shippingAddress,
+            billingInfo: billingInfo
+        )
+        let coordinator = CheckoutSuccessCoordinator(
+            router: router,
+            apiClient: apiClient,
+            viewModel: viewModel
+        )
         
         addDependency(coordinator)
         coordinator.start()
