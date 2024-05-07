@@ -13,8 +13,8 @@ extension DispatchRoute {
     public static var testYetiCheckout: Self {
         return .checkout("652ef22e5599070b1b8b9986")
     }
-    public static var testYetiMugCheckout: Self {
-        return .checkout("65dcf44b774d442bb689067a")
+    public static var testStanleyCheckout: Self {
+        return .checkout("6638f910ebe97a4d41672c0c")
     }
 
     public static var testMysteryCheckout: Self {

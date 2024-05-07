@@ -14,4 +14,8 @@ class GraphQLClient {
         let data = try await networkService.performRequest(urlRequest)
         return try request.parseResponse(data: data)
     }
+    
+    func updateEnvironment(_ environment: AppEnvironment) {
+        self.environment = environment
+    }
 }
