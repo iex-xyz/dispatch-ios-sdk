@@ -26,13 +26,13 @@ class ProductMediaViewModel: ObservableObject {
     }
     
     func onNextButtonTapped() {
-        currentIndex = max(currentIndex + 1, images.count - 1)
+        currentIndex = (currentIndex + 1) % images.count
     }
-    
+
     func onPreviousButtonTapped() {
-        currentIndex = max(currentIndex - 1, 0)
+        currentIndex = (currentIndex - 1 + images.count) % images.count
     }
-    
+
     func onCurrentIndexDidChange(_ index: Int) {
         self.currentIndex = index
     }
