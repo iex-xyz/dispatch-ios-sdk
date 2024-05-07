@@ -22,22 +22,11 @@ struct PaymentOptionsPickerView: View {
                 VStack {
                     Spacer()
                     if paymentMethods.contains(.applePay) {
-                        Button(action: {
+                        ApplePayButton(paymentButtonType: .plain, isDisabled: false) {
                             onPaymentMethodSelected(.applePay)
                             dismiss()
-                        }) {
-                            HStack {
-                                Image(systemName: "apple.logo")
-                                Text("Pay")
-                            }
-                            .font(.headline.bold())
                         }
-                        .buttonStyle(
-                            PrimaryButtonStyle(
-                                foregroundColor: Color(UIColor.systemBackground),
-                                backgroundColor: .primary
-                            )
-                        )
+                        .frame(height: 44)
                     }
                     
                     if paymentMethods.contains(.creditCard) {
