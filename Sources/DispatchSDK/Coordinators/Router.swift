@@ -12,6 +12,8 @@ extension UIViewController: Presentable {
 }
 
 protocol Router: Presentable {
+    var isAtRoot: Bool { get }
+
     func presentSelf(completion: (() -> Void)?)
     func dismissSelf(completion: (() -> Void)?)
 

@@ -52,7 +52,11 @@ class CreditCardCoordinator: BaseCoordinator {
 
     private lazy var closeButtonController: UIHostingController<CloseButton> = {
         let controller = UIHostingController<CloseButton>(rootView: CloseButton { [weak self] in
-            self?.didCancel()
+            if self?.router.isAtRoot == true {
+                self?.didCancel()
+            } else {
+                self?.router.popToRootModule(animated: true)
+            }
         })
         
         controller.view.backgroundColor = .clear

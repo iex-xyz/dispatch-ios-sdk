@@ -16,6 +16,14 @@ final class RouterImp: NSObject, Router {
 //        self.rootController?.navigationBar.isTranslucent = false
     }
     
+    var isAtRoot: Bool {
+        guard let rootController else {
+            return false
+        }
+        
+        return rootController.viewControllers.count <= 1
+    }
+    
     func toPresent() -> UIViewController? {
         return rootController
     }
