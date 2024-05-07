@@ -5,15 +5,9 @@ struct ContentView: View {
     @State var environment: AppEnvironment = .staging
     
     let buildInfo = """
-• Apple Pay is setup but needs proper mapping to Dispatch API models (line items, shipping methods, etc)
-
-• Custom navigation title merchant tag isn't resizing width or marquee scrolling properly
-
 • Navigation hasn't been updated to match latest Figma. Still some questions/research around feasibility going sheet -> fullscreen
 
 • Checkout preview needs some testing with multiple attribute variant
-
-• Some loading states on buttons aren't being set properly
 
 • SVG image support is not sizing properly
 
