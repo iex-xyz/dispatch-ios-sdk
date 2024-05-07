@@ -32,7 +32,8 @@ final class MainCoordinator: BaseCoordinator {
                         checkout: .mock(),
                         orderNumber: UUID().uuidString,
                         shippingAddress: Address.mock(),
-                        billingInfo: .mock()
+                        billingInfo: .mock(),
+                        continueCTA: "Keep Shopping"
                     )
                 )
                 

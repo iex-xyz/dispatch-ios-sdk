@@ -291,11 +291,19 @@ class CheckoutCoordinator: BaseCoordinator {
             apiClient: apiClient,
             viewModel: viewModel,
             paymentMethods: self.viewModel.enabledPaymentMethods,
-            config: config
-        ) {
-            // TODO: Add cancel handler
-        }
-        
+            config: config,
+            didCancel: {
+                
+            },
+            didComplete: { [weak self] order, address, billingInfo in
+                self?.navigateToOrderCompleteCoordinator(
+                    order: order,
+                    checkout: checkout,
+                    shippingAddress: address,
+                    billingInfo: billingInfo
+                )
+            }
+        )
         addDependency(coordinator)
         coordinator.start()
     }
@@ -311,7 +319,8 @@ class CheckoutCoordinator: BaseCoordinator {
             checkout: checkout,
             orderNumber: order.id,
             shippingAddress: shippingAddress,
-            billingInfo: billingInfo
+            billingInfo: billingInfo,
+            continueCTA: config.orderCompletionCTA
         )
         let coordinator = CheckoutSuccessCoordinator(
             router: router,

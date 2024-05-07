@@ -31,6 +31,7 @@ class CreditCardCoordinator: BaseCoordinator {
     private var cancellables: Set<AnyCancellable> = .init()
     
     private let viewModel: InitiateCreditCardCheckoutViewModel
+    private let didComplete: (InitiateOrder, Address?, BillingInfo?) -> Void
     private let didCancel: () -> Void
     
     private lazy var rightBarButtonController: UIHostingController<RightNavigationButtons> = {
@@ -70,7 +71,8 @@ class CreditCardCoordinator: BaseCoordinator {
         viewModel: InitiateCreditCardCheckoutViewModel,
         paymentMethods: [PaymentMethods],
         config: DispatchConfig,
-        didCancel: @escaping () -> Void
+        didCancel: @escaping () -> Void,
+        didComplete: @escaping (InitiateOrder, Address?, BillingInfo?) -> Void
     ) {
         self.router = router
         self.apiClient = apiClient
@@ -78,6 +80,7 @@ class CreditCardCoordinator: BaseCoordinator {
         self.config = config
         self.paymentMethods = paymentMethods
         self.didCancel = didCancel
+        self.didComplete = didComplete
         super.init()
     }
     
@@ -261,11 +264,7 @@ class CreditCardCoordinator: BaseCoordinator {
         viewModel
             ._onOrderComplete
             .sink { [weak self] order in
-                self?.navigateToOrderCompleteCoordinator(
-                    order: order,
-                    shippingAddress: shippingAddress,
-                    billingInfo: billingInfo
-                )
+                self?.didComplete(order, shippingAddress, billingInfo)
             }
             .store(in: &cancellables)
         
@@ -283,24 +282,4 @@ class CreditCardCoordinator: BaseCoordinator {
         UIApplication.shared.open(url)
     }
     
-    private func navigateToOrderCompleteCoordinator(
-        order: InitiateOrder,
-        shippingAddress: Address,
-        billingInfo: BillingInfo
-    ) {
-        let viewModel = CheckoutSuccessViewModel(
-            checkout: viewModel.checkout,
-            orderNumber: order.id,
-            shippingAddress: shippingAddress,
-            billingInfo: billingInfo
-        )
-        let coordinator = CheckoutSuccessCoordinator(
-            router: router,
-            apiClient: apiClient,
-            viewModel: viewModel
-        )
-        
-        addDependency(coordinator)
-        coordinator.start()
-    }
 }

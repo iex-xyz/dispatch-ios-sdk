@@ -93,7 +93,8 @@ struct ContentView: View {
         let config: DispatchConfig = DispatchConfig(
             applicationId: "64b86c02453510acde70250f",
             environment: environment,
-            merchantId: "merchant.co.dispatch.checkout"
+            merchantId: "merchant.co.dispatch.checkout",
+            orderCompletionCTA: "Back to List"
         )
         DispatchSDK.shared.setup(using: config)
         DispatchSDK.shared.present(with: route)

@@ -160,7 +160,7 @@ struct CheckoutSuccessView: View {
                 Button(action: {
                     viewModel.onMainCtaButtonTapped()
                 }) {
-                    Text("Keep Shopping")
+                    Text(viewModel.continueCTA)
                 }
                 .buttonStyle(PrimaryButtonStyle())
                 FooterView()
@@ -177,7 +177,8 @@ struct CheckoutSuccessView: View {
         checkout: .mock(),
         orderNumber: "C0192329328",
         shippingAddress: .mock(),
-        billingInfo: .mock()
+        billingInfo: .mock(),
+        continueCTA: "Keep Shopping"
     )
     return CheckoutSuccessView(
         viewModel: viewModel
