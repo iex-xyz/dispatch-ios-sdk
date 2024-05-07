@@ -22,6 +22,7 @@ struct ShippingAddressFormContainer: View {
                     Text("Continue")
                 }
                 .buttonStyle(PrimaryButtonStyle(isLoading: viewModel.isUpdatingOrder))
+                .disabled(viewModel.isUpdatingOrder)
                 FooterView()
             }
             .padding()
@@ -263,6 +264,7 @@ struct ShippingAddressForm: View {
                 Spacer()
             }
         }
+        .colorScheme(theme.colorScheme)
 
     }
 }

@@ -64,7 +64,8 @@ struct CheckoutView: View {
                     PayButton(
                         productType: viewModel.checkout?.product.type ?? .product,
                         paymentMethod: viewModel.selectedPaymentMethod,
-                        isDisabled: false
+                        isDisabled: false,
+                        isLoading: false
                     ) {
                         viewModel.onPaymentCTATapped()
                     }

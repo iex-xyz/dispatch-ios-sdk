@@ -2,7 +2,23 @@ import Foundation
 import Combine
 
 class ShippingMethodViewModel: ObservableObject {
-    internal enum State {
+    enum SelectedShippingMethodState {
+        case idle
+        case loading
+        case loaded(ShippingMethod)
+        case error(Error)
+
+        var isButtonDisabled: Bool {
+            switch self {
+            case .loading, .loaded:
+                return true
+            case .error, .idle:
+                return false
+            }
+        }
+    }
+
+    enum State {
         case idle
         case loading
         case loaded([ShippingMethod])
@@ -17,7 +33,8 @@ class ShippingMethodViewModel: ObservableObject {
 
     
     @Published var state: State = .idle
-    
+    @Published var shippingMethodState: SelectedShippingMethodState = .idle
+
     init(apiClient: GraphQLClient, orderId: String) {
         self.apiClient = apiClient
         self.orderId = orderId
@@ -58,6 +75,9 @@ class ShippingMethodViewModel: ObservableObject {
     }
     
     private func updateShippingMethodForOrder(shippingMethod: ShippingMethod) async {
+        DispatchQueue.main.async {
+            self.shippingMethodState = .loading
+        }
         do {
             let request = UpdateOrderShippingMethodRequest(
                 params: .init(
@@ -68,9 +88,13 @@ class ShippingMethodViewModel: ObservableObject {
             
             _ = try await apiClient.performOperation(request)
             DispatchQueue.main.async {
+                self.shippingMethodState = .loaded(shippingMethod)
                 self._onShippingMethodTapped.send(shippingMethod)
             }
         } catch {
+            DispatchQueue.main.async {
+                self.shippingMethodState = .error(error)
+            }
             print("[DispatchSDK] Error updating shipping method (\(shippingMethod.id) for \(orderId)")
         }
         

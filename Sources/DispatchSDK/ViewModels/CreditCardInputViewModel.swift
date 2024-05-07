@@ -87,7 +87,7 @@ class CreditCardInputViewModel: ShippingAddressViewModel {
             (billingAddressMatchesShipping || (
                 isAddress1Valid &&
                 isCityValid &&
-                isStateValid &&
+                isZoneValid &&
                 isZipValid &&
                 isPhoneValid
             ))
@@ -122,7 +122,7 @@ class CreditCardInputViewModel: ShippingAddressViewModel {
             address1: address1,
             address2: address2,
             city: city,
-            state: state,
+            state: zone.code,
             zip: zip,
             phoneNumber: phone,
             country: country.code,
@@ -143,7 +143,9 @@ class CreditCardInputViewModel: ShippingAddressViewModel {
             // TODO: Error handling
             return
         }
-        self.isGeneratingPaymentToken = true
+        DispatchQueue.main.async {
+            self.isGeneratingPaymentToken = true
+        }
 
         let request = GetPaymentTokenRequest(
             orderId: order.id,
@@ -158,7 +160,7 @@ class CreditCardInputViewModel: ShippingAddressViewModel {
             address1: address1,
             address2: address2,
             city: city,
-            state: state,
+            state: zone.code,
             zip: zip,
             country: country.code
         )

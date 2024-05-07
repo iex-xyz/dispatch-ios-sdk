@@ -4,7 +4,8 @@ struct PayButton: View {
     @Preference(\.theme) var theme
     let productType: ProductType
     let paymentMethod: PaymentMethods
-    @State var isDisabled: Bool
+    var isDisabled: Bool
+    var isLoading: Bool
     let onButtonTapped: () -> Void
 
     var body: some View {
@@ -37,7 +38,7 @@ struct PayButton: View {
         }
         .disabled(isDisabled)
         .buttonStyle(
-            PrimaryButtonStyle()
+            PrimaryButtonStyle(isLoading: isLoading)
         )
         
     }
@@ -48,17 +49,17 @@ struct PayButton: View {
         VStack {
             ForEach([ProductType.donation, ProductType.product], id: \.self) { productType in
                     VStack {
-                        PayButton(productType: productType, paymentMethod: .applePay, isDisabled: true) {}
-                        PayButton(productType: productType, paymentMethod: .googlePay, isDisabled: false) {}
-                        PayButton(productType: productType, paymentMethod: .creditCard, isDisabled: true) {}
-                        PayButton(productType: productType, paymentMethod: .stripeLink, isDisabled: false) {}
+                        PayButton(productType: productType, paymentMethod: .applePay, isDisabled: true, isLoading: true) {}
+                        PayButton(productType: productType, paymentMethod: .googlePay, isDisabled: false, isLoading: false) {}
+                        PayButton(productType: productType, paymentMethod: .creditCard, isDisabled: true, isLoading: false) {}
+                        PayButton(productType: productType, paymentMethod: .stripeLink, isDisabled: false, isLoading: false) {}
                     }
                     
                     VStack {
-                        PayButton(productType: productType, paymentMethod: .applePay, isDisabled: true) {}
-                        PayButton(productType: productType, paymentMethod: .googlePay, isDisabled: true) {}
-                        PayButton(productType: productType, paymentMethod: .creditCard, isDisabled: false) {}
-                        PayButton(productType: productType, paymentMethod: .stripeLink, isDisabled: false) {}
+                        PayButton(productType: productType, paymentMethod: .applePay, isDisabled: true, isLoading: true) {}
+                        PayButton(productType: productType, paymentMethod: .googlePay, isDisabled: true, isLoading: true) {}
+                        PayButton(productType: productType, paymentMethod: .creditCard, isDisabled: false, isLoading: false) {}
+                        PayButton(productType: productType, paymentMethod: .stripeLink, isDisabled: false, isLoading: false) {}
                     }
                     .environment(\.theme, .mock(mode: .dark))
             }

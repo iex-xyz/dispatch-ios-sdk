@@ -1,63 +1,6 @@
 import Foundation
 import Combine
 
-class CountriesViewModel: ObservableObject {
-
-    enum State {
-        case idle
-        case loading
-        case complete([Country])
-        case failed(Error)
-        
-        var countries: [Country] {
-            switch self {
-            case let .complete(countries):
-                return countries
-            default:
-                return []
-            }
-        }
-        
-        var isEnabled: Bool {
-            switch self {
-            case .complete, .failed:
-                return true
-            default:
-                return false
-            }
-        }
-    }
-    
-    @Published var state: State = .idle
-    
-    let apiClient: GraphQLClient
-    
-    init(apiClient: GraphQLClient) {
-        self.apiClient = apiClient
-        
-        fetchCountries()
-    }
-
-    func fetchCountries() {
-        self.state = .loading
-        Task {
-            do {
-                let request = GetCountriesRequest(locale: "en") // TODO: https://github.com/iex-xyz/frontend-monorepo/blob/development/apps/checkout/i18n/i18n.ts#L16
-                let response = try await apiClient.performOperation(request)
-                
-                DispatchQueue.main.async {
-                    self.state = .complete(response.countries)
-                }
-            } catch {
-                print("[DispatchSDK] Unable to fetch countries list: ", error)
-                DispatchQueue.main.async {
-                    self.state = .failed(error)
-                }
-            }
-        }
-    }
-}
-
 class ShippingAddressViewModel: ObservableObject {
     enum AddressLookupState {
         case idle
@@ -73,7 +16,15 @@ class ShippingAddressViewModel: ObservableObject {
                 return false
             }
         }
-
+        
+        var shouldShowSpinner: Bool {
+            switch self {
+            case .loading:
+                return true
+            default:
+                return false
+            }
+        }
     }
         
     let _onOrderUpdated = PassthroughSubject<(InitiateOrder, Address, String), Never>()
@@ -86,7 +37,6 @@ class ShippingAddressViewModel: ObservableObject {
     @Published var address1: String = ""
     @Published var address2: String = ""
     @Published var city: String = ""
-    @Published var state: String = ""
     @Published var zip: String = ""
     @Published var zone: Country.Zone = .empty
     @Published var phone: String = ""
@@ -102,7 +52,7 @@ class ShippingAddressViewModel: ObservableObject {
     @Published var isLastNameValid = false
     @Published var isAddress1Valid = false
     @Published var isCityValid = false
-    @Published var isStateValid = false
+    @Published var isZoneValid = false
     @Published var isZipValid = false
     @Published var isPhoneValid = false
     
@@ -110,7 +60,7 @@ class ShippingAddressViewModel: ObservableObject {
     @Published var isLastNameDirty = false
     @Published var isAddress1Dirty = false
     @Published var isCityDirty = false
-    @Published var isStateDirty = false
+    @Published var isZoneDirty = false
     @Published var isZipDirty = false
     @Published var isPhoneDirty = false
     
@@ -137,7 +87,9 @@ class ShippingAddressViewModel: ObservableObject {
     func onAddressLookupRowTapped(address: AddressLookupResult) {
         self.address1 = address.address1
         self.city = address.city
-        self.state = address.state
+        self.zone = country.zones.first(where: { zone in
+            zone.code.lowercased() == address.state.lowercased()
+        }) ?? .empty
         self.zip = address.postalCode
         self.addressLookupState = .idle
     }
@@ -183,15 +135,14 @@ class ShippingAddressViewModel: ObservableObject {
             .map { _ in true }
             .assign(to: &$isCityDirty)
 
-        $state
-            .dropFirst()
-            .map { !$0.isEmpty || self.country.zones.isEmpty || !self.country.shouldShowField("zone") }
-            .assign(to: &$isStateValid)
+        $zone
+            .map { !$0.code.isEmpty || self.country.zones.isEmpty || !self.country.shouldShowField("zone") }
+            .assign(to: &$isZoneValid)
 
-        $state
+        $zone
             .dropFirst()
             .map { _ in true }
-            .assign(to: &$isStateDirty)
+            .assign(to: &$isZoneDirty)
 
         $zip
             .dropFirst()
@@ -252,7 +203,7 @@ class ShippingAddressViewModel: ObservableObject {
             !isUpdatingOrder,
             isAddress1Valid,
             isCityValid,
-            isStateValid,
+            isZoneValid,
             isZipValid,
             isPhoneValid
         else {
@@ -268,7 +219,9 @@ class ShippingAddressViewModel: ObservableObject {
     }
 
     private func updateOrderAddress(using updateType: UpdateOrderShippingRequest.UpdateShippingType) async {
-        self.isUpdatingOrder = true
+        DispatchQueue.main.async {
+            self.isUpdatingOrder = true
+        }
         Task { [weak self] in
             guard let self else { return }
             do {

@@ -26,6 +26,7 @@ struct ShippingMethodsView: View {
                             ShippingMethodCell(shippingMethod: shippingMethod)
                                 .tint(.primary)
                         }
+                        .disabled(viewModel.shippingMethodState.isButtonDisabled)
                     }
                     
                 case .error:

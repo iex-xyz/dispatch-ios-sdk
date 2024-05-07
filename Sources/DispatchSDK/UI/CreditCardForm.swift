@@ -93,8 +93,14 @@ struct CreditCardForm: View {
                 }) {
                     Text("Continue")
                 }
-                .buttonStyle(PrimaryButtonStyle(isLoading: viewModel.isUpdatingBillingAddress || viewModel.isGeneratingPaymentToken))
-                .disabled(viewModel.isUpdatingBillingAddress || viewModel.isGeneratingPaymentToken)
+                .buttonStyle(
+                    PrimaryButtonStyle(
+                        isLoading: viewModel.isUpdatingBillingAddress || viewModel.isGeneratingPaymentToken
+                    )
+                )
+                .disabled(
+                    viewModel.isUpdatingBillingAddress || viewModel.isGeneratingPaymentToken
+                )
                 FooterView()
             }
             .padding()

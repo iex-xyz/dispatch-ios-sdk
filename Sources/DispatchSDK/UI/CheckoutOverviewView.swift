@@ -161,7 +161,8 @@ struct CheckoutOverviewView: View {
                 PayButton(
                     productType: viewModel.checkout.product.type,
                     paymentMethod: .creditCard,
-                    isDisabled: !viewModel.state.isEnabled
+                    isDisabled: !viewModel.state.isEnabled,
+                    isLoading: viewModel.state.isLoading
                 ) {
                     viewModel.onPayButtonTapped()
                 }

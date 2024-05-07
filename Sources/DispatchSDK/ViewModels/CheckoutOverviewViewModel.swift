@@ -14,6 +14,13 @@ class CheckoutOverviewViewModel: ObservableObject {
             case .loading: return false
             }
         }
+        
+        var isLoading: Bool {
+            switch self {
+            case .idle, .failed, .complete: return false
+            case .loading: return true
+            }
+        }
     }
     
     @Published var state: OrderCheckoutState = .idle
