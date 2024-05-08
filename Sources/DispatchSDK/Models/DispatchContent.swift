@@ -1,6 +1,6 @@
 import Foundation
 
-struct Content: Codable {
+struct DispatchContent: Codable {
     let version: String
     let subFolderId: String
     let initScreen: InitScreen
@@ -79,7 +79,7 @@ struct Content: Codable {
     }
 }
 
-extension Content {
+extension DispatchContent {
     static func mock(
         version: String = "v1",
         subFolderId: String = "001",
@@ -106,7 +106,7 @@ extension Content {
         merchantId: String = "64b5864419f8dfb43888f07b",
         id: String = "64dabb5fa62014aafefbe89e"
     ) -> Self {
-        Content(
+        DispatchContent(
             version: version,
             subFolderId: subFolderId,
             initScreen: initScreen,

@@ -4,6 +4,7 @@ struct PhoneNumberRules: Codable {
     let mask: String
     let regex: String
     let placeholder: String
+    let countryCode: String
 }
 
 class PhoneNumberValidator {

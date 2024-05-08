@@ -58,6 +58,7 @@ struct ThemeTextFieldStyle: TextFieldStyle {
                             Colors.controlBackground
                         )
                     )
+                
             }
             
             if !isValid {

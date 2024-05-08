@@ -36,7 +36,8 @@ internal struct QuantityStepControl : View {
                     .foregroundColor(value < maxQuantity ? .primary : .primary.opacity(0.5))
             })
         }
-        .padding()
+        .padding(.horizontal)
+        .frame(height: 44)
         .overlay(
             Group {
                 switch theme.inputStyle {

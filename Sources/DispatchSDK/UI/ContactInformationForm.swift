@@ -17,7 +17,6 @@ struct ContactInformationForm: View {
         VStack(alignment: .leading, spacing: 24) {
             Text("Contact Information")
                 .font(.title3.bold())
-                .padding(.horizontal)
             
             VStack(alignment: .leading, spacing: 12) {
                 Text("Please enter your email to continue.")

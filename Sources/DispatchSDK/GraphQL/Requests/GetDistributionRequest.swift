@@ -4,7 +4,7 @@ struct GetDistributionRequest: GraphQLRequest {
     enum Response: Codable {
         case leadgen(Leadgen)
         case checkout(Checkout)
-        case content(Content)
+        case content(DispatchContent)
     }
 
     typealias Output = Response

@@ -14,6 +14,7 @@ struct ShippingAddressFormContainer: View {
             ScrollView {
                 ShippingAddressForm(viewModel: viewModel)
                     .padding()
+                FooterView()
             }
             VStack(spacing: 32) {
                 Button(action: {
@@ -23,9 +24,11 @@ struct ShippingAddressFormContainer: View {
                 }
                 .buttonStyle(PrimaryButtonStyle(isLoading: viewModel.isUpdatingOrder))
                 .disabled(viewModel.isUpdatingOrder)
-                FooterView()
             }
-            .padding()
+            .padding(.horizontal)
+            .padding(.vertical, 8)
+            .background(theme.backgroundColor)
+            .shadow(color: .black.opacity(0.1), radius: 32, y: -8)
         }
         .background(theme.backgroundColor)
         .colorScheme(theme.colorScheme)

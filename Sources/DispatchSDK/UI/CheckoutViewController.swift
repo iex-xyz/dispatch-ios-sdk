@@ -79,6 +79,7 @@ struct CheckoutView: View {
                             maxQuantity: viewModel.maxQuantity
                         )
                         .frame(minWidth: 120)
+                        .frame(height: 40)
                     }
                     PayButton(
                         productType: viewModel.checkout?.product.type ?? .product,

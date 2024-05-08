@@ -75,12 +75,17 @@ struct PhoneNumberTextField: UIViewRepresentable {
         }
 
         private func format(for number: String) -> String {
-            let digits = number.filter { $0.isNumber }
-            let mask = PhoneNumberValidator.rules(for: country)?.mask ?? "+# (###) ###-####"
-            
+            var digits = number.filter { $0.isNumber }
+            let rules = PhoneNumberValidator.rules(for: country)
+            let mask = rules?.mask ?? "+# (###) ###-####"
+
+            if !digits.hasPrefix(rules?.countryCode ?? "1") {
+                digits = (rules?.countryCode ?? "1") + digits
+            }
+
             var result = ""
             var index = digits.startIndex
-            
+
             for ch in mask where index < digits.endIndex {
                 if ch == "#" {
                     result.append(digits[index])
@@ -89,7 +94,7 @@ struct PhoneNumberTextField: UIViewRepresentable {
                     result.append(ch)
                 }
             }
-            
+
             return result
         }
     }
