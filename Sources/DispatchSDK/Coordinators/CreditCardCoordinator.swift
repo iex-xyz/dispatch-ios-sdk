@@ -54,11 +54,7 @@ class CreditCardCoordinator: BaseCoordinator {
 
     private lazy var closeButtonController: UIHostingController<CloseButton> = {
         let controller = UIHostingController<CloseButton>(rootView: CloseButton { [weak self] in
-            if self?.router.isAtRoot == true {
-                self?.didCancel()
-            } else {
-                self?.router.popToRootModule(animated: true)
-            }
+            self?.router.dismissCheckout(completion: nil)
         })
         
         controller.view.backgroundColor = .clear
@@ -116,9 +112,7 @@ class CreditCardCoordinator: BaseCoordinator {
             }
             .store(in: &cancellables)
 
-        router.push(viewController, animated: true) { [weak self] in
-            self?.didCancel()
-        }
+        router.presentCheckout(viewController, completion: nil)
     }
     
     private func showShippingAddressForm(

@@ -10,7 +10,7 @@ struct CheckoutLogoImageView: View {
             LogoImageView(logoUrl: url)
                 .frame(width: 40, height: 40)
                 .clipShape(Circle())
-                .padding(.leading)
+                .padding(.leading, 8)
             
         }
     }

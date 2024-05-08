@@ -2,18 +2,19 @@ import UIKit
 import SwiftUI
 
 final class RouterImp: NSObject, Router {
-
     private var rootController: UINavigationController?
+    private var checkoutController: UINavigationController?
     private var completions: [UIViewController : () -> Void]
     
-    init(rootController: UINavigationController) {
+    init(rootController: UINavigationController, checkoutController: UINavigationController) {
         self.rootController = rootController
+        self.checkoutController = checkoutController
         self.completions = [:]
         super.init()
         self.rootController?.delegate = self
         
-//        self.rootController?.navigationBar.barTintColor = UIColor.yellow
 //        self.rootController?.navigationBar.isTranslucent = false
+//        self.checkoutController?.navigationBar.isTranslucent = false
     }
     
     var isAtRoot: Bool {
@@ -26,6 +27,26 @@ final class RouterImp: NSObject, Router {
     
     func toPresent() -> UIViewController? {
         return rootController
+    }
+    
+    func presentCheckout(_ root: Presentable, completion: (() -> Void)?) {
+        guard let checkoutController, let rootViewController = root.toPresent() else {
+            return
+        }
+        
+        checkoutController.setViewControllers([rootViewController], animated: false)
+        checkoutController.modalPresentationStyle = .overFullScreen
+        
+        rootController?
+            .present(
+                checkoutController,
+                animated: true,
+                completion: completion
+            )
+    }
+    
+    func dismissCheckout(completion: (() -> Void)?) {
+        checkoutController?.dismiss(animated: true, completion: completion)
     }
     
     func presentSelf(completion: (() -> Void)?) {
@@ -106,7 +127,7 @@ final class RouterImp: NSObject, Router {
             completions[controller] = completion
         }
         controller.hidesBottomBarWhenPushed = hideBottomBar
-        rootController?.pushViewController(controller, animated: animated)
+        checkoutController?.pushViewController(controller, animated: animated)
     }
     
     func popModule()  {
@@ -114,7 +135,7 @@ final class RouterImp: NSObject, Router {
     }
     
     func popModule(animated: Bool)  {
-        if let controller = rootController?.popViewController(animated: animated) {
+        if let controller = checkoutController?.popViewController(animated: animated) {
             runCompletion(for: controller)
         }
     }
@@ -130,7 +151,7 @@ final class RouterImp: NSObject, Router {
     }
     
     func popToRootModule(animated: Bool) {
-        if let controllers = rootController?.popToRootViewController(animated: animated) {
+        if let controllers = checkoutController?.popToRootViewController(animated: animated) {
             controllers.forEach { controller in
                 runCompletion(for: controller)
             }

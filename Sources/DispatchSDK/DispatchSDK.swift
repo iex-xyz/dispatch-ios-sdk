@@ -65,7 +65,7 @@ public class DispatchSDK {
 
     private func makeCoordinator() -> Coordinator {
         return MainCoordinator(
-            router: RouterImp(rootController: UINavigationController()),
+            router: RouterImp(rootController: UINavigationController(), checkoutController: UINavigationController()),
             apiClient: apiClient,
             config: config
         )
