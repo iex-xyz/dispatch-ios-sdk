@@ -71,14 +71,6 @@ struct ContentView: View {
                     }
                 }
                 
-                Section("Scenarios") {
-                    Button(action: {
-                        handleItemTapped(.testSuccessfulOrder)
-                    }) {
-                        Text("Successful Order")
-                    }
-                }
-                
                 Section("Current Build Information") {
                     Text(buildInfo)
                         .font(.caption.monospaced())
