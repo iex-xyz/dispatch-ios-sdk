@@ -157,12 +157,14 @@ struct CheckoutSuccessView: View {
             }
             
             VStack(spacing: 16) {
-                Button(action: {
-                    viewModel.onMainCtaButtonTapped()
-                }) {
-                    Text(viewModel.continueCTA)
+                if !viewModel.hideOrderCompletionCTA {
+                    Button(action: {
+                        viewModel.onMainCtaButtonTapped()
+                    }) {
+                        Text(viewModel.continueCTA)
+                    }
+                    .buttonStyle(PrimaryButtonStyle())
                 }
-                .buttonStyle(PrimaryButtonStyle())
                 FooterView()
             }
             .padding()

@@ -6,17 +6,20 @@ public struct DispatchConfig: Equatable {
     let environment: AppEnvironment
     let merchantId: String
     let orderCompletionCTA: String
+    let hideOrderCompletionCTA: Bool
     
     public init(
         applicationId: String,
         environment: AppEnvironment,
         merchantId: String,
-        orderCompletionCTA: String = "Keep Shopping"
+        orderCompletionCTA: String = "Keep Shopping",
+        hideOrderCompletionCTA: Bool = false
     ) {
         self.applicationId = applicationId
         self.environment = environment
         self.merchantId = merchantId
         self.orderCompletionCTA = orderCompletionCTA
+        self.hideOrderCompletionCTA = hideOrderCompletionCTA
     }
     
     static var `default`: Self = {

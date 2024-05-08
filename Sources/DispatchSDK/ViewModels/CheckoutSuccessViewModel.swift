@@ -8,6 +8,8 @@ class CheckoutSuccessViewModel: ObservableObject {
     let billingInfo: BillingInfo?
     
     let continueCTA: String
+    let hideOrderCompletionCTA: Bool
+
     
     let _onMainCTATapped = PassthroughSubject<Void, Never>()
 
@@ -17,13 +19,15 @@ class CheckoutSuccessViewModel: ObservableObject {
         orderNumber: String,
         shippingAddress: Address?,
         billingInfo: BillingInfo?,
-        continueCTA: String
+        continueCTA: String,
+        hideOrderCompletionCTA: Bool
     ) {
         self.checkout = checkout
         self.orderNumber = orderNumber
         self.shippingAddress = shippingAddress
         self.billingInfo = billingInfo
         self.continueCTA = continueCTA
+        self.hideOrderCompletionCTA = hideOrderCompletionCTA
     }
     
     func onMainCtaButtonTapped() {
