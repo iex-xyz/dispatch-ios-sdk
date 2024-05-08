@@ -138,7 +138,9 @@ class CheckoutCoordinator: BaseCoordinator {
             rootView: .init(viewModel: viewModel)
         )
         
-        viewController.navigationItem.rightBarButtonItem = .init(customView: rightBarButtonController.view)
+        if !config.hideRootCloseButton {
+            viewController.navigationItem.rightBarButtonItem = .init(customView: rightBarButtonController.view)
+        }
         viewController.navigationItem.leftBarButtonItem = .init(customView: leftBarButtonController.view)
         viewController.navigationItem.titleView = navigationTitleController.view
 
