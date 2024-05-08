@@ -52,7 +52,7 @@ struct PayButton: View {
         switch paymentMethod {
         case .applePay:
             ApplePayButton(
-                paymentButtonType: productType == .donation ? .donate : .plain,
+                paymentButtonType: productType == .donation ? .donate : .buy,
                 isDisabled: isDisabled
             ) {
                 onButtonTapped()
