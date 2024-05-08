@@ -60,9 +60,6 @@ internal class CheckoutViewModel: ObservableObject {
     @Published var paymentConfiguration: PaymentConfiguration? = nil {
         didSet {
             var paymentMethods: [PaymentMethods] = []
-            #if DEBUG
-            paymentMethods.append(.applePay)
-            #endif
             if paymentConfiguration?.applePayEnabled == true {
                 paymentMethods.append(.applePay)
             }
