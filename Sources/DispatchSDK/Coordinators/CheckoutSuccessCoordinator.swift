@@ -36,8 +36,8 @@ class CheckoutSuccessCoordinator: BaseCoordinator {
         viewModel
             ._onMainCTATapped
             .sink { [weak self] in
-                self?.router.dismissSelf(completion: {
-                    //
+                self?.router.dismissCheckout(completion: { [weak self] in
+                    self?.router.dismissSelf(completion: nil)
                 })
             }
             .store(in: &cancellables)
