@@ -321,7 +321,8 @@ class CheckoutCoordinator: BaseCoordinator {
             orderNumber: order.id,
             shippingAddress: shippingAddress,
             billingInfo: billingInfo,
-            continueCTA: config.orderCompletionCTA
+            continueCTA: config.orderCompletionCTA, 
+            hideOrderCompletionCTA: config.hideOrderCompletionCTA
         )
         let coordinator = CheckoutSuccessCoordinator(
             router: router,

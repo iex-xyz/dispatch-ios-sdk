@@ -33,7 +33,8 @@ final class MainCoordinator: BaseCoordinator {
                         orderNumber: UUID().uuidString,
                         shippingAddress: Address.mock(),
                         billingInfo: .mock(),
-                        continueCTA: "Keep Shopping"
+                        continueCTA: "Keep Shopping",
+                        hideOrderCompletionCTA: false
                     )
                 )
                 

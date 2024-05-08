@@ -180,7 +180,8 @@ struct CheckoutSuccessView: View {
         orderNumber: "C0192329328",
         shippingAddress: .mock(),
         billingInfo: .mock(),
-        continueCTA: "Keep Shopping"
+        continueCTA: "Keep Shopping", 
+        hideOrderCompletionCTA: false
     )
     return CheckoutSuccessView(
         viewModel: viewModel
