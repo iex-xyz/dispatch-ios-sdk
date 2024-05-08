@@ -120,6 +120,7 @@ class InitiateCreditCardCheckoutViewModel: ObservableObject {
                 DispatchQueue.main.async {
                     self.orderState = .loaded(result)
                     self._onOrderInitiated.send((result, self.email))
+                    self.orderState = .idle
                 }
                 
             } catch let error as GraphQLError {

@@ -158,6 +158,16 @@ final class RouterImp: NSObject, Router {
         }
     }
     
+    func setCheckoutRootModule(_ module: Presentable?, animated: Bool) {
+        setCheckoutRootModule(module, hideBar: false, animated: animated)
+    }
+    
+    func setCheckoutRootModule(_ module: Presentable?, hideBar: Bool, animated: Bool) {
+        guard let controller = module?.toPresent() else { return }
+        checkoutController?.setViewControllers([controller], animated: animated)
+        checkoutController?.isNavigationBarHidden = hideBar
+    }
+    
     private func runCompletion(for controller: UIViewController) {
         guard let completion = completions[controller] else { return }
         completion()
