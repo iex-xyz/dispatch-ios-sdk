@@ -2,32 +2,20 @@ import UIKit
 import SwiftUI
 import Combine
 
-struct CheckoutLogoImageView: View {
-    @ObservedObject var viewModel: CheckoutViewModel
-    
-    var body: some View {
-        if let url = viewModel.checkout?.merchantLogoUrl {
-            LogoImageView(logoUrl: url)
-                .frame(width: 40, height: 40)
-                .clipShape(Circle())
-                .padding(.leading, 8)
-            
-        }
-    }
-}
-
 class CheckoutCoordinator: BaseCoordinator {
-    let router: Router
-    let apiClient: GraphQLClient
-    let checkoutId: String
-    let config: DispatchConfig
+    private let router: Router
+    private let apiClient: GraphQLClient
+    private let analyticsClient: AnalyticsClient
+    private let checkoutId: String
+    private let config: DispatchConfig
 
     var shouldDismissFlow: (() -> Void)?
 
-    lazy private(set) var viewModel: CheckoutViewModel = .init(id: checkoutId, apiClient: apiClient)
+    lazy private(set) var viewModel: CheckoutViewModel = .init(id: checkoutId, apiClient: apiClient, analyticsClient: analyticsClient)
     
     private lazy var rightBarButtonController: UIHostingController<CloseButton> = {
         let controller = UIHostingController<CloseButton>(rootView: CloseButton { [weak self] in
+            self?.analyticsClient.send(event: .checkoutDismissed_Checkout)
             self?.shouldDismissFlow?()
         })
         
@@ -58,12 +46,14 @@ class CheckoutCoordinator: BaseCoordinator {
     init(
         router: Router,
         apiClient: GraphQLClient,
+        analyticsClient: AnalyticsClient,
         checkoutId: String,
         config: DispatchConfig,
         shouldDismiss: (() -> Void)? = nil
     ) {
         self.router = router
         self.apiClient = apiClient
+        self.analyticsClient = analyticsClient
         self.checkoutId = checkoutId
         self.config = config
         self.shouldDismissFlow = shouldDismiss
@@ -80,6 +70,7 @@ class CheckoutCoordinator: BaseCoordinator {
         viewModel
             ._onCloseButtonTapped
             .sink { [weak self] in
+                self?.analyticsClient.send(event: .checkoutDismissed_Checkout)
                 self?.router.dismissSelf(completion: { [weak self] in
                     self?.router.popToRootModule(animated: false)
                 })
@@ -108,6 +99,7 @@ class CheckoutCoordinator: BaseCoordinator {
         viewModel
             ._onLockButtonTapped
             .sink { [weak self] checkout in
+                self?.analyticsClient.send(event: .trustModalOpened_Checkout)
                 self?.showSecureCheckout(for: checkout)
         }
         .store(in: &cancellables)
@@ -115,6 +107,7 @@ class CheckoutCoordinator: BaseCoordinator {
         viewModel
             ._onMoreProductInfoButtonTapped
             .sink { [weak self] checkout in
+                self?.analyticsClient.send(event: .productDetailsOpened_Checkout)
                 self?.showProductOverview(for: checkout)
         }
         .store(in: &cancellables)
@@ -122,6 +115,7 @@ class CheckoutCoordinator: BaseCoordinator {
         viewModel
             ._onPaymentCTATapped
             .sink { [weak self] (checkout, paymentType) in
+                self?.analyticsClient.send(event: .checkoutRequested_Checkout)
                 switch paymentType {
                 case .creditCard:
                     self?.showPayWithCreditCard(for: checkout)
@@ -158,6 +152,7 @@ class CheckoutCoordinator: BaseCoordinator {
 
         router.setRootModule(viewController, animated: false)
         router.presentSelf(completion: nil)
+        analyticsClient.send(event: .view_Leadgen)
     }
     
     override func start(with route: DispatchRoute) {
@@ -170,6 +165,7 @@ class CheckoutCoordinator: BaseCoordinator {
             attribute: attribute,
             variations: variations,
             selectedVariation: selectedVariation,
+            analyticsClient: analyticsClient,
             quantity: quantity
         )
         let viewController = UIHostingController<VariantPickerView>(
@@ -200,6 +196,7 @@ class CheckoutCoordinator: BaseCoordinator {
             rootView: PaymentOptionsPickerView(paymentMethods: viewModel.enabledPaymentMethods,
                                                onPaymentMethodSelected: { [weak self] paymentMethod in
                 self?.viewModel.selectedPaymentMethod = paymentMethod
+                self?.analyticsClient.send(event: .paymentMethodSelected_Checkout(paymentMethod: paymentMethod.rawValue))
             })
         )
         if let sheet = viewController.sheetPresentationController {
@@ -221,10 +218,11 @@ class CheckoutCoordinator: BaseCoordinator {
             sheet.prefersGrabberVisible = true
         }
         viewController.navigationItem.leftBarButtonItem = .init(customView: leftBarButtonController.view)
-        router.present(viewController, animated: true, completion: {
-            //
+        router.present(viewController, animated: true, completion: { [weak self] in
+            self?.analyticsClient.send(event: .trustModalDismissed_Checkout)
         })
-
+        
+        analyticsClient.send(event: .trustModalOpened_Checkout)
     }
     
     func showProductOverview(for checkout: Checkout) {
@@ -258,11 +256,13 @@ class CheckoutCoordinator: BaseCoordinator {
             content: checkout,
             quantity: viewModel.currentQuantity,
             selectedVariant: viewModel.selectedVariation,
-            apiClient: apiClient
+            apiClient: apiClient,
+            analyticsClient: analyticsClient
         )
         let coordinator = ApplePayCoordinator(
             router: router,
             apiClient: apiClient,
+            analyticsClient: analyticsClient,
             viewModel: viewModel,
             config: config,
             didCancel: {
@@ -292,6 +292,7 @@ class CheckoutCoordinator: BaseCoordinator {
         let coordinator = CreditCardCoordinator(
             router: router,
             apiClient: apiClient,
+            analyticsClient: analyticsClient,
             viewModel: viewModel,
             paymentMethods: self.viewModel.enabledPaymentMethods,
             config: config,
@@ -329,6 +330,7 @@ class CheckoutCoordinator: BaseCoordinator {
         let coordinator = CheckoutSuccessCoordinator(
             router: router,
             apiClient: apiClient,
+            analyticsClient: analyticsClient,
             viewModel: viewModel
         )
         

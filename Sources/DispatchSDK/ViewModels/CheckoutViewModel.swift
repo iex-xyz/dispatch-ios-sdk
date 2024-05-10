@@ -21,6 +21,7 @@ internal class CheckoutViewModel: ObservableObject {
     @Published private(set) var state: State = .idle
 
     @Published var productViewModel: ProductViewModel? = nil
+    @Published var mediaViewModel: ProductMediaViewModel
     
     @Published var checkout: Checkout? = nil {
         didSet {
@@ -74,7 +75,11 @@ internal class CheckoutViewModel: ObservableObject {
         }
     }
 
-    @Published var currentQuantity: Int = 1
+    @Published var currentQuantity: Int = 1 {
+        didSet {
+            analyticsClient.send(event: .quantitySelected_Checkout(quantity: currentQuantity))
+        }
+    }
     
     private let id: String
     
@@ -91,10 +96,17 @@ internal class CheckoutViewModel: ObservableObject {
     }
 
     private let apiClient: GraphQLClient
+    private let analyticsClient: AnalyticsClient
     
-    init(id: String, apiClient: GraphQLClient) {
+    init(
+        id: String,
+        apiClient: GraphQLClient,
+        analyticsClient: AnalyticsClient
+    ) {
         self.id = id
         self.apiClient = apiClient
+        self.analyticsClient = analyticsClient
+        self.mediaViewModel = .init(images: [], analyticsClient: analyticsClient)
 
         Task {
             await fetchDistribution(for: id)

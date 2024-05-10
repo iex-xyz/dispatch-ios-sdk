@@ -14,7 +14,7 @@ struct LogoImageView: View {
                 .scaledToFit()
                 .padding(8)
         } placeholder: {
-            ProgressView()
+            EmptyView()
         }
     }
 }

@@ -1,5 +1,6 @@
 import Foundation
 import Combine
+import UIKit
 
 class CheckoutOverviewViewModel: ObservableObject {
     enum OrderCheckoutState {
@@ -26,6 +27,7 @@ class CheckoutOverviewViewModel: ObservableObject {
     @Published var state: OrderCheckoutState = .idle
     
     let apiClient: GraphQLClient
+    let analyticsClient: AnalyticsClient
     let checkout: Checkout
     let email: String
     let variant: Variation?
@@ -48,6 +50,7 @@ class CheckoutOverviewViewModel: ObservableObject {
 
     init(
         apiClient: GraphQLClient,
+        analyticsClient: AnalyticsClient,
         checkout: Checkout,
         order: InitiateOrder,
         email: String,
@@ -61,6 +64,7 @@ class CheckoutOverviewViewModel: ObservableObject {
         tokenizedPayment: String
     ) {
         self.apiClient = apiClient
+        self.analyticsClient = analyticsClient
         self.checkout = checkout
         self.order = order
         self.email = email
@@ -82,6 +86,7 @@ class CheckoutOverviewViewModel: ObservableObject {
             do {
                 let order = try await completeOrder()
                 DispatchQueue.main.async {
+                    self.analyticsClient.send(event: .paymentSent_Checkout)
                     self.state = .complete(order)
                     self._onOrderComplete.send(order)
                 }
@@ -89,6 +94,7 @@ class CheckoutOverviewViewModel: ObservableObject {
                 // TODO: Error handling
                 print("[DispatchSDK] Unable to complete order", error)
                 DispatchQueue.main.async {
+                    self.analyticsClient.send(event: .paymentFailed_Checkout)
                     self.state = .failed(error)
                 }
             }
@@ -127,10 +133,19 @@ class CheckoutOverviewViewModel: ObservableObject {
         // TODO:
     }
     
+    func onTermsButtonTapped() {
+        if
+            let url = URL(string: checkout.merchantTermsUrl),
+            UIApplication.shared.canOpenURL(url)
+        {
+            UIApplication.shared.open(url)
+        }
+
+        analyticsClient.send(event: .termsClicked_Checkout)
+    }
+    
     private func completeOrder() async throws -> InitiateOrder {
         let request = CompleteOrderRequest(orderId: order.id, tokenizedPayment: tokenizedPayment)
         return try await apiClient.performOperation(request)
-        
-        
     }
 }

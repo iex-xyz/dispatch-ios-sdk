@@ -129,6 +129,6 @@ struct MediaCarouselView: View {
 }
 
 #Preview {
-    let viewModel: ProductMediaViewModel = .init(images: [])
+    let viewModel: ProductMediaViewModel = .init(images: [], analyticsClient: MockAnalyticsClient())
     return MediaCarouselView(viewModel: viewModel, isZoomable: false)
 }

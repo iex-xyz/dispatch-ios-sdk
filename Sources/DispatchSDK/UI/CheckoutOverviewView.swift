@@ -143,12 +143,7 @@ struct CheckoutOverviewView: View {
                     }
                     Divider()
                     Button(action: {
-                        if
-                            let url = URL(string: viewModel.checkout.merchantTermsUrl),
-                            UIApplication.shared.canOpenURL(url)
-                        {
-                            UIApplication.shared.open(url)
-                        }
+                        viewModel.onTermsButtonTapped()
                     }) {
                         Text("By continuing, I agree to the ") + Text("Terms of Sale").underline()
                     }
@@ -185,6 +180,7 @@ struct CheckoutOverviewView: View {
 #Preview {
     let viewModel: CheckoutOverviewViewModel = .init(
         apiClient: .init(networkService: PreviewNetworkService(), environment: .staging),
+        analyticsClient: MockAnalyticsClient(),
         checkout: .mock(),
         order: .mock(),
         email: "test@test.com",

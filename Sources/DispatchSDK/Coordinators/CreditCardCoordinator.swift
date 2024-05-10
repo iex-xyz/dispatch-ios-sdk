@@ -25,6 +25,7 @@ struct RightNavigationButtons: View {
 class CreditCardCoordinator: BaseCoordinator {
     private let router: Router
     private let apiClient: GraphQLClient
+    private let analyticsClient: AnalyticsClient
     private var order: InitiateOrder?
     private let config: DispatchConfig
     private let paymentMethods: [PaymentMethods]
@@ -64,6 +65,7 @@ class CreditCardCoordinator: BaseCoordinator {
     init(
         router: Router,
         apiClient: GraphQLClient,
+        analyticsClient: AnalyticsClient,
         viewModel: InitiateCreditCardCheckoutViewModel,
         paymentMethods: [PaymentMethods],
         config: DispatchConfig,
@@ -72,6 +74,7 @@ class CreditCardCoordinator: BaseCoordinator {
     ) {
         self.router = router
         self.apiClient = apiClient
+        self.analyticsClient = analyticsClient
         self.viewModel = viewModel
         self.config = config
         self.paymentMethods = paymentMethods
@@ -105,6 +108,7 @@ class CreditCardCoordinator: BaseCoordinator {
             ._onOrderInitiated
             .sink { [weak self] order, email in
                 self?.order = order
+                self?.analyticsClient.send(event: .customerIdentifierCollected_Checkout)
                 self?.showShippingAddressForm(
                     for: order,
                     email: email
@@ -137,6 +141,7 @@ class CreditCardCoordinator: BaseCoordinator {
             .sink {
                 [weak self] order,
                 address, phone in
+                self?.analyticsClient.send(event: .shippingAddressCollected_Checkout)
                 self?.showShippingMethods(
                     for: order,
                     email: email,
@@ -238,6 +243,7 @@ class CreditCardCoordinator: BaseCoordinator {
         // TODO: Where do we store all of this data while we go through the flow?
         let viewModel = CheckoutOverviewViewModel(
             apiClient: apiClient,
+            analyticsClient: analyticsClient,
             checkout: viewModel.checkout,
             order: order,
             email: viewModel.email,

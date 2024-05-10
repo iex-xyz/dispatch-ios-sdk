@@ -6,6 +6,7 @@ import PassKit
 class ApplePayCoordinator: BaseCoordinator {
     private let router: Router
     private let apiClient: GraphQLClient
+    private let analyticsClient: AnalyticsClient
     private let config: DispatchConfig
     private var cancellables: Set<AnyCancellable> = .init()
     
@@ -17,6 +18,7 @@ class ApplePayCoordinator: BaseCoordinator {
     init(
         router: Router,
         apiClient: GraphQLClient,
+        analyticsClient: AnalyticsClient,
         viewModel: ApplePayViewModel,
         config: DispatchConfig,
         didCancel: @escaping () -> Void,
@@ -24,6 +26,7 @@ class ApplePayCoordinator: BaseCoordinator {
     ) {
         self.router = router
         self.apiClient = apiClient
+        self.analyticsClient = analyticsClient
         self.viewModel = viewModel
         self.config = config
         self.didCancel = didCancel

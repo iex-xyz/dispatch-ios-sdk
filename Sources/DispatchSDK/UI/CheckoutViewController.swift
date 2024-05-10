@@ -6,22 +6,21 @@ import Combine
 struct CheckoutView: View {
     @Preference(\.theme) var theme
     @ObservedObject var viewModel: CheckoutViewModel
-    @StateObject var mediaViewModel: ProductMediaViewModel = .init(images: [])
 
     var body: some View {
         VStack {
             ScrollView {
                 VStack {
-                    MediaCarouselView(viewModel: mediaViewModel, isZoomable: false)
+                    MediaCarouselView(viewModel: viewModel.mediaViewModel, isZoomable: false)
                         .frame(minHeight: 200, idealHeight: 300, maxHeight: 360)
-                        .fullScreenCover(item: $mediaViewModel.selectedImage) { selectedImage in
+                        .fullScreenCover(item: $viewModel.mediaViewModel.selectedImage) { selectedImage in
                             ZStack {
-                                MediaCarouselView(viewModel: mediaViewModel, isZoomable: true)
+                                MediaCarouselView(viewModel: viewModel.mediaViewModel, isZoomable: true)
                                 VStack {
                                     HStack {
                                         Spacer()
                                         CloseButton {
-                                            mediaViewModel.selectedImage = nil
+                                            viewModel.mediaViewModel.selectedImage = nil
                                         }
                                     }
                                     .padding()
@@ -104,7 +103,7 @@ struct CheckoutView: View {
         .background(theme.backgroundColor)
         .tint(.dispatchBlue)
         .onChange(of: viewModel.checkout) { value in
-            mediaViewModel.product = value?.product
+            viewModel.mediaViewModel.product = value?.product
         }
         .colorScheme(theme.colorScheme)
     }

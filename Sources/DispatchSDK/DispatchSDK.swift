@@ -48,9 +48,13 @@ public class DispatchSDK {
     public private(set) var config: DispatchConfig = .default {
         didSet {
             apiClient.updateEnvironment(config.environment)
+            analyticsClient.updateEnvironment(config.environment)
+            analyticsClient.updateApplicationId(config.applicationId)
         }
     }
     public private(set) var distributionId: String = ""
+    
+    private(set) var onEventTriggered: ((DispatchEvent) -> Void)?
 
     #if DEBUG
     public private(set) var environment: AppEnvironment = .staging
@@ -68,17 +72,31 @@ public class DispatchSDK {
             environment: config.environment
         )
     }()
+    private lazy var analyticsClient: AnalyticsClient = {
+        LiveAnalyticsClient(
+            environment: config.environment,
+            applicationId: config.applicationId,
+            onEventTriggered: { [weak self] event in
+                self?.onEventTriggered?(event)
+            }
+        )
+    }()
 
     private func makeCoordinator() -> Coordinator {
         return MainCoordinator(
             router: RouterImp(rootController: UINavigationController(), checkoutController: UINavigationController()),
             apiClient: apiClient,
+            analyticsClient: analyticsClient,
             config: config
         )
     }
     
     public func setup(using config: DispatchConfig) {
         self.config = config
+    }
+    
+    public func registerForEvents(_ callback: @escaping (DispatchEvent) -> Void) {
+        self.onEventTriggered = callback
     }
     
     public func present(with route: DispatchRoute) {
@@ -93,6 +111,8 @@ public class DispatchSDK {
         default:
             break
         }
+        
+        analyticsClient.updateDistributionId(distributionId)
         coordinator.start(with: route)
     }
 }

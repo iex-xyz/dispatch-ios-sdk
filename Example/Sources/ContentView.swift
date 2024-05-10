@@ -3,22 +3,12 @@ import DispatchSDK
 
 struct ContentView: View {
     @State var environment: AppEnvironment = .staging
+    @State var events: [DispatchEvent] = []
     
     let buildInfo = """
-• Navigation hasn't been updated to match latest Figma. Still some questions/research around feasibility going sheet -> fullscreen
-
 • Checkout preview needs some testing with multiple attribute variant
 
-• SVG image support is not sizing properly
-
-• HTML needs more testing with various tags and test cases. Staging presets have weird characters and missing HTML tags
-
-• Confetti success needs to be polished
-
-• PhoneNumberTextfield needs more testing to verify full global support works as intended
-
 • Rotation indicator is not implemented yet
-
 """
     var body: some View {
             List {
@@ -71,11 +61,32 @@ struct ContentView: View {
                     }
                 }
                 
+                Section("Logged Analytics Events") {
+                    if events.isEmpty {
+                        Text("No analytics events logged yet")
+                            .foregroundStyle(.secondary)
+                    }
+                    ForEach(events, id: \.name) { event in
+                        Text(event.name)
+                    }
+                    
+                    if !events.isEmpty {
+                        Button(role: .destructive, action: {
+                            events.removeAll()
+                        }) {
+                            HStack {
+                                Image(systemName: "trash")
+                                Text("Clear")
+                            }
+                        }
+                    }
+                }
                 Section("Current Build Information") {
                     Text(buildInfo)
                         .font(.caption.monospaced())
                         .multilineTextAlignment(.leading)
                 }
+                
 
             }
             .listStyle(.insetGrouped)
@@ -90,6 +101,9 @@ struct ContentView: View {
         )
         DispatchSDK.shared.setup(using: config)
         DispatchSDK.shared.present(with: route)
+        DispatchSDK.shared.registerForEvents { event in
+            self.events.append(event)
+        }
 
     }
 }

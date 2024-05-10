@@ -32,37 +32,6 @@ class ApplePayViewModel: NSObject, ObservableObject {
         case fetchingShippingMethods(InitiateOrder)
         case loaded(InitiateOrder, [ShippingMethod])
         case error(Error)
-        
-//        var shouldShowSpinner: Bool {
-//            if case .loading = self {
-//                return true
-//            } else {
-//                return false
-//            }
-//        }
-//        
-//        var isDisabled: Bool {
-//            switch self {
-//            case .initiatingOrder, .fetchingShippingMethods:
-//                return true
-//            case .error, .idle:
-//                return false
-//            }
-//        }
-//        
-//        var errorMessage: String? {
-//            switch self {
-//            case let .error(error):
-//                if let error = error as? GraphQLError {
-//                    return error.description
-//                } else {
-//                    return "Something went wrong"
-//                }
-//            default:
-//                return nil
-//            }
-//        }
-
     }
 
 
@@ -72,6 +41,7 @@ class ApplePayViewModel: NSObject, ObservableObject {
     @Published var state: State = .idle
 
     private let apiClient: GraphQLClient
+    private let analyticsClient: AnalyticsClient
     private let quantity: Int
     private var order: InitiateOrder?
     private let selectedVariant: Variation?
@@ -88,9 +58,16 @@ class ApplePayViewModel: NSObject, ObservableObject {
     let _onOrderCompleted = PassthroughSubject<(InitiateOrder, Address?, BillingInfo?), Never>()
 
     // TODO: Checkout -> Content?
-    init(content: Checkout, quantity: Int, selectedVariant: Variation?, apiClient: GraphQLClient) {
+    init(
+        content: Checkout,
+        quantity: Int,
+        selectedVariant: Variation?,
+        apiClient: GraphQLClient,
+        analyticsClient: AnalyticsClient
+    ) {
         self.content = content
         self.apiClient = apiClient
+        self.analyticsClient = analyticsClient
         self.quantity = quantity
         self.selectedVariant = selectedVariant
         self.supportedNetworks = []
@@ -135,7 +112,9 @@ class ApplePayViewModel: NSObject, ObservableObject {
             variantId: self.selectedVariant?.id,
             quantity: self.quantity
         )
-        return try await apiClient.performOperation(request)
+        let response = try await apiClient.performOperation(request)
+        analyticsClient.send(event: .checkoutRequested_Checkout)
+        return response
     }
 
     func paymentSummaryItemsGenerator() -> [PKPaymentSummaryItem] {
@@ -320,6 +299,7 @@ extension ApplePayViewModel: PKPaymentAuthorizationViewControllerDelegate {
             let shippingMethodsRequest = GetShippingMethodsForOrderRequest(orderId: order.id)
             let shippingMethodsResponse = try await apiClient.performOperation(shippingMethodsRequest)
             self.updateAvailableShippingMethods(shippingMethodsResponse.availableShippingMethods)
+            self.analyticsClient.send(event: .shippingAddressCollected_Checkout)
             return .init(
                 errors: nil,
                 paymentSummaryItems: paymentSummaryItemsGenerator(),
@@ -376,7 +356,7 @@ extension ApplePayViewModel: PKPaymentAuthorizationViewControllerDelegate {
         _ controller: PKPaymentAuthorizationViewController,
         didAuthorizePayment payment: PKPayment
     ) async -> PKPaymentAuthorizationResult {
-        guard 
+        guard
             let order,
             let billing = payment.billingContact,
             let billingFirstName = billing.name?.givenName,
@@ -387,6 +367,7 @@ extension ApplePayViewModel: PKPaymentAuthorizationViewControllerDelegate {
             print("[ApplePay] Error when authorizing payment. Missing billing info or billing contact: ", payment.billingContact ?? "no-billing-contact")
             return .init(status: .failure, errors: [])
         }
+        self.analyticsClient.send(event: .paymentAuthorized_Checkout)
         let shipping = payment.shippingContact
         do {
             if (!content.product.requiresShipping) {
@@ -503,9 +484,11 @@ extension ApplePayViewModel: PKPaymentAuthorizationViewControllerDelegate {
 
             self.authorizedPayment = payment
 
+            self.analyticsClient.send(event: .paymentSent_Checkout)
             return PKPaymentAuthorizationResult(status: .success, errors: nil)
         } catch {
             print("[ApplePay] Error when authorizing payment: ", error)
+            self.analyticsClient.send(event: .paymentFailed_Checkout)
             return PKPaymentAuthorizationResult(status: .failure, errors: [error])
         }
     }

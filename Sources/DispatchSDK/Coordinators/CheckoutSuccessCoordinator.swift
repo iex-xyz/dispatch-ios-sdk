@@ -5,6 +5,7 @@ import Combine
 class CheckoutSuccessCoordinator: BaseCoordinator {
     private let router: Router
     private let apiClient: GraphQLClient
+    private let analyticsClient: AnalyticsClient
     
     let viewModel: CheckoutSuccessViewModel
     
@@ -13,10 +14,12 @@ class CheckoutSuccessCoordinator: BaseCoordinator {
     init(
         router: Router,
         apiClient: GraphQLClient,
+        analyticsClient: AnalyticsClient,
         viewModel: CheckoutSuccessViewModel
     ) {
         self.router = router
         self.apiClient = apiClient
+        self.analyticsClient = analyticsClient
         self.viewModel = viewModel
         super.init()
     }

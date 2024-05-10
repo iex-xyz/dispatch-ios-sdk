@@ -4,11 +4,13 @@ final class MainCoordinator: BaseCoordinator {
     
     private let router: Router
     private let apiClient: GraphQLClient
+    private let analyticsClient: AnalyticsClient
     private let config: DispatchConfig
 
-    init(router: Router, apiClient: GraphQLClient, config: DispatchConfig) {
+    init(router: Router, apiClient: GraphQLClient, analyticsClient: AnalyticsClient, config: DispatchConfig) {
         self.router = router
         self.apiClient = apiClient
+        self.analyticsClient = analyticsClient
         self.config = config
     }
     
@@ -27,7 +29,8 @@ final class MainCoordinator: BaseCoordinator {
             case .orderSuccess:
                 let successCoordinator = CheckoutSuccessCoordinator(
                     router: router,
-                    apiClient: apiClient,
+                    apiClient: apiClient, 
+                    analyticsClient: analyticsClient,
                     viewModel: .init(
                         checkout: .mock(),
                         orderNumber: UUID().uuidString,
@@ -51,6 +54,7 @@ final class MainCoordinator: BaseCoordinator {
         let coordinator = CheckoutCoordinator(
             router: router,
             apiClient: apiClient,
+            analyticsClient: analyticsClient,
             checkoutId: id,
             config: config
         )

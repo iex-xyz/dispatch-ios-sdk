@@ -4,39 +4,6 @@ import Combine
 import UIKit
 import Foundation
 
-class VariantPickerViewModel: ObservableObject {
-    @Published var selectedVariation: Variation
-    let attribute: Attribute
-    let variations: [Variation]
-    let quantity: Int
-
-    init(
-        attribute: Attribute,
-        variations: [Variation],
-        selectedVariation: Variation,
-        quantity: Int
-    ) {
-        self.attribute = attribute
-        self.variations = variations
-        self.selectedVariation = selectedVariation
-        self.quantity = quantity
-    }
-    
-    func onVariantTapped(_ variant: Variation) {
-        self.selectedVariation = variant
-    }
-    
-    func isVariationEnabled(_ variation: Variation) -> Bool {
-        guard 
-            let quantityAvailable = variation.quantityAvailable
-        else {
-            return false
-        }
-        
-        return Int(quantityAvailable) >= quantity
-    }
-}
-
 struct VariantPickerView: View {
     @Preference(\.theme) var theme
     @Environment(\.dismiss) var dismiss
