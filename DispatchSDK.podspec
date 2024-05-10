@@ -9,32 +9,23 @@
 Pod::Spec.new do |s|
   s.name             = 'DispatchSDK'
   s.version          = '1.0.0'
-  s.summary          = 'A short description of DispatchSDK.'
-
-# This description is used to generate tags and improve search results.
-#   * Think: What does it do? Why did you write it? What is the focus?
-#   * Try to keep it short, snappy and to the point.
-#   * Write the description between the DESC delimiters below.
-#   * Finally, don't worry about the indent, CocoaPods strips it!
+  s.summary          = 'Enable Dispatch’s checkout experiences to be invoked in-app'
 
   s.description      = <<-DESC
-TODO: Add long description of the pod here.
-                       DESC
+  iOS SDK that allows applications to enable enable Dispatch’s checkout conversion experiences to be invoked in-app
+    DESC
 
   s.homepage         = 'https://github.com/iex-xyz/dispatch-ios-sdk'
   s.license          = { :type => 'MIT', :file => 'LICENSE' }
-  s.author           = { 'Stephen Silber' => 'stephensilber@gmail.com' }
+  s.author           = { 'Dispatch Solutions, Inc' => 'stephensilber@gmail.com' }
   s.source           = { :git => 'https://github.com/iex-xyz/dispatch-ios-sdk.git', :tag => s.version.to_s }
 
   s.ios.deployment_target = '15.0'
+  s.swift_version    = '5.5'
 
-  s.source_files = 'Sources/**/*'
+  s.source_files = 'Sources/DispatchSDK/Sources/**/*'
   
   s.resource_bundles = {
-    'DispatchSDK' => ['Sources/Resources/*.json']
+    'DispatchSDK' => ['Sources/DispatchSDK/Resources/*.json']
   }
-
-  # s.public_header_files = 'Pod/Classes/**/*.h'
-  # s.frameworks = 'UIKit', 'MapKit'
-  # s.dependency 'AFNetworking', '~> 2.3'
 end
