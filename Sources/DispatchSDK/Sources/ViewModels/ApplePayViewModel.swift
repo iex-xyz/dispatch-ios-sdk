@@ -57,7 +57,6 @@ class ApplePayViewModel: NSObject, ObservableObject {
 
     let _onOrderCompleted = PassthroughSubject<(InitiateOrder, Address?, BillingInfo?), Never>()
 
-    // TODO: Checkout -> Content?
     init(
         content: Checkout,
         quantity: Int,
@@ -363,7 +362,7 @@ extension ApplePayViewModel: PKPaymentAuthorizationViewControllerDelegate {
             let billingLastName = billing.name?.familyName,
             let billingAddress = billing.postalAddress
         else {
-            // TODO: Add errors
+            // TODO: Add more verbose errors
             print("[ApplePay] Error when authorizing payment. Missing billing info or billing contact: ", payment.billingContact ?? "no-billing-contact")
             return .init(status: .failure, errors: [])
         }

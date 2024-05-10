@@ -198,7 +198,6 @@ class ShippingAddressViewModel: ObservableObject {
     }
     
     func onContinueButtonTapped() {
-        // TODO: Form validation
         guard
             !isUpdatingOrder,
             isAddress1Valid,
@@ -213,7 +212,6 @@ class ShippingAddressViewModel: ObservableObject {
             // NOTE: We optimistically set the billing address here to save a round trip
             // on the billing form if the user's shipping and billing match. Otherwise we
             // will need to update the billing address separately
-            // TODO: Can this potentially bite us when editing the form?
             await updateOrderAddress(using: .shippingAndBilling)
         }
     }

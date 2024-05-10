@@ -3,7 +3,7 @@ import Foundation
 struct UpdateOrderQuantityRequest: GraphQLRequest {
     struct Response: Codable {
         let id: String
-        let status: String // TODO: Type with enum?
+        let status: String
     }
     
     struct RequestParams: Codable {

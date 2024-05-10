@@ -77,7 +77,6 @@ class CreditCardInputViewModel: ShippingAddressViewModel {
     }
     
     override func onContinueButtonTapped() {
-        // TODO: Ensure validation?
         guard
             !isGeneratingPaymentToken,
             !isUpdatingBillingAddress,
@@ -100,7 +99,6 @@ class CreditCardInputViewModel: ShippingAddressViewModel {
             do {
                 // NOTE: We only need to update billing address if it does not match shipping
                 // since we pass ADDRESS_SHIPPING_AND_BILLING when setting our shipping address
-                // TODO: Can this potentially bite us if a user goes back to update their order?
                 if !billingAddressMatchesShipping {
                     try await updateBillingAddress()
                 }
@@ -140,7 +138,7 @@ class CreditCardInputViewModel: ShippingAddressViewModel {
             let expirationMonth = expirationComponents.first,
             let expirationYear = expirationComponents.last
         else {
-            // TODO: Error handling
+            // TODO: Better error handling
             return
         }
         DispatchQueue.main.async {

@@ -91,7 +91,6 @@ class CheckoutOverviewViewModel: ObservableObject {
                     self._onOrderComplete.send(order)
                 }
             } catch {
-                // TODO: Error handling
                 print("[DispatchSDK] Unable to complete order", error)
                 DispatchQueue.main.async {
                     self.analyticsClient.send(event: .paymentFailed_Checkout)
@@ -100,39 +99,7 @@ class CheckoutOverviewViewModel: ObservableObject {
             }
         }
     }
-    
-    func onMorePaymentOptionsButtonTapped() {
-        
-    }
-    
-    func onVariantButtonTapped() {
-        
-    }
-    
-    func onEmailButtonTapped() {
-        _onEmailTapped.send(email)
-    }
-    
-    func onPhoneButtonTapped() {
-        _onPhoneTapped.send(phone)
-    }
-    
-    func onShippingAddressButtonTapped() {
-//        _onShippingMethodTapped.send(shippingAddress)
-    }
-    
-    func onShippingMethodButtonTapped() {
-        _onShippingMethodTapped.send(shippingMethod)
-    }
-    
-    func onPaymentDetailsButtonTapped() {
-//        _onPaymentDetailsTapped.send()
-    }
-    
-    func onCloseButtonTapped() {
-        // TODO:
-    }
-    
+
     func onTermsButtonTapped() {
         if
             let url = URL(string: checkout.merchantTermsUrl),

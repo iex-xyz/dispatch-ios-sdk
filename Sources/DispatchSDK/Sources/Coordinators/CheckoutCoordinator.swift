@@ -265,9 +265,7 @@ class CheckoutCoordinator: BaseCoordinator {
             analyticsClient: analyticsClient,
             viewModel: viewModel,
             config: config,
-            didCancel: {
-                // TODO:
-            },
+            didCancel: { },
             didComplete: { [weak self] order, address, billingInfo in
                 self?.navigateToOrderCompleteCoordinator(
                     order: order,

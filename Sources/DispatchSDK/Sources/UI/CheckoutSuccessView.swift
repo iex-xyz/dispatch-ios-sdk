@@ -12,7 +12,6 @@ struct CheckoutSuccessView: View {
     var body: some View {
         ZStack {
             VStack {
-                // TODO: How are we doing headers? UINavigationBar?
                 if let imageUrlString = viewModel.checkout.product.baseImages.first, let url = URL(string: imageUrlString) {
                     AsyncImage(url: url, content: { content in
                         content

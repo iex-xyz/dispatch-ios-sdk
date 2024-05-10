@@ -240,7 +240,6 @@ class CreditCardCoordinator: BaseCoordinator {
         billingInfo: BillingInfo,
         paymentToken: String
     ) {
-        // TODO: Where do we store all of this data while we go through the flow?
         let viewModel = CheckoutOverviewViewModel(
             apiClient: apiClient,
             analyticsClient: analyticsClient,

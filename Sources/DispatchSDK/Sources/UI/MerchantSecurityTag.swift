@@ -12,7 +12,7 @@ struct MerchantSecurityTag: View {
             tapHandler()
         }) {
             HStack {
-                Image(systemName: "lock.circle") // TODO: Dotted version where supported
+                Image(systemName: "lock.circle") // TODO: Dotted version from figma?
                     .foregroundStyle(Color.dispatchBlue)
                 Text(domain)
                     .font(.footnote)
@@ -30,6 +30,8 @@ struct MerchantSecurityTag: View {
 #Preview {
     MerchantSecurityTag(domain: "nike.com", tapHandler: {})
 }
+
+// WIP: This still has some tweaks before it can work well in the MerchantSecurityTag
 struct MarqueeText: View {
     let text: String
     @State private var textWidth: CGFloat = 0

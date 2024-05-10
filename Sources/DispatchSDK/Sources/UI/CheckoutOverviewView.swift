@@ -36,7 +36,6 @@ struct CheckoutOverviewView: View {
                                         .lineLimit(3)
                                         .foregroundStyle(.primary)
                                 } handler: {
-                                    viewModel.onVariantButtonTapped()
                                 }
                                 Divider()
                             }
@@ -49,7 +48,6 @@ struct CheckoutOverviewView: View {
                             .minimumScaleFactor(0.8)
                             .foregroundStyle(.primary)
                     } handler: {
-                        viewModel.onEmailButtonTapped()
                     }
                     Divider()
                     CheckoutOverviewDetailRow(title: "Phone", showChevron: false) {
@@ -59,7 +57,6 @@ struct CheckoutOverviewView: View {
                             .minimumScaleFactor(0.8)
                             .foregroundStyle(.primary)
                     } handler: {
-                        viewModel.onPhoneButtonTapped()
                     }
                     Divider()
                     CheckoutOverviewDetailRow(title: "Ship to", showChevron: false) {
@@ -69,7 +66,6 @@ struct CheckoutOverviewView: View {
                             .minimumScaleFactor(0.8)
                             .foregroundStyle(.primary)
                     } handler: {
-                        viewModel.onShippingAddressButtonTapped()
                     }
                     Divider()
                     CheckoutOverviewDetailRow(title: "Payment", showChevron: false) {
@@ -84,7 +80,6 @@ struct CheckoutOverviewView: View {
                         }
                             .foregroundStyle(.primary)
                     } handler: {
-                        viewModel.onPaymentDetailsButtonTapped()
                     }
                     Divider()
                     CheckoutOverviewDetailRow(title: "Delivery", showChevron: false) {
@@ -94,7 +89,6 @@ struct CheckoutOverviewView: View {
                             .minimumScaleFactor(0.8)
                             .foregroundStyle(.primary)
                     } handler: {
-                        viewModel.onShippingMethodButtonTapped()
                     }
                     Divider()
                     CheckoutOverviewDetailRow(title: "Subtotal", showChevron: false) {
@@ -109,7 +103,6 @@ struct CheckoutOverviewView: View {
                             .minimumScaleFactor(0.8)
                             .foregroundStyle(.primary)
                     } handler: {
-                        viewModel.onShippingMethodButtonTapped()
                     }
                     Divider()
                     CheckoutOverviewDetailRow(title: "Tax", showChevron: false) {
@@ -124,7 +117,6 @@ struct CheckoutOverviewView: View {
                             .minimumScaleFactor(0.8)
                             .foregroundStyle(.primary)
                     } handler: {
-                        viewModel.onShippingMethodButtonTapped()
                     }
                     Divider()
                     CheckoutOverviewDetailRow(title: "Total", showChevron: false) {
@@ -139,7 +131,6 @@ struct CheckoutOverviewView: View {
                             .minimumScaleFactor(0.8)
                             .foregroundStyle(.primary)
                     } handler: {
-                        viewModel.onShippingMethodButtonTapped()
                     }
                     Divider()
                     Button(action: {
@@ -161,14 +152,15 @@ struct CheckoutOverviewView: View {
                 ) {
                     viewModel.onPayButtonTapped()
                 }
-                if viewModel.paymentMethods.count > 1 {
-                    Button(action: {
-                        viewModel.onMorePaymentOptionsButtonTapped()
-                    }) {
-                        Text("More payment options ") + Text(Image(systemName: "arrow.right"))
-                    }
-                    .font(.subheadline.bold())
-                }
+                // NOTE: Supporting this with 2 presented navs will end up in a recursive nav state
+//                if viewModel.paymentMethods.count > 1 {
+//                    Button(action: {
+//                        viewModel.onMorePaymentOptionsButtonTapped()
+//                    }) {
+//                        Text("More payment options ") + Text(Image(systemName: "arrow.right"))
+//                    }
+//                    .font(.subheadline.bold())
+//                }
             }
             .padding()
         }
