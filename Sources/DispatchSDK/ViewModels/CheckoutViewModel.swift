@@ -98,6 +98,8 @@ internal class CheckoutViewModel: ObservableObject {
     private let apiClient: GraphQLClient
     private let analyticsClient: AnalyticsClient
     
+    private var cancellables: Set<AnyCancellable> = .init()
+    
     init(
         id: String,
         apiClient: GraphQLClient,
@@ -107,6 +109,14 @@ internal class CheckoutViewModel: ObservableObject {
         self.apiClient = apiClient
         self.analyticsClient = analyticsClient
         self.mediaViewModel = .init(images: [], analyticsClient: analyticsClient)
+        
+        self.mediaViewModel.$selectedImage.sink(
+            receiveValue: { [weak self] _ in
+                self?.objectWillChange.send()
+            }
+        )
+        .store(in: &cancellables)
+
 
         Task {
             await fetchDistribution(for: id)

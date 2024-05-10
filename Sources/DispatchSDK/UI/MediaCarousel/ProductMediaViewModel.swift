@@ -3,7 +3,7 @@ import Combine
 
 class ProductMediaViewModel: ObservableObject {
     
-    struct Image: Identifiable {
+    struct CarouselImage: Equatable, Identifiable, Hashable {
         var id: String {
             url
         }
@@ -24,7 +24,7 @@ class ProductMediaViewModel: ObservableObject {
             analyticsClient.send(event:.carouselSwipe_Checkout(direction: direction, imageIndex: currentIndex))
         }
     }
-    @Published var selectedImage: Image?
+    @Published var selectedImage: CarouselImage?
     
     private let analyticsClient: AnalyticsClient
 

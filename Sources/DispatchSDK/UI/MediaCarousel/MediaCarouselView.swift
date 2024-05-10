@@ -35,7 +35,7 @@ struct MediaCarouselView: View {
                             AsyncImage(url: URL(string: viewModel.images[index])) { image in
                                 image
                                     .resizable()
-                                    .scaledToFit()
+                                    .scaledToFill()
                                     .frame(width: geometry.size.width)
                                     .frame(minHeight: 200, maxHeight: 360)
                             } placeholder: {
