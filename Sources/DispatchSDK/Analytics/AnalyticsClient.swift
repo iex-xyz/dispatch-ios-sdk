@@ -1,6 +1,13 @@
 import Combine
 import Foundation
 
+public struct LoggedDispatchEvent: Identifiable {
+    public let id: UUID = .init()
+    public let distributionId: String
+    public let timestamp: Date = .now
+    public let event: DispatchEvent
+}
+
 public enum DispatchEvent: Equatable {
     // Checkout
     case carouselSwipe_Checkout(direction: String, imageIndex: Int) // Added
@@ -68,11 +75,75 @@ public enum DispatchEvent: Equatable {
         case .view_Leadgen: return "view_Leadgen"
         }
     }
+
+    public var params: [String: AnyHashable] {
+        switch self {
+        case .carouselSwipe_Checkout(let direction, let imageIndex):
+            return ["direction": direction, "imageIndex": imageIndex]
+        case .checkoutDismissed_Checkout:
+            return [:]
+        case .checkoutRequested_Checkout:
+            return [:]
+        case .customerIdentifierCollected_Checkout:
+            return [:]
+        case .navigatePrevious_Checkout:
+            return [:]
+        case .paymentSent_Checkout:
+            return [:]
+        case .paymentAuthorized_Checkout:
+            return [:]
+        case .paymentFailed_Checkout:
+            return [:]
+        case .paymentMethodSelected_Checkout(let paymentMethod):
+            return ["paymentMethod": paymentMethod]
+        case .productDetailsOpened_Checkout:
+            return [:]
+        case .shippingAddressCollected_Checkout:
+            return [:]
+        case .trustModalDismissed_Checkout:
+            return [:]
+        case .trustModalOpened_Checkout:
+            return [:]
+        case .variantSelected_Checkout(let attribute):
+            return attribute
+        case .quantitySelected_Checkout(let quantity):
+            return ["quantity": quantity]
+        case .termsClicked_Checkout:
+            return [:]
+        case .view_Checkout:
+            return [:]
+        case .carouselSwipe_Leadgen(let direction, let imageIndex):
+            return ["direction": direction, "imageIndex": imageIndex]
+        case .contactInfoCollected_Leadgen:
+            return [:]
+        case .copyCode_Leadgen:
+            return [:]
+        case .formRequested_Leadgen:
+            return [:]
+        case .formDismissed_Leadgen:
+            return [:]
+        case .navigatePrevious_Leadgen:
+            return [:]
+        case .recommendedProductClick_Leadgen:
+            return [:]
+        case .shopNowClicked_Leadgen:
+            return [:]
+        case .termsClicked_Leadgen:
+            return [:]
+        case .trustModalDismissed_Leadgen:
+            return [:]
+        case .trustModalOpened_Leadgen:
+            return [:]
+        case .view_Leadgen:
+            return [:]
+        }
+    }
+    
 }
 
 
 protocol AnalyticsClient {
-    var onEventTriggered: (DispatchEvent) -> Void { get set }
+    var onEventTriggered: (LoggedDispatchEvent) -> Void { get set }
     func send(event: DispatchEvent) -> Void
     func updateEnvironment(_ environment: AppEnvironment)
     func updateApplicationId(_ applicationId: String)
@@ -81,7 +152,7 @@ protocol AnalyticsClient {
 
 class MockAnalyticsClient: AnalyticsClient {
     
-    var onEventTriggered: (DispatchEvent) -> Void = { _ in
+    var onEventTriggered: (LoggedDispatchEvent) -> Void = { _ in
         
     }
 
@@ -104,12 +175,12 @@ class MockAnalyticsClient: AnalyticsClient {
 
 class LiveAnalyticsClient: AnalyticsClient {
     
-    internal var onEventTriggered: (DispatchEvent) -> Void
+    internal var onEventTriggered: (LoggedDispatchEvent) -> Void
     private var environment: AppEnvironment
     private var applicationId: String
     private var distributionId: String?
     
-    init(environment: AppEnvironment, applicationId: String, onEventTriggered: @escaping (DispatchEvent) -> Void) {
+    init(environment: AppEnvironment, applicationId: String, onEventTriggered: @escaping (LoggedDispatchEvent) -> Void) {
         self.onEventTriggered = onEventTriggered
         self.environment = environment
         self.applicationId = applicationId
@@ -130,7 +201,8 @@ class LiveAnalyticsClient: AnalyticsClient {
     func send(event: DispatchEvent) {
         // TODO: Implement REST API (missing from Postman)
         
-        onEventTriggered(event)
+        let loggedEvent = LoggedDispatchEvent(distributionId: distributionId ?? "missing", event: event)
+        onEventTriggered(loggedEvent)
     }
 
     // TODO: Handle async event handler via API

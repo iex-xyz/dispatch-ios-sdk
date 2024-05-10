@@ -3,7 +3,7 @@ import DispatchSDK
 
 struct ContentView: View {
     @State var environment: AppEnvironment = .staging
-    @State var events: [DispatchEvent] = []
+    @State var events: [LoggedDispatchEvent] = []
     
     let buildInfo = """
 • Checkout preview needs some testing with multiple attribute variant
@@ -66,8 +66,8 @@ struct ContentView: View {
                         Text("No analytics events logged yet")
                             .foregroundStyle(.secondary)
                     }
-                    ForEach(events, id: \.name) { event in
-                        Text(event.name)
+                    ForEach(events, id: \.id) { event in
+                        EventRow(for: event)
                     }
                     
                     if !events.isEmpty {
@@ -92,6 +92,23 @@ struct ContentView: View {
             .listStyle(.insetGrouped)
     }
     
+    func EventRow(for event: LoggedDispatchEvent) -> some View {
+        VStack(alignment: .leading) {
+            Text(event.event.name)
+                .font(.caption.monospaced().bold())
+            if !event.event.params.isEmpty {
+                VStack(alignment: .leading) {
+                    ForEach(Array(event.event.params.keys), id: \.self) { key in
+                        Text("\(key): \(String(describing: event.event.params[key]))")
+                            .font(.caption2.monospaced())
+                            .foregroundStyle(.secondary)
+                            .multilineTextAlignment(.leading)
+                            .lineLimit(3)
+                    }
+                }
+            }
+        }
+    }
     func handleItemTapped(_ route: DispatchRoute) {
         let config: DispatchConfig = DispatchConfig(
             applicationId: "64b86c02453510acde70250f",

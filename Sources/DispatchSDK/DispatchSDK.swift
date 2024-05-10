@@ -54,7 +54,7 @@ public class DispatchSDK {
     }
     public private(set) var distributionId: String = ""
     
-    private(set) var onEventTriggered: ((DispatchEvent) -> Void)?
+    private(set) var onEventTriggered: ((LoggedDispatchEvent) -> Void)?
 
     #if DEBUG
     public private(set) var environment: AppEnvironment = .staging
@@ -95,7 +95,7 @@ public class DispatchSDK {
         self.config = config
     }
     
-    public func registerForEvents(_ callback: @escaping (DispatchEvent) -> Void) {
+    public func registerForEvents(_ callback: @escaping (LoggedDispatchEvent) -> Void) {
         self.onEventTriggered = callback
     }
     
