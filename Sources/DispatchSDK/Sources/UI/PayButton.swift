@@ -10,7 +10,7 @@ struct ApplePayButton: UIViewRepresentable {
     func makeUIView(context: Context) -> PKPaymentButton {
         let button = PKPaymentButton(
             paymentButtonType: paymentButtonType,
-            paymentButtonStyle: theme.paymentButtonStyle
+            paymentButtonStyle: .automatic
         )
         button.addTarget(context.coordinator, action: #selector(Coordinator.buttonTapped), for: .touchUpInside)
 
@@ -20,6 +20,7 @@ struct ApplePayButton: UIViewRepresentable {
     
     func updateUIView(_ uiView: PKPaymentButton, context: Context) {
         uiView.isEnabled = !isDisabled
+        uiView.cornerRadius = theme.cornerRadius
     }
 
     func makeCoordinator() -> Coordinator {

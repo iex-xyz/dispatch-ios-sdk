@@ -106,11 +106,11 @@ extension Theme {
     }
     
     var cornerRadius: CGFloat {
-        switch inputStyle {
+        switch ctaStyle {
         case .round, .rounded:
-            return 24
+            return 30
         case .soft:
-            return 4
+            return 10
         case .sharp:
             return 0
         }

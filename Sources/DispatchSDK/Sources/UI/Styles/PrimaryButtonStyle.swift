@@ -36,7 +36,7 @@ struct PrimaryButtonStyle: ButtonStyle {
         .frame(height: 44)
         .frame(maxWidth: isFullWidth ? .infinity : nil)
         .background(!isEnabled ? Color.gray : backgroundColor)
-        .cornerRadius(cornerRadius(for: theme.inputStyle))
+        .cornerRadius(theme.cornerRadius)
         .opacity(configuration.isPressed ? 0.95 : 1)
         .animation(.easeInOut, value: configuration.isPressed)
         .disabled(!isEnabled)

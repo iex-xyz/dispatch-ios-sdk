@@ -104,6 +104,7 @@ struct CheckoutView: View {
         .tint(.dispatchBlue)
         .onChange(of: viewModel.checkout) { value in
             viewModel.mediaViewModel.product = value?.product
+            theme = value?.theme ?? .default
         }
         .colorScheme(theme.colorScheme)
     }
