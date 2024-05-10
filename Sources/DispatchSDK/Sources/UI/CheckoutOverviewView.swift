@@ -29,9 +29,12 @@ struct CheckoutOverviewView: View {
                         let attributes = viewModel.checkout.product.attributes?.values
                     {
                         ForEach(Array(attributes), id: \.id) { attribute in
-                            if let renderedValue = variant.attributes?[attribute.id] {
+                            if
+                                let attributeKey = variant.attributes?[attribute.id],
+                                let selectedValue = attribute.options[attributeKey]?.title
+                            {
                                 CheckoutOverviewDetailRow(title: attribute.title, showChevron: false) {
-                                    Text(renderedValue)
+                                    Text(selectedValue)
                                         .multilineTextAlignment(.trailing)
                                         .lineLimit(3)
                                         .foregroundStyle(.primary)

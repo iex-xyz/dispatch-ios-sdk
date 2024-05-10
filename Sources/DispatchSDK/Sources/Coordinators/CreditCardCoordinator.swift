@@ -111,6 +111,7 @@ class CreditCardCoordinator: BaseCoordinator {
                 self?.analyticsClient.send(event: .customerIdentifierCollected_Checkout)
                 self?.showShippingAddressForm(
                     for: order,
+                    variant: self?.viewModel.variant,
                     email: email
                 )
             }
@@ -121,6 +122,7 @@ class CreditCardCoordinator: BaseCoordinator {
     
     private func showShippingAddressForm(
         for order: InitiateOrder,
+        variant: Variation?,
         email: String
     ) {
         let addressLookupService: AddressLookupService = MapKitAddressLookupService()
@@ -144,6 +146,7 @@ class CreditCardCoordinator: BaseCoordinator {
                 self?.analyticsClient.send(event: .shippingAddressCollected_Checkout)
                 self?.showShippingMethods(
                     for: order,
+                    variant: variant,
                     email: email,
                     phone: phone,
                     address: address
@@ -156,6 +159,7 @@ class CreditCardCoordinator: BaseCoordinator {
     
     private func showShippingMethods(
         for order: InitiateOrder,
+        variant: Variation?,
         email: String,
         phone: String,
         address: Address
@@ -175,6 +179,7 @@ class CreditCardCoordinator: BaseCoordinator {
             .sink { [weak self] shippingMethod in
                 self?.showBillingForm(
                     for: order,
+                    variant: variant,
                     email: email,
                     shippingAddress: address, 
                     phone: phone,
@@ -188,6 +193,7 @@ class CreditCardCoordinator: BaseCoordinator {
     
     private func showBillingForm(
         for order: InitiateOrder,
+        variant: Variation?,
         email: String,
         shippingAddress: Address,
         phone: String,
@@ -215,7 +221,7 @@ class CreditCardCoordinator: BaseCoordinator {
                 self?.showOrderPreview(
                     for: order,
                     email: email,
-                    variant: nil,
+                    variant: variant,
                     phone: phone,
                     shippingAddress: shippingAddress,
                     shippingMethod: shippingMethod,
