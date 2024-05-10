@@ -16,6 +16,7 @@ struct ShippingAddressFormContainer: View {
                     .padding()
                 FooterView()
             }
+            .keyboardAvoiding()
             VStack(spacing: 32) {
                 Button(action: {
                     viewModel.onContinueButtonTapped()

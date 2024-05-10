@@ -87,6 +87,7 @@ struct CreditCardForm: View {
                 }
                 .padding()
             }
+            .keyboardAvoiding()
             VStack(spacing: 32) {
                 Button(action: {
                     viewModel.onContinueButtonTapped()

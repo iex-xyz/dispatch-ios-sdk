@@ -39,7 +39,7 @@ Then run pod install.
 func application(_ application: UIApplication, didFinishLaunchingWithOptions launchOptions: [UIApplication.LaunchOptionsKey: Any]?) -> Bool {
     let config = DispatchConfig(
         applicationId: "YOUR_APPLICATION_ID", 
-        environment: .staging, // Use .production for release
+        environment: .demo, // Use .production for release
         merchantId: "YOUR_MERCHANT_ID"
     )
     DispatchSDK.shared.setup(using: config)
@@ -64,7 +64,7 @@ DispatchSDK.shared.registerForEvents { event in
 DispatchConfig is the configuration object used to set up the SDK. It has the following properties:
 
 - applicationId: String - Your application ID
-- environment: AppEnvironment - The environment to use (.staging or .production)
+- environment: AppEnvironment - The environment to use (.demo or .production)
 - merchantId: String - Your merchant ID
 - orderCompletionCTA: String - The call to action text for the order completion screen (default is "Keep Shopping")
 - hideOrderCompletionCTA: Bool - Whether to hide the order completion call to action (default is false)

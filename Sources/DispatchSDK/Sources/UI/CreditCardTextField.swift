@@ -4,8 +4,8 @@ import SwiftUI
 class CardTypeUITextField: PaddedTextField {
     let cardImageView = UIImageView(image: Icons.Card.default)
     
-    override init(frame: CGRect) {
-        super.init(frame: frame)
+    override init(theme: Theme?) {
+        super.init(theme: theme)
         cardImageView.contentMode = .scaleAspectFit
         setRightView(cardImageView, padding: 48)
     }
@@ -30,7 +30,7 @@ struct CreditCardTextField: UIViewRepresentable {
     var cardIcon: UIImage? = Icons.Card.default
 
     func makeUIView(context: Context) -> CardTypeUITextField {
-        let textField = CardTypeUITextField(frame: .zero)
+        let textField = CardTypeUITextField(theme: theme)
         textField.keyboardType = .numberPad
         textField.delegate = context.coordinator
         textField.layer.borderWidth = 2

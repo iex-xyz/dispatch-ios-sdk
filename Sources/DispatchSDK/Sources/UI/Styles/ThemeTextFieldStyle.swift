@@ -42,16 +42,16 @@ struct ThemeTextFieldStyle: TextFieldStyle {
                         .frame(alignment: .leading)
                 }
                 configuration
+                    .frame(height: 44)
                     .padding(.horizontal, 16)
                     .foregroundStyle(.primary)
-                    .frame(height: 44)
                     .overlay(
-                        RoundedRectangle(cornerRadius: cornerRadius(for: theme.inputStyle), style: .continuous)
+                        RoundedRectangle(cornerRadius: theme.cornerRadius, style: .continuous)
                             .stroke(borderColor, lineWidth: 2)
                     )
                     .background(
                         RoundedRectangle(
-                            cornerRadius: cornerRadius(for: theme.inputStyle),
+                            cornerRadius: theme.cornerRadius,
                             style: .continuous
                         )
                         .fill(
@@ -105,18 +105,6 @@ struct ThemeTextFieldStyle: TextFieldStyle {
         }
     }
     
-    private func cornerRadius(for style: Style?) -> CGFloat {
-        switch style {
-        case .round, .rounded:
-            return 30
-        case .soft:
-            return 4
-        case .sharp:
-            return 0
-        default:
-            return 0
-        }
-    }
 }
 
 struct ThemeTextFieldStyle_Preview: PreviewProvider {

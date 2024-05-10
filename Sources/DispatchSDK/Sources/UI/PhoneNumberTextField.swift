@@ -11,7 +11,7 @@ struct PhoneNumberTextField: UIViewRepresentable {
     static var fallbackPlaceholder: String = "+1 (123) 456-7890"
 
     func makeUIView(context: Context) -> UITextField {
-        let textField = PaddedTextField()
+        let textField = PaddedTextField(theme: theme)
         textField.keyboardType = .phonePad
         textField.delegate = context.coordinator
         textField.layer.borderWidth = 2
@@ -24,9 +24,9 @@ struct PhoneNumberTextField: UIViewRepresentable {
         case .round, .rounded:
             textField.layer.cornerRadius = theme.cornerRadius
         case .sharp:
-            textField.layer.cornerRadius = 0
+            textField.layer.cornerRadius = theme.cornerRadius
         case .soft:
-            textField.layer.cornerRadius = 4
+            textField.layer.cornerRadius = theme.cornerRadius
         }
         return textField
     }
