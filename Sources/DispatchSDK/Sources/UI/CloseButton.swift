@@ -1,5 +1,6 @@
 import SwiftUI
 
+@available(iOS 15.0, *)
 struct CloseButton: View {
     @Preference(\.theme) var theme
     let handler: () -> Void
@@ -24,6 +25,7 @@ struct CloseButton: View {
     }
 }
 
+@available(iOS 15.0, *)
 #Preview {
     CloseButton {
         //

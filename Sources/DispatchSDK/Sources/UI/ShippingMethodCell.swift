@@ -1,5 +1,6 @@
 import SwiftUI
 
+@available(iOS 15.0, *)
 struct ShippingMethodCell: View {
     @Preference(\.theme) var theme
 
@@ -62,9 +63,7 @@ struct ShippingMethodCell: View {
     }
 }
 
-
-
-
+@available(iOS 15.0, *)
 struct ShippingMethodCell_Preview: PreviewProvider {
     static var previews: some View {
         VStack {

@@ -4,6 +4,7 @@ import Combine
 import UIKit
 import Foundation
 
+@available(iOS 15.0, *)
 struct VariantPickerView: View {
     @Preference(\.theme) var theme
     @Environment(\.dismiss) var dismiss

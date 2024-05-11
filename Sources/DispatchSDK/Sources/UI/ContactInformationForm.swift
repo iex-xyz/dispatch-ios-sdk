@@ -1,5 +1,6 @@
 import SwiftUI
 
+@available(iOS 15.0, *)
 struct ContactInformationForm: View {
     @Preference(\.theme) var theme
     @Environment(\.dismiss) var dismiss
@@ -84,7 +85,7 @@ struct ContactInformationForm: View {
 }
 
 
-
+@available(iOS 15.0, *)
 struct ContactInformationForm_Preview: PreviewProvider {
     static let theme: Theme = .sharp
     static var previews: some View {

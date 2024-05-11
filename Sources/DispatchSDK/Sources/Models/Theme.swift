@@ -13,6 +13,7 @@ enum Mode: String, Codable {
     case dark = "DARK"
 }
 
+@available(iOS 15.0, *)
 struct Theme: Codable, Equatable {
     let buttonStyle: Style?
     let successButtonText: String?
@@ -71,6 +72,7 @@ struct Theme: Codable, Equatable {
     }
 }
 
+@available(iOS 15.0, *)
 extension Theme {
     static func mock(
         buttonStyle: Style? = .round,
@@ -96,6 +98,8 @@ extension Theme {
 }
 
 import SwiftUI
+
+@available(iOS 15.0, *)
 extension Theme {
     var colorScheme: ColorScheme {
         return mode == .dark ? .dark : .light
@@ -118,6 +122,7 @@ extension Theme {
     }
 }
 
+@available(iOS 15.0, *)
 extension Theme {
     static let soft = Theme.mock(ctaStyle: .soft, inputStyle: .soft)
     static let sharp = Theme.mock(ctaStyle: .sharp, inputStyle: .sharp)
@@ -155,7 +160,8 @@ struct ThemeInput: Codable {
     }
 }
 
-// NOTE: These are just for testing and can be removed
+// NOTE: These are just for testing and can be removed]
+@available(iOS 15.0, *)
 extension Theme {
     func toggle() -> Theme {
         return mode == .light ? darkMode() : lightMode()

@@ -64,14 +64,22 @@ public class DispatchSDK {
 
     private lazy var coordinator: Coordinator = self.makeCoordinator()
     private lazy var apiClient: GraphQLClient = {
-        GraphQLClient(
-            networkService: RealNetworkService(
-                applicationId: config.applicationId,
-                distributionId: distributionId
-            ),
-            environment: config.environment
-        )
+        if #available(iOS 15, *) {
+            return GraphQLClient(
+                networkService: RealNetworkService(
+                    applicationId: config.applicationId,
+                    distributionId: distributionId
+                ),
+                environment: config.environment
+            )
+        } else {
+            return GraphQLClient(
+                networkService: EmptyNetworkService(),
+                environment: config.environment
+            )
+        }
     }()
+
     private lazy var analyticsClient: AnalyticsClient = {
         LiveAnalyticsClient(
             environment: config.environment,
@@ -83,12 +91,21 @@ public class DispatchSDK {
     }()
 
     private func makeCoordinator() -> Coordinator {
-        return MainCoordinator(
-            router: RouterImp(rootController: UINavigationController(), checkoutController: UINavigationController()),
-            apiClient: apiClient,
-            analyticsClient: analyticsClient,
-            config: config
-        )
+        if #available(iOS 15, *) {
+            return MainCoordinator(
+                router: RouterImp(rootController: UINavigationController(), checkoutController: UINavigationController()),
+                apiClient: apiClient,
+                analyticsClient: analyticsClient,
+                config: config
+            )
+
+        } else {
+            return WebViewCoordinator(
+                config: config,
+                analyticsClient: analyticsClient
+            )
+        }
+
     }
     
     public func setup(using config: DispatchConfig) {

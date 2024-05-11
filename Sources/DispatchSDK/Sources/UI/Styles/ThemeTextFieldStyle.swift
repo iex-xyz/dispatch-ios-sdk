@@ -1,5 +1,6 @@
 import SwiftUI
 
+@available(iOS 15.0, *)
 fileprivate extension Theme {
     var validationAlignment: Alignment {
         switch self.inputStyle {
@@ -11,6 +12,7 @@ fileprivate extension Theme {
     }
 }
 
+@available(iOS 15.0, *)
 extension View {
     func placeholder<Content: View>(
         when shouldShow: Bool,
@@ -24,6 +26,7 @@ extension View {
     }
 }
 
+@available(iOS 15.0, *)
 struct ThemeTextFieldStyle: TextFieldStyle {
     @Preference(\.theme) var theme
 
@@ -107,6 +110,7 @@ struct ThemeTextFieldStyle: TextFieldStyle {
     
 }
 
+@available(iOS 15.0, *)
 struct ThemeTextFieldStyle_Preview: PreviewProvider {
     static var previews: some View {
         // Example Theme, replace with your actual theme values.

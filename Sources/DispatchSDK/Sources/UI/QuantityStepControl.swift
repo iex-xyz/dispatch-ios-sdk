@@ -1,6 +1,7 @@
 import SwiftUI
 
-internal struct QuantityStepControl : View {
+@available(iOS 15.0, *)
+struct QuantityStepControl : View {
     @Preference(\.theme) var theme
 
     @Binding var value: Int
@@ -57,7 +58,7 @@ internal struct QuantityStepControl : View {
     }
 }
 
-
+@available(iOS 15.0, *)
 #Preview {
     
     @State var quantity: Int = 3

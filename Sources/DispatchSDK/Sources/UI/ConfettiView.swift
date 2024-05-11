@@ -2,6 +2,7 @@ import UIKit
 import SpriteKit
 import SwiftUI
 
+@available(iOS 15.0, *)
 class ParticleScene: SKScene {
     override init(size: CGSize) {
         super.init(size: size)

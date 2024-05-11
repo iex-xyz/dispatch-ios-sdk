@@ -1,5 +1,6 @@
 import SwiftUI
 
+@available(iOS 15.0, *)
 struct CarouselArrowButtonStyle: ButtonStyle {
     @Preference(\.theme) var theme
 
@@ -23,6 +24,7 @@ struct CarouselArrowButtonStyle: ButtonStyle {
     }
 }
 
+@available(iOS 15.0, *)
 #Preview {
     VStack {
         HStack {

@@ -1,5 +1,6 @@
 import Foundation
 
+@available(iOS 15.0, *)
 struct DispatchContent: Codable {
     let version: String
     let subFolderId: String
@@ -79,6 +80,7 @@ struct DispatchContent: Codable {
     }
 }
 
+@available(iOS 15.0, *)
 extension DispatchContent {
     static func mock(
         version: String = "v1",

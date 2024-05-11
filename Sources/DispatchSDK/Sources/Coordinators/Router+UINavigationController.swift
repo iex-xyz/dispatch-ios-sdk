@@ -1,6 +1,7 @@
 import UIKit
 import SwiftUI
 
+@available(iOS 15.0, *)
 final class RouterImp: NSObject, Router {
     private var rootController: UINavigationController?
     private var checkoutController: UINavigationController?
@@ -175,6 +176,7 @@ final class RouterImp: NSObject, Router {
     }
 }
 
+@available(iOS 15.0, *)
 extension RouterImp: UIAdaptivePresentationControllerDelegate {
     
     func presentationControllerDidDismiss(_ presentationController: UIPresentationController) {
@@ -182,6 +184,7 @@ extension RouterImp: UIAdaptivePresentationControllerDelegate {
     }
 }
 
+@available(iOS 15.0, *)
 extension RouterImp: UINavigationControllerDelegate {
     func navigationController(
         _ navigationController: UINavigationController,

@@ -1,6 +1,7 @@
 import SwiftUI
 
-internal struct CheckoutHeader: View {
+@available(iOS 15.0, *)
+struct CheckoutHeader: View {
     @Preference(\.theme) var theme
     let logo: Image?
     let domain: String

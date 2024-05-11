@@ -1,6 +1,7 @@
 import SwiftUI
 import Combine
 
+@available(iOS 15.0, *)
 struct ProductOverview: View {
     @Preference(\.theme) var theme
     @ObservedObject var viewModel: ProductOverviewViewModel
@@ -42,6 +43,7 @@ struct ProductOverview: View {
     }
 }
 
+@available(iOS 15.0, *)
 #Preview {
     let description = """
 Apple Watch Band - AlphaPremier - Rainbow\n\nOne of our flagship collections, the AlphaPremier, has made its way to the Apple Watch world. These straps are made from the same soft, supple seatbelt weave as our AlphaPremier straps, which are a favorite among traditional watch wearers. The dual-layer straps are held in place with two nylon keepers, one of which can be slid into the perfect spot. It's the perfect solution for Apple Watch wearers who love our AlphaPremier straps.\n\nMaterial\nSeatbelt weave nylon\n\nSizing\n\nSmall: Fits 38mm or 40mm Apple Watch (22mm band width)\nLarge: Fits 42mm, 44mm, or 45mm Apple Watch (22mm band width)\n\nAdapter\n\nSilver, Space Gray\n\nColor\nRainbow\n\nLength\n120mm x 75mm

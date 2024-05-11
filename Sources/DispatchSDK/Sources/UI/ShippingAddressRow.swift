@@ -1,5 +1,6 @@
 import SwiftUI
 
+@available(iOS 15.0, *)
 struct ShippingAddressRow: View {
     let address: AddressLookupResult
     var body: some View {
@@ -20,6 +21,7 @@ struct ShippingAddressRow: View {
     }
 }
 
+@available(iOS 15.0, *)
 #Preview {
     VStack {
         ShippingAddressRow(

@@ -1,6 +1,7 @@
 import UIKit
 import SwiftUI
 
+@available(iOS 15.0, *)
 struct ExpirationDateTextField: UIViewRepresentable {
     @Preference(\.theme) var theme
     @Binding var text: String

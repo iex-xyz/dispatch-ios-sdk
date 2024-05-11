@@ -9,6 +9,7 @@ protocol NetworkService {
     func performRequest(_ urlRequest: URLRequest) async throws -> Data
 }
 
+@available(iOS 15.0, *)
 class RealNetworkService: NetworkService {
     
     private let applicationId: String
@@ -40,7 +41,14 @@ class RealNetworkService: NetworkService {
 }
 
 // TODO: Add mock data support
+@available(iOS 15.0, *)
 class PreviewNetworkService: NetworkService {
+    func performRequest(_ urlRequest: URLRequest) async throws -> Data {
+        throw NetworkError.serverError(statusCode: 400)
+    }
+}
+
+class EmptyNetworkService: NetworkService {
     func performRequest(_ urlRequest: URLRequest) async throws -> Data {
         throw NetworkError.serverError(statusCode: 400)
     }

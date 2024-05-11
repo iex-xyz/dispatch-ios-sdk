@@ -1,5 +1,6 @@
 import SwiftUI
 
+@available(iOS 15.0, *)
 struct SecondaryButtonStyle: ButtonStyle {
     @Preference(\.theme) var theme
 
@@ -17,8 +18,7 @@ struct SecondaryButtonStyle: ButtonStyle {
 }
 
 
-
-
+@available(iOS 15.0, *)
 #Preview {
     VStack {
         VStack(spacing: 24) {

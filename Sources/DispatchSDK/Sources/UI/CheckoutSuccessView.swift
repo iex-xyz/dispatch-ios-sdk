@@ -5,6 +5,7 @@ import QuartzCore
 import CoreGraphics
 import SpriteKit
 
+@available(iOS 15.0, *)
 struct CheckoutSuccessView: View {
     @Preference(\.theme) var theme
     @ObservedObject var viewModel: CheckoutSuccessViewModel
@@ -97,12 +98,13 @@ struct CheckoutSuccessView: View {
 }
 
 
-
+@available(iOS 15.0, *)
 #Preview {
     SpriteView(scene: ParticleScene(size: .init(width: 300, height: 600)), options: [.allowsTransparency])
         .frame(maxWidth: .infinity, maxHeight: .infinity)
 }
 
+@available(iOS 15.0, *)
 #Preview {
     let viewModel = CheckoutSuccessViewModel(
         checkout: .mock(),

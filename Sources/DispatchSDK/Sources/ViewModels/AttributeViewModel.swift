@@ -1,6 +1,7 @@
 import Foundation
 
-internal class AttributeViewModel: ObservableObject, Identifiable {
+@available(iOS 15.0, *)
+class AttributeViewModel: ObservableObject, Identifiable {
     var id: String {
         attribute.id
     }

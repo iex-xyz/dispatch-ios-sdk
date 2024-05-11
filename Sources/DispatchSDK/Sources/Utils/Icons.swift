@@ -1,5 +1,6 @@
 import SwiftUI
 
+@available(iOS 15.0, *)
 struct Icons {
     
     @Preference(\.theme) static var theme

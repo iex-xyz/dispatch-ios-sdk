@@ -1,14 +1,19 @@
 import SwiftUI
+
+@available(iOS 15.0, *)
 struct ItemsPerPageKey: EnvironmentKey {
     static var defaultValue: Int = 10
 }
 
+@available(iOS 15.0, *)
 extension EnvironmentValues {
     var itemsPerPage: Int {
         get { self[ItemsPerPageKey.self] }
         set { self[ItemsPerPageKey.self] = newValue }
     }
 }
+
+@available(iOS 15.0, *)
 struct ExpandableText: View {
     internal var text : String
     
@@ -184,7 +189,7 @@ struct ExpandableText: View {
     }
 }
 
-
+@available(iOS 15.0, *)
 #Preview {
     VStack(spacing: 32) {
         ExpandableText(
@@ -201,7 +206,7 @@ struct ExpandableText: View {
     .background(Color.dispatchLightGray)
 }
 
-
+@available(iOS 15.0, *)
 extension ExpandableText {
     internal func font(_ font: Font) -> ExpandableText {
         var result = self
@@ -246,6 +251,7 @@ extension ExpandableText {
     }
 }
 
+@available(iOS 15.0, *)
 extension String {
     fileprivate func heightOfString(usingFont font: UIFont) -> CGFloat {
         let fontAttributes = [NSAttributedString.Key.font: font]
@@ -260,6 +266,7 @@ extension String {
     }
 }
 
+@available(iOS 15.0, *)
 internal struct TextSet {
     var text: String
     var font: Font
@@ -272,6 +279,7 @@ internal struct TextSet {
     }
 }
 
+@available(iOS 15.0, *)
 fileprivate func fontToUIFont(font: Font) -> UIFont {
     switch font {
     case .largeTitle:

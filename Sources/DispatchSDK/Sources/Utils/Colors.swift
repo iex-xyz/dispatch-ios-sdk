@@ -1,5 +1,6 @@
 import SwiftUI
 
+@available(iOS 15.0, *)
 extension Color {
     static var dispatchRed: Color = Color(hex: "#FF4343")
     static var dispatchBlue: Color = Color(hex: "#158AFF")
@@ -25,6 +26,7 @@ extension Color {
     static var shopPayPurple: Color = Color(hex: "#5A31F4")
 }
 
+@available(iOS 15.0, *)
 struct Colors {
     @Preference(\.theme) static var theme
     static var borderGray: Color {

@@ -1,7 +1,7 @@
 import Combine
 import SwiftUI
 
-
+@available(iOS 15.0, *)
 class CreditCardInputViewModel: ShippingAddressViewModel {
     @Published var cardNumber: String = ""
     @Published var cardType: CreditCardType?

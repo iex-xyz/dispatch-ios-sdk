@@ -7,7 +7,7 @@
 
 import SwiftUI
 
-
+@available(iOS 15.0, *)
 struct CheckoutOverviewDetailRow<Content: View>: View {
     let title: String
     let content: () -> Content
@@ -54,6 +54,7 @@ struct CheckoutOverviewDetailRow<Content: View>: View {
     }
 }
 
+@available(iOS 15.0, *)
 #Preview {
     VStack {
         Divider()

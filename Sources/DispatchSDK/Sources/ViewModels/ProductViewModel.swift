@@ -1,6 +1,7 @@
 import Foundation
 
-internal class ProductViewModel: ObservableObject {
+@available(iOS 15.0, *)
+class ProductViewModel: ObservableObject {
     @Published var product: Product
     @Published var selectedVariantMap: [String: AttributeViewModel] = [:]
     @Published var currentAttributePicker: Attribute? = nil

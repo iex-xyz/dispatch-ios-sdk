@@ -1,12 +1,6 @@
-//
-//  SwiftUIView.swift
-//  
-//
-//  Created by Stephen Silber on 4/18/24.
-//
-
 import SwiftUI
 
+@available(iOS 15.0, *)
 struct FooterView: View {
     var body: some View {
         HStack(spacing: 48) {
@@ -16,6 +10,7 @@ struct FooterView: View {
     }
 }
 
+@available(iOS 15.0, *)
 #Preview {
     FooterView()
 }

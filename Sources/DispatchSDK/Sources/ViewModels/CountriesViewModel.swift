@@ -1,6 +1,7 @@
 import Foundation
 import Combine
 
+@available(iOS 15.0, *)
 class CountriesViewModel: ObservableObject {
 
     enum State {

@@ -1,5 +1,6 @@
 import UIKit
 
+@available(iOS 15.0, *)
 class PaddedTextField: UITextField {
     var theme: Theme?
     var textPadding = UIEdgeInsets(top: 12, left: 16, bottom: 12, right: 16)

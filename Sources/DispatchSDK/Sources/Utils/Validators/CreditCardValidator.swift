@@ -1,5 +1,6 @@
 import Foundation
 
+@available(iOS 15.0, *)
 class CreditCardValidator {
     // Validate credit card number using the Luhn algorithm
     static func validateCardNumber(_ number: String) -> Bool {

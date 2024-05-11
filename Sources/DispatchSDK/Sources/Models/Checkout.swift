@@ -1,5 +1,6 @@
 import Foundation
 
+@available(iOS 15.0, *)
 struct Checkout: Codable, Equatable {
     let version: String
     let subFolderId: String
@@ -27,6 +28,7 @@ struct Checkout: Codable, Equatable {
     let id: String
 }
 
+@available(iOS 15.0, *)
 extension Checkout {
     static func mock() -> Checkout {
         return Checkout(

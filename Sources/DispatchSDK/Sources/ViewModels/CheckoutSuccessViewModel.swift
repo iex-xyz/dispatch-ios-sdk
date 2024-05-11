@@ -1,6 +1,7 @@
 import SwiftUI
 import Combine
 
+@available(iOS 15.0, *)
 class CheckoutSuccessViewModel: ObservableObject {
     let checkout: Checkout
     let orderNumber: String

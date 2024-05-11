@@ -1,6 +1,7 @@
 import SwiftUI
 import UIKit
 
+@available(iOS 15.0, *)
 struct UIHostingConfigurationBackport<Content, Background>: UIContentConfiguration where Content: View, Background: View {
     let content: Content
     let background: Background
@@ -88,6 +89,7 @@ struct UIHostingConfigurationBackport<Content, Background>: UIContentConfigurati
     }
 }
 
+@available(iOS 15.0, *)
 final class UIHostingContentViewBackport<Content, Background>: UIView, UIContentView where Content: View, Background: View {
     private let hostingController: UIHostingController<ZStack<TupleView<(Background, Content)>>?> = {
         let controller = UIHostingController<ZStack<TupleView<(Background, Content)>>?>(rootView: nil)
@@ -151,6 +153,7 @@ final class UIHostingContentViewBackport<Content, Background>: UIView, UIContent
     }
 }
 
+@available(iOS 15.0, *)
 struct _UIHostingConfigurationBackgroundViewBackport<S>: View where S: ShapeStyle {
     let style: S
     
@@ -159,6 +162,7 @@ struct _UIHostingConfigurationBackgroundViewBackport<S>: View where S: ShapeStyl
     }
 }
 
+@available(iOS 15.0, *)
 private extension UIResponder {
     var parentViewController: UIViewController? {
         return next as? UIViewController ?? next?.parentViewController

@@ -24,7 +24,7 @@ struct PaymentJson: Codable {
     }
 }
 
-
+@available(iOS 15.0, *)
 class ApplePayViewModel: NSObject, ObservableObject {
     internal enum State {
         case idle
@@ -212,6 +212,7 @@ class ApplePayViewModel: NSObject, ObservableObject {
     
 }
 
+@available(iOS 15.0, *)
 extension ApplePayViewModel: PKPaymentAuthorizationViewControllerDelegate {
     func paymentAuthorizationViewControllerDidFinish(
         _ controller: PKPaymentAuthorizationViewController

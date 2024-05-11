@@ -2,6 +2,7 @@ import UIKit
 import SwiftUI
 import Combine
 
+@available(iOS 15.0, *)
 class CreditCardCheckoutViewModel: ObservableObject {
     let checkout: Checkout
     @Published var hasAgreedToTerms: Bool = false

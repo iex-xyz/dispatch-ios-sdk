@@ -1,5 +1,6 @@
 import SwiftUI
 
+@available(iOS 15.0, *)
 struct PaymentOptionsPickerView: View {
     @Preference(\.theme) var theme
     @Environment(\.dismiss) var dismiss
@@ -60,6 +61,7 @@ struct PaymentOptionsPickerView: View {
     }
 }
 
+@available(iOS 15.0, *)
 struct PaymentOptionsPickerView_Previews: PreviewProvider {
     static var previews: some View {
         PaymentOptionsPickerView(paymentMethods: [.applePay, .creditCard]) { _ in

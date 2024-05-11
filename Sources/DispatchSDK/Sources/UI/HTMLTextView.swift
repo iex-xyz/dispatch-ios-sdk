@@ -1,5 +1,6 @@
 import SwiftUI
 
+@available(iOS 15.0, *)
 struct HTMLLabel: UIViewRepresentable {
     @Preference(\.theme) var theme
     let htmlString: String
@@ -21,7 +22,7 @@ struct HTMLLabel: UIViewRepresentable {
 }
 
 
-
+@available(iOS 15.0, *)
 struct HTMLTextView: UIViewRepresentable {
     @Preference(\.theme) var theme
 
@@ -57,6 +58,7 @@ struct HTMLTextView: UIViewRepresentable {
     }
 }
 
+@available(iOS 15.0, *)
 extension UIColor {
     var hexString: String {
         var red: CGFloat = 0
@@ -71,6 +73,7 @@ extension UIColor {
     }
 }
 
+@available(iOS 15.0, *)
 fileprivate extension String {
     func htmlAttributedString(textColor: UIColor) -> NSAttributedString {
         let htmlTemplate = """
@@ -110,6 +113,7 @@ fileprivate extension String {
     }
 }
 
+@available(iOS 15.0, *)
 fileprivate extension NSAttributedString {
     func modifyBulletSpacing(spacing: CGFloat, lineSpacing: CGFloat = 2) -> NSAttributedString {
         let mutableAttributedString = NSMutableAttributedString(attributedString: self)
@@ -131,7 +135,7 @@ fileprivate extension NSAttributedString {
     }
 }
 
-
+@available(iOS 15.0, *)
 #Preview {
     let html = """
     <h1>Heading</h1>

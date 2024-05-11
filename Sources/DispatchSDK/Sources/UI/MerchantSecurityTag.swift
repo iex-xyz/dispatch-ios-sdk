@@ -1,6 +1,6 @@
 import SwiftUI
 
-
+@available(iOS 15.0, *)
 struct MerchantSecurityTag: View {
     @Preference(\.theme) var theme
 
@@ -27,11 +27,13 @@ struct MerchantSecurityTag: View {
     }
 }
 
+@available(iOS 15.0, *)
 #Preview {
     MerchantSecurityTag(domain: "nike.com", tapHandler: {})
 }
 
 // WIP: This still has some tweaks before it can work well in the MerchantSecurityTag
+@available(iOS 15.0, *)
 struct MarqueeText: View {
     let text: String
     @State private var textWidth: CGFloat = 0
@@ -58,7 +60,7 @@ struct MarqueeText: View {
     }
 }
 
-
+@available(iOS 15.0, *)
 #Preview {
     MarqueeText(text: "welcometothelodgewithalongname.com")
 }

@@ -1,6 +1,7 @@
 import Combine
 import SwiftUI
 
+@available(iOS 15.0, *)
 struct ShippingAddressFormContainer: View {
     @Preference(\.theme) var theme
     @ObservedObject var viewModel: ShippingAddressViewModel
@@ -36,6 +37,7 @@ struct ShippingAddressFormContainer: View {
     }
 }
 
+@available(iOS 15.0, *)
 struct ShippingAddressForm: View {
     @Preference(\.theme) var theme
     @ObservedObject var viewModel: ShippingAddressViewModel
@@ -273,6 +275,7 @@ struct ShippingAddressForm: View {
     }
 }
 
+@available(iOS 15.0, *)
 #Preview {
     let viewModel: ShippingAddressViewModel = .init(
         addressLookupService: MockAddressLookupService(),

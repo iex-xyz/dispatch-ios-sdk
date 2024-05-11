@@ -1,6 +1,7 @@
 import SwiftUI
 import Combine
 
+@available(iOS 15.0, *)
 class ProductOverviewViewModel: ObservableObject {
     let product: Product
 

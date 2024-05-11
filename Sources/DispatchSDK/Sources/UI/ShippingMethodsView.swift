@@ -1,5 +1,6 @@
 import SwiftUI
 
+@available(iOS 15.0, *)
 struct ShippingMethodsView: View {
     @Preference(\.theme) var theme
     @ObservedObject var viewModel: ShippingMethodViewModel
@@ -43,6 +44,7 @@ struct ShippingMethodsView: View {
     }
 }
 
+@available(iOS 15.0, *)
 #Preview {
     let viewModel: ShippingMethodViewModel = ShippingMethodViewModel(
         apiClient: GraphQLClient(networkService: PreviewNetworkService(), environment: .staging),

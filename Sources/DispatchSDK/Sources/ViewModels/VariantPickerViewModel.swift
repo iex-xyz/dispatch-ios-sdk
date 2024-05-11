@@ -1,6 +1,7 @@
 import Combine
 import Foundation
 
+@available(iOS 15.0, *)
 class VariantPickerViewModel: ObservableObject {
     @Published var selectedVariation: Variation
     let attribute: Attribute

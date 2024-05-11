@@ -1,6 +1,7 @@
 import UIKit
 import SwiftUI
 
+@available(iOS 15.0, *)
 class CardTypeUITextField: PaddedTextField {
     let cardImageView = UIImageView(image: Icons.Card.default)
     
@@ -21,6 +22,7 @@ class CardTypeUITextField: PaddedTextField {
     }
 }
 
+@available(iOS 15.0, *)
 struct CreditCardTextField: UIViewRepresentable {
     @Preference(\.theme) var theme
     @Binding var text: String
@@ -106,6 +108,7 @@ struct CreditCardTextField: UIViewRepresentable {
     }
 }
 
+@available(iOS 15.0, *)
 extension UITextField {
     func setRightView(_ view: UIView, padding: CGFloat) {
         view.translatesAutoresizingMaskIntoConstraints = true
@@ -131,6 +134,7 @@ extension UITextField {
     }
 }
 
+@available(iOS 15.0, *)
 #Preview {
     @State var creditCardNumber = ""
     return VStack {

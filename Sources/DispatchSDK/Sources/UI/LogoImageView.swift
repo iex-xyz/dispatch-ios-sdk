@@ -1,5 +1,6 @@
 import SwiftUI
 
+@available(iOS 15.0, *)
 struct LogoImageView: View {
     let logoUrl: String
     

@@ -1,5 +1,6 @@
 import SwiftUI
 
+@available(iOS 15.0, *)
 struct VariantPickerCell: View {
     @Preference(\.theme) var theme
     let text: String
@@ -43,6 +44,7 @@ struct VariantPickerCell: View {
     }
 }
 
+@available(iOS 15.0, *)
 #Preview {
     VStack {
         VariantPickerCell(text: "Label", isSelected: true)

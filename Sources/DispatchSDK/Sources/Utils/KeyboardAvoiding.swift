@@ -1,6 +1,7 @@
 import Combine
 import SwiftUI
 
+@available(iOS 15.0, *)
 extension Publishers {
     static var keyboardHeight: AnyPublisher<CGFloat, Never> {
         let willShow = NotificationCenter.default.publisher(for: UIApplication.keyboardWillShowNotification)
@@ -13,12 +14,14 @@ extension Publishers {
     }
 }
 
+@available(iOS 15.0, *)
 extension Notification {
     var keyboardHeight: CGFloat {
         return (userInfo?[UIResponder.keyboardFrameEndUserInfoKey] as? CGRect)?.height ?? 0
     }
 }
 
+@available(iOS 15.0, *)
 struct KeyboardAvoiding: ViewModifier {
     @State private var keyboardActiveAdjustment: CGFloat = 0
 
@@ -33,6 +36,7 @@ struct KeyboardAvoiding: ViewModifier {
     }
 }
 
+@available(iOS 15.0, *)
 extension View {
     func keyboardAvoiding() -> some View {
         modifier(KeyboardAvoiding())

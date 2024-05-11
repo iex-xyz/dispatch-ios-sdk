@@ -1,5 +1,6 @@
 import SwiftUI
 
+@available(iOS 15.0, *)
 struct CheckoutProductPreviewRow: View {
     let product: Product
     
@@ -28,6 +29,7 @@ struct CheckoutProductPreviewRow: View {
     }
 }
 
+@available(iOS 15.0, *)
 #Preview {
     CheckoutProductPreviewRow(product: .mock())
 }

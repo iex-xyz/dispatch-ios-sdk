@@ -1,5 +1,6 @@
 import Foundation
 
+@available(iOS 15.0, *)
 struct Distribution: Codable, Equatable {
     let version: String
     let subFolderId: String
@@ -21,6 +22,7 @@ struct Distribution: Codable, Equatable {
     let id: String
 }
 
+@available(iOS 15.0, *)
 extension Distribution {
     static func mock(
         version: String = "1.0",

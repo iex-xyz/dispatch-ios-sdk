@@ -1,5 +1,6 @@
 import SwiftUI
 
+@available(iOS 15.0, *)
 struct MediaCarouselView: View {
     @Preference(\.theme) var theme
     @ObservedObject var viewModel: ProductMediaViewModel
@@ -128,6 +129,7 @@ struct MediaCarouselView: View {
 
 }
 
+@available(iOS 15.0, *)
 #Preview {
     let viewModel: ProductMediaViewModel = .init(images: [], analyticsClient: MockAnalyticsClient())
     return MediaCarouselView(viewModel: viewModel, isZoomable: false)

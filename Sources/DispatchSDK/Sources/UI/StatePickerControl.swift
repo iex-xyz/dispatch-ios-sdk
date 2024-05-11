@@ -1,5 +1,6 @@
 import SwiftUI
 
+@available(iOS 15.0, *)
 struct ZonePickerControl: View {
     @Preference(\.theme) var theme
     @Binding var selectedZone: Country.Zone
@@ -45,6 +46,7 @@ struct ZonePickerControl: View {
     }
 }
 
+@available(iOS 15.0, *)
 #Preview {
     let zones: [Country.Zone] = [] // Your list of Zone models
     @State var selectedZone: Country.Zone = .empty
@@ -56,6 +58,7 @@ struct ZonePickerControl: View {
         .frame(width: 160)
 }
 
+@available(iOS 15.0, *)
 struct StatePickerControl: View {
     @Preference(\.theme) var theme
     @Binding var state: String
@@ -95,6 +98,7 @@ struct StatePickerControl: View {
     }
 }
 
+@available(iOS 15.0, *)
 #Preview {
     @State var state: String = ""
     return StatePickerControl(state: $state)

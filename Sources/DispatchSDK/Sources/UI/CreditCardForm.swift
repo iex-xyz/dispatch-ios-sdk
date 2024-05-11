@@ -1,6 +1,7 @@
 import Combine
 import SwiftUI
 
+@available(iOS 15.0, *)
 struct CreditCardForm: View {
     @Preference(\.theme) var theme
     @ObservedObject var viewModel: CreditCardInputViewModel
@@ -111,6 +112,7 @@ struct CreditCardForm: View {
     }
 }
 
+@available(iOS 15.0, *)
 #Preview {
     let viewModel: CreditCardInputViewModel = .init(
         addressLookupService: MockAddressLookupService(),

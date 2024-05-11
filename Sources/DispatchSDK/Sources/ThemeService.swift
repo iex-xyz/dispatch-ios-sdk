@@ -2,6 +2,7 @@ import Foundation
 import SwiftUI
 import Combine
 
+@available(iOS 15.0, *)
 final class Preferences {
     static let standard = Preferences()
     
@@ -14,6 +15,7 @@ final class Preferences {
     var theme: Theme = .default
 }
 
+@available(iOS 15.0, *)
 @propertyWrapper
 struct MemoryStored {
     typealias Value = Theme
@@ -54,6 +56,7 @@ struct MemoryStored {
     }
 }
 
+@available(iOS 15.0, *)
 final class PublisherObservableObject: ObservableObject {
     
     var subscriber: AnyCancellable?
@@ -65,6 +68,7 @@ final class PublisherObservableObject: ObservableObject {
     }
 }
 
+@available(iOS 15.0, *)
 @propertyWrapper
 struct Preference<Value>: DynamicProperty {
     

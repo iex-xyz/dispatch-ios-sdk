@@ -2,8 +2,9 @@ import UIKit
 import SwiftUI
 import Combine
 
+@available(iOS 15.0, *)
 class InitiateCreditCardCheckoutViewModel: ObservableObject {
-    internal enum State {
+    enum State {
         case idle
         case loading
         case loaded(InitiateOrder)

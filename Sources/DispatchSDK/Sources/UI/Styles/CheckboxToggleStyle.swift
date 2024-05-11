@@ -1,5 +1,6 @@
 import SwiftUI
 
+@available(iOS 15.0, *)
 struct CheckboxToggleStyle: ToggleStyle {
     @Preference(\.theme) var theme
     @Binding var isValid: Bool
@@ -32,7 +33,7 @@ struct CheckboxToggleStyle: ToggleStyle {
 
 
 
-
+@available(iOS 15.0, *)
 #Preview {
     @State var isToggled: Bool = false
     return VStack {

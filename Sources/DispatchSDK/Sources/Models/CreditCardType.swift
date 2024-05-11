@@ -1,6 +1,7 @@
 import Foundation
 import UIKit
 
+@available(iOS 15.0, *)
 enum CreditCardType: CaseIterable {
     case visa
     case masterCard
@@ -61,7 +62,7 @@ enum CreditCardType: CaseIterable {
     }
 }
 
-
+@available(iOS 15.0, *)
 extension String {
     func formatAsCreditCard() -> String {
 

@@ -1,6 +1,7 @@
 import SwiftUI
 
-internal struct ProductOverviewDetailsCell: View {
+@available(iOS 15.0, *)
+struct ProductOverviewDetailsCell: View {
     @Preference(\.theme) var theme
 
     let product: Product
@@ -63,7 +64,7 @@ internal struct ProductOverviewDetailsCell: View {
 }
 
 
-
+@available(iOS 15.0, *)
 #Preview {
     let product: Product = .mock()
     @State var text: String = ""

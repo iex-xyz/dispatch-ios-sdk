@@ -1,5 +1,6 @@
 import UIKit
 
+@available(iOS 15.0, *)
 final class MainCoordinator: BaseCoordinator {
     
     private let router: Router

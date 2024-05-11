@@ -1,5 +1,6 @@
 import SwiftUI
 
+@available(iOS 15.0, *)
 internal struct LightVariantPreviewButton: View {
     @Preference(\.theme) var theme
 
@@ -75,6 +76,7 @@ internal struct LightVariantPreviewButton: View {
 //    }
 //}
 
+@available(iOS 15.0, *)
 struct VariantPreviewButton_Previews: PreviewProvider {
     static var previews: some View {
         VStack {

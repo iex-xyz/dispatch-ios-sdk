@@ -3,6 +3,7 @@ import SwiftUI
 import UIKit
 import Combine
 
+@available(iOS 15.0, *)
 struct CheckoutView: View {
     @Preference(\.theme) var theme
     @ObservedObject var viewModel: CheckoutViewModel

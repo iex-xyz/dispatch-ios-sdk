@@ -1,8 +1,9 @@
 import Foundation
 import Combine
 
-internal class CheckoutViewModel: ObservableObject {
-    internal enum State {
+@available(iOS 15.0, *)
+class CheckoutViewModel: ObservableObject {
+    enum State {
         case idle
         case loading
         case loaded(Checkout)

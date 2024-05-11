@@ -3,6 +3,7 @@ import SwiftUI
 import Combine
 import PassKit
 
+@available(iOS 15.0, *)
 class ApplePayCoordinator: BaseCoordinator {
     private let router: Router
     private let apiClient: GraphQLClient

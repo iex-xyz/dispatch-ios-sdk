@@ -1,3 +1,5 @@
+
+@available(iOS 15.0, *)
 class BaseCoordinator: Coordinator {
     
     var childCoordinators: [Coordinator] = []

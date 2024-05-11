@@ -2,26 +2,8 @@ import UIKit
 import SwiftUI
 import Combine
 
-struct RightNavigationButtons: View {
-    let leftButtonHandler: () -> Void
-    let rightButtonHandler: () -> Void
 
-    var body: some View {
-        HStack {
-            Button(action: {
-                
-            }) {
-                Image(systemName: "chevron.left")
-            }
-            Button(action: {
-                
-            }) {
-                Image(systemName: "chevron.right")
-            }
-        }
-    }
-}
-
+@available(iOS 15.0, *)
 class CreditCardCoordinator: BaseCoordinator {
     private let router: Router
     private let apiClient: GraphQLClient
@@ -35,17 +17,6 @@ class CreditCardCoordinator: BaseCoordinator {
     private let didComplete: (InitiateOrder, Address?, BillingInfo?) -> Void
     private let didCancel: () -> Void
     
-    private lazy var rightBarButtonController: UIHostingController<RightNavigationButtons> = {
-        let controller = UIHostingController<RightNavigationButtons>(rootView: RightNavigationButtons(leftButtonHandler: {
-            //
-        }, rightButtonHandler: {
-            //
-        }))
-        
-        controller.view.backgroundColor = .clear
-        controller.view.translatesAutoresizingMaskIntoConstraints = false
-        return controller
-    }()
     private lazy var navigationTitleController: UIHostingController<MerchantSecurityTag> = {
         let controller = UIHostingController<MerchantSecurityTag>(rootView: MerchantSecurityTag(domain: viewModel.checkout.product.pdpDomain ?? "", tapHandler: {}))
         controller.view.backgroundColor = .clear

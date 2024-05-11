@@ -1,6 +1,7 @@
 import Foundation
 import Combine
 
+@available(iOS 15.0, *)
 class ShippingAddressViewModel: ObservableObject {
     enum AddressLookupState {
         case idle

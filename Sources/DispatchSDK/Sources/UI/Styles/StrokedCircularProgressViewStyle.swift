@@ -1,5 +1,6 @@
 import SwiftUI
 
+@available(iOS 15.0, *)
 struct StrokedCircularProgressViewStyle: ProgressViewStyle {
     @State private var rotation: Double = 0.0
     

@@ -1,6 +1,7 @@
 import UIKit
 import SwiftUI
 
+@available(iOS 15.0, *)
 struct PhoneNumberTextField: UIViewRepresentable {
     @Preference(\.theme) var theme
     @Binding var text: String
@@ -100,6 +101,7 @@ struct PhoneNumberTextField: UIViewRepresentable {
     }
 }
 
+@available(iOS 15.0, *)
 #Preview {
     @State var phone: String = ""
     @State var country: Country = .unitedStates

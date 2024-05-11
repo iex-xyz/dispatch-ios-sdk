@@ -1,5 +1,6 @@
 import SwiftUI
 
+@available(iOS 15.0, *)
 struct ZoomableScrollView<Content: View>: UIViewRepresentable {
     private var content: Content
     @Binding var scale: CGFloat

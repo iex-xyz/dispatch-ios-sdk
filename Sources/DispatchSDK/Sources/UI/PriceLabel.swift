@@ -1,5 +1,6 @@
 import SwiftUI
 
+@available(iOS 15.0, *)
 struct PriceLabel: View {
     @Preference(\.theme) var theme
     
@@ -24,6 +25,7 @@ struct PriceLabel: View {
     }
 }
 
+@available(iOS 15.0, *)
 #Preview {
     HStack(spacing: 32) {
         VStack(alignment: .leading) {

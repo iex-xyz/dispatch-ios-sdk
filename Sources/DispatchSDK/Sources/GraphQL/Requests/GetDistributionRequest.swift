@@ -1,5 +1,6 @@
 import Foundation
 
+@available(iOS 15.0, *)
 struct GetDistributionRequest: GraphQLRequest {
     enum Response: Codable {
         case leadgen(Leadgen)
@@ -29,7 +30,7 @@ struct GetDistributionRequest: GraphQLRequest {
     }
 }
 
-
+@available(iOS 15.0, *)
 extension GetDistributionRequest.Response {
     private enum CodingKeys: String, CodingKey {
         case type

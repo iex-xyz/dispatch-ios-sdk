@@ -2,6 +2,7 @@ enum AddressLookupError: Error {
     case unableToSearch(Error)
 }
 
+@available(iOS 15.0, *)
 struct AddressLookupResult: Equatable, Identifiable {
     var id: String {
         "\(address1), \(city), \(state) \(postalCode), \(country)"
@@ -22,10 +23,12 @@ struct AddressLookupResult: Equatable, Identifiable {
     
 }
 
+@available(iOS 15.0, *)
 protocol AddressLookupService {
     func query(for address: String) async throws -> [AddressLookupResult]
 }
 
+@available(iOS 15.0, *)
 class MockAddressLookupService: AddressLookupService {
     func query(for address: String) async throws -> [AddressLookupResult] {
         // Sleep for 1 second

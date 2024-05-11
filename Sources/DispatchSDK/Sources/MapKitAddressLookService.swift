@@ -1,5 +1,6 @@
 import MapKit
 
+@available(iOS 15.0, *)
 class MapKitAddressLookupService: AddressLookupService {
     func query(for address: String) async throws -> [AddressLookupResult] {
         let request = MKLocalSearch.Request()
@@ -18,7 +19,7 @@ class MapKitAddressLookupService: AddressLookupService {
     }
 }
 
-
+@available(iOS 15.0, *)
 extension MKLocalSearchCompleter {
     func results(for query: String) async throws -> [MKLocalSearchCompletion] {
         self.queryFragment = query
@@ -40,6 +41,7 @@ extension MKLocalSearchCompleter {
 
 private var associationKey = 0
 
+@available(iOS 15.0, *)
 class CompleterDelegate: NSObject, MKLocalSearchCompleterDelegate {
     var completionHandler: ([MKLocalSearchCompletion]?, Error?) -> Void
 
@@ -56,6 +58,7 @@ class CompleterDelegate: NSObject, MKLocalSearchCompleterDelegate {
     }
 }
 
+@available(iOS 15.0, *)
 extension AddressLookupResult {
     init(placemark: MKPlacemark) {
         address1 = (placemark.subThoroughfare ?? "") + " " + (placemark.thoroughfare ?? "")

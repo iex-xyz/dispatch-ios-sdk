@@ -1,5 +1,6 @@
 import SwiftUI
 
+@available(iOS 15.0, *)
 struct CheckoutOverviewView: View {
     @Preference(\.theme) var theme
     @ObservedObject var viewModel: CheckoutOverviewViewModel
@@ -172,6 +173,7 @@ struct CheckoutOverviewView: View {
     }
 }
 
+@available(iOS 15.0, *)
 #Preview {
     let viewModel: CheckoutOverviewViewModel = .init(
         apiClient: .init(networkService: PreviewNetworkService(), environment: .staging),

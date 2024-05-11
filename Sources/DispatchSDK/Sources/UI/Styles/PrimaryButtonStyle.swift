@@ -1,5 +1,6 @@
 import SwiftUI
 
+@available(iOS 15.0, *)
 struct PrimaryButtonStyle: ButtonStyle {
     @Preference(\.theme) var theme
     @Environment(\.isEnabled) var isEnabled
@@ -64,7 +65,7 @@ struct PrimaryButtonStyle: ButtonStyle {
     }
 }
 
-
+@available(iOS 15.0, *)
 struct PrimaryButtonStyle_Preview: PreviewProvider {
     static let round = Theme.round
     static let soft = Theme.soft

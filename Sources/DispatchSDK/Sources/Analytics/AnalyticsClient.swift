@@ -4,7 +4,7 @@ import Foundation
 public struct LoggedDispatchEvent: Identifiable {
     public let id: UUID = .init()
     public let distributionId: String
-    public let timestamp: Date = .now
+    public let timestamp: Date = Date()
     public let event: DispatchEvent
 }
 

@@ -1,5 +1,6 @@
 import SwiftUI
 
+@available(iOS 15.0, *)
 struct SecureCheckoutOverview: View {
     @Preference(\.theme) var theme: Theme
     @Environment(\.dismiss) var dismiss
@@ -130,6 +131,7 @@ struct SecureCheckoutOverview: View {
     }
 }
 
+@available(iOS 15.0, *)
 struct SecureCheckoutOverview_Previews: PreviewProvider {
     static var previews: some View {
         VStack {

@@ -1,6 +1,7 @@
 import SwiftUI
 import PassKit
 
+@available(iOS 15.0, *)
 struct ApplePayButton: UIViewRepresentable {
     @Preference(\.theme) var theme
     let paymentButtonType: PKPaymentButtonType
@@ -41,6 +42,7 @@ struct ApplePayButton: UIViewRepresentable {
 
 }
 
+@available(iOS 15.0, *)
 struct PayButton: View {
     @Preference(\.theme) var theme
     let productType: ProductType
@@ -99,6 +101,7 @@ struct PayButton: View {
     }
 }
 
+@available(iOS 15.0, *)
 #Preview {
     ScrollView {
         VStack {

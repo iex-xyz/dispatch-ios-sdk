@@ -1,5 +1,6 @@
 import SwiftUI
 
+@available(iOS 15.0, *)
 struct CountryPickerControl: View {
     @Preference(\.theme) var theme
     @Binding var selectedCountry: Country

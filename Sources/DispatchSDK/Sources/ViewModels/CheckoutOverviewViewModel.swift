@@ -2,6 +2,7 @@ import Foundation
 import Combine
 import UIKit
 
+@available(iOS 15.0, *)
 class CheckoutOverviewViewModel: ObservableObject {
     enum OrderCheckoutState {
         case idle

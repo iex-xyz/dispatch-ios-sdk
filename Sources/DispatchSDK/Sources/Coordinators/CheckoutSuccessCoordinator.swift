@@ -2,6 +2,7 @@ import UIKit
 import SwiftUI
 import Combine
 
+@available(iOS 15.0, *)
 class CheckoutSuccessCoordinator: BaseCoordinator {
     private let router: Router
     private let apiClient: GraphQLClient
