@@ -54,12 +54,12 @@ struct PhoneNumberTextField: UIViewRepresentable {
     class Coordinator: NSObject, UITextFieldDelegate {
         var parent: PhoneNumberTextField
         @Binding var country: Country
-
+        
         init(_ textField: PhoneNumberTextField, country: Binding<Country>) {
             self.parent = textField
             self._country = country
         }
-
+        
         func textFieldDidBeginEditing(_ textField: UITextField) {
             parent.isFocused = true
         }
@@ -67,36 +67,12 @@ struct PhoneNumberTextField: UIViewRepresentable {
         func textFieldDidEndEditing(_ textField: UITextField) {
             parent.isFocused = false
         }
-
+        
         func textField(_ textField: UITextField, shouldChangeCharactersIn range: NSRange, replacementString string: String) -> Bool {
             let fullText = (textField.text as NSString?)?.replacingCharacters(in: range, with: string) ?? ""
-            textField.text = format(for: fullText)
+            textField.text = PhoneNumberValidator.format(for: fullText, country: country)
             parent.text = textField.text ?? ""
             return false
-        }
-
-        private func format(for number: String) -> String {
-            var digits = number.filter { $0.isNumber }
-            let rules = PhoneNumberValidator.rules(for: country)
-            let mask = rules?.mask ?? "+# (###) ###-####"
-
-            if !digits.hasPrefix(rules?.countryCode ?? "1") {
-                digits = (rules?.countryCode ?? "1") + digits
-            }
-
-            var result = ""
-            var index = digits.startIndex
-
-            for ch in mask where index < digits.endIndex {
-                if ch == "#" {
-                    result.append(digits[index])
-                    index = digits.index(after: index)
-                } else {
-                    result.append(ch)
-                }
-            }
-
-            return result
         }
     }
 }

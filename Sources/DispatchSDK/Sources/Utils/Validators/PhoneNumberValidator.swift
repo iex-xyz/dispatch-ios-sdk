@@ -19,6 +19,31 @@ class PhoneNumberValidator {
         return phoneNumberRules[country.code]
     }
     
+    static func format(for number: String, country: Country) -> String {
+        var digits = number.filter { $0.isNumber }
+        let rules = PhoneNumberValidator.rules(for: country)
+        let mask = rules?.mask ?? "+# (###) ###-####"
+        let countryCode = rules?.countryCode ?? "1"
+        
+        if !digits.hasPrefix(countryCode) && digits.count > countryCode.count {
+            digits = (countryCode) + digits
+        }
+        
+        var result = ""
+        var index = digits.startIndex
+        
+        for ch in mask where index < digits.endIndex {
+            if ch == "#" {
+                result.append(digits[index])
+                index = digits.index(after: index)
+            } else {
+                result.append(ch)
+            }
+        }
+        
+        return result
+    }
+    
     private static func loadPhoneNumberRules() {
         guard let url = Bundle.module.url(forResource: "phone_number_rules", withExtension: "json"),
               let data = try? Data(contentsOf: url),
