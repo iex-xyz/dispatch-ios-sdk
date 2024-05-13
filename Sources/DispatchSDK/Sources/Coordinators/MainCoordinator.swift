@@ -39,7 +39,8 @@ final class MainCoordinator: BaseCoordinator {
                         billingInfo: .mock(),
                         continueCTA: "Keep Shopping",
                         hideOrderCompletionCTA: false
-                    )
+                    ),
+                    showAtRoot: true
                 )
                 
                 addDependency(successCoordinator)

@@ -5,6 +5,7 @@ enum NetworkError: Error {
     case serverError(statusCode: Int)
 }
 
+@available(iOS 15.0, *)
 protocol NetworkService {
     func performRequest(_ urlRequest: URLRequest) async throws -> Data
 }
@@ -48,7 +49,9 @@ class PreviewNetworkService: NetworkService {
     }
 }
 
+@available(iOS 13.0.0, *)
 class EmptyNetworkService: NetworkService {
+    @available(iOS 13.0.0, *)
     func performRequest(_ urlRequest: URLRequest) async throws -> Data {
         throw NetworkError.serverError(statusCode: 400)
     }

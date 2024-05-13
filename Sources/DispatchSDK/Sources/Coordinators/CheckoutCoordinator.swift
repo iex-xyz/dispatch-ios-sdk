@@ -272,7 +272,8 @@ class CheckoutCoordinator: BaseCoordinator {
                     order: order,
                     checkout: checkout,
                     shippingAddress: address,
-                    billingInfo: billingInfo
+                    billingInfo: billingInfo,
+                    showAtRoot: true
                 )
             }
         )
@@ -303,7 +304,8 @@ class CheckoutCoordinator: BaseCoordinator {
                     order: order,
                     checkout: checkout,
                     shippingAddress: address,
-                    billingInfo: billingInfo
+                    billingInfo: billingInfo,
+                    showAtRoot: false
                 )
             }
         )
@@ -316,7 +318,8 @@ class CheckoutCoordinator: BaseCoordinator {
         order: InitiateOrder,
         checkout: Checkout,
         shippingAddress: Address?,
-        billingInfo: BillingInfo?
+        billingInfo: BillingInfo?,
+        showAtRoot: Bool
     ) {
         let viewModel = CheckoutSuccessViewModel(
             checkout: checkout,
@@ -330,7 +333,8 @@ class CheckoutCoordinator: BaseCoordinator {
             router: router,
             apiClient: apiClient,
             analyticsClient: analyticsClient,
-            viewModel: viewModel
+            viewModel: viewModel,
+            showAtRoot: showAtRoot
         )
         
         addDependency(coordinator)

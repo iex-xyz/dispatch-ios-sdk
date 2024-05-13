@@ -1,5 +1,16 @@
 import Foundation
 
+@available(iOS 15.0, *)
+class WrappedAPIClient {
+    let graphqlClient: GraphQLClient
+    
+    @available(iOS 15.0, *)
+    init(graphqlClient: GraphQLClient) {
+        self.graphqlClient = graphqlClient
+    }
+}
+
+@available(iOS 15.0, *)
 class GraphQLClient {
     private let networkService: NetworkService
     private var environment: AppEnvironment

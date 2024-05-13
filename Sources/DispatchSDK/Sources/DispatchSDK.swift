@@ -45,6 +45,70 @@ public struct DispatchConfig: Equatable {
 
 public class DispatchSDK {
     public static var shared: DispatchSDK = .init()
+    public private(set) var distributionId: String = ""
+    
+    private(set) var onEventTriggered: ((LoggedDispatchEvent) -> Void)?
+
+    #if DEBUG
+    public private(set) var environment: AppEnvironment = .staging
+    #else
+    public private(set) var environment: AppEnvironment = .production
+    #endif
+
+    private lazy var coordinator: Coordinator = self.makeCoordinator()
+    private lazy var core: DispatchSDKService = self.makeSDKService()
+    
+    private func makeSDKService() -> DispatchSDKService {
+        if #available(iOS 15.0, *) {
+            return DefaultDispatchSDK()
+        } else {
+            return FallbackDispatchSDK()
+        }
+    }
+    
+    private func makeCoordinator() -> Coordinator {
+        core.makeCoordinator()
+    }
+    
+    public func setup(using config: DispatchConfig) {
+        core.setup(using: config)
+    }
+    
+    public func registerForEvents(_ callback: @escaping (LoggedDispatchEvent) -> Void) {
+        core.registerForEvents(callback)
+    }
+    
+    public func present(with route: DispatchRoute) {
+        if core.config.applicationId.isEmpty {
+            print("[DispatchSDK] Warning: Invalid applicationId set before presenting. Please make sure you call 'setup(using config: DispatchConfig) before presenting.")
+        }
+        switch route {
+        case let .checkout(id):
+            self.distributionId = id
+        case let .leadgen(id):
+            self.distributionId = id
+        default:
+            break
+        }
+        
+        core.updateDistributionId(distributionId)
+        coordinator.start(with: route)
+    }
+}
+
+// We break the core behaviors into a protocol here so that we can target iOS 15 for certain
+// clients such as the GraphQL API Client
+protocol DispatchSDKService {
+    var config: DispatchConfig { get }
+    func setup(using config: DispatchConfig)
+    func registerForEvents(_ callback: @escaping (LoggedDispatchEvent) -> Void)
+    func updateDistributionId(_ distributionId: String)
+    
+    func makeCoordinator() -> Coordinator
+}
+
+@available(iOS 15.0, *)
+class DefaultDispatchSDK: DispatchSDKService {
     public private(set) var config: DispatchConfig = .default {
         didSet {
             apiClient.updateEnvironment(config.environment)
@@ -64,20 +128,13 @@ public class DispatchSDK {
 
     private lazy var coordinator: Coordinator = self.makeCoordinator()
     private lazy var apiClient: GraphQLClient = {
-        if #available(iOS 15, *) {
-            return GraphQLClient(
-                networkService: RealNetworkService(
-                    applicationId: config.applicationId,
-                    distributionId: distributionId
-                ),
-                environment: config.environment
-            )
-        } else {
-            return GraphQLClient(
-                networkService: EmptyNetworkService(),
-                environment: config.environment
-            )
-        }
+        return GraphQLClient(
+            networkService: RealNetworkService(
+                applicationId: config.applicationId,
+                distributionId: distributionId
+            ),
+            environment: config.environment
+        )
     }()
 
     private lazy var analyticsClient: AnalyticsClient = {
@@ -89,22 +146,14 @@ public class DispatchSDK {
             }
         )
     }()
-
-    private func makeCoordinator() -> Coordinator {
-        if #available(iOS 15, *) {
-            return MainCoordinator(
-                router: RouterImp(rootController: UINavigationController(), checkoutController: UINavigationController()),
-                apiClient: apiClient,
-                analyticsClient: analyticsClient,
-                config: config
-            )
-
-        } else {
-            return WebViewCoordinator(
-                config: config,
-                analyticsClient: analyticsClient
-            )
-        }
+    
+    internal func makeCoordinator() -> Coordinator {
+        return MainCoordinator(
+            router: RouterImp(rootController: UINavigationController(), checkoutController: UINavigationController()),
+            apiClient: apiClient,
+            analyticsClient: analyticsClient,
+            config: config
+        )
     }
     
     public func setup(using config: DispatchConfig) {
@@ -115,20 +164,52 @@ public class DispatchSDK {
         self.onEventTriggered = callback
     }
     
-    public func present(with route: DispatchRoute) {
-        if config.applicationId.isEmpty {
-            print("[DispatchSDK] Warning: Invalid applicationId set before presenting. Please make sure you call 'setup(using config: DispatchConfig) before presenting.")
+    func updateDistributionId(_ distributionId: String) {
+        self.distributionId = distributionId
+    }
+
+}
+
+class FallbackDispatchSDK: DispatchSDKService {
+    private(set) var onEventTriggered: ((LoggedDispatchEvent) -> Void)?
+    private var distributionId: String = ""
+
+    public private(set) var config: DispatchConfig = .default {
+        didSet {
+            analyticsClient.updateEnvironment(config.environment)
+            analyticsClient.updateApplicationId(config.applicationId)
         }
-        switch route {
-        case let .checkout(id):
-            self.distributionId = id
-        case let .leadgen(id):
-            self.distributionId = id
-        default:
-            break
-        }
-        
-        analyticsClient.updateDistributionId(distributionId)
-        coordinator.start(with: route)
+    }
+    
+    private lazy var analyticsClient: AnalyticsClient = {
+        LiveAnalyticsClient(
+            environment: config.environment,
+            applicationId: config.applicationId,
+            onEventTriggered: { [weak self] event in
+                self?.onEventTriggered?(event)
+            }
+        )
+    }()
+    
+
+
+    func setup(using config: DispatchConfig) {
+        self.config = config
+    }
+    
+    func registerForEvents(_ callback: @escaping (LoggedDispatchEvent) -> Void) {
+        self.onEventTriggered = callback
+    }
+    
+    
+    func makeCoordinator() -> any Coordinator {
+        return WebViewCoordinator(
+            config: config,
+            analyticsClient: analyticsClient
+        )
+    }
+
+    func updateDistributionId(_ distributionId: String) {
+        self.distributionId = distributionId
     }
 }

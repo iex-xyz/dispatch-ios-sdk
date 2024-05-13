@@ -7,7 +7,8 @@ class CheckoutSuccessCoordinator: BaseCoordinator {
     private let router: Router
     private let apiClient: GraphQLClient
     private let analyticsClient: AnalyticsClient
-    
+    private let showAtRoot: Bool
+
     let viewModel: CheckoutSuccessViewModel
     
     private var cancellables: Set<AnyCancellable> = .init()
@@ -16,12 +17,14 @@ class CheckoutSuccessCoordinator: BaseCoordinator {
         router: Router,
         apiClient: GraphQLClient,
         analyticsClient: AnalyticsClient,
-        viewModel: CheckoutSuccessViewModel
+        viewModel: CheckoutSuccessViewModel,
+        showAtRoot: Bool
     ) {
         self.router = router
         self.apiClient = apiClient
         self.analyticsClient = analyticsClient
         self.viewModel = viewModel
+        self.showAtRoot = showAtRoot
         super.init()
     }
     
@@ -48,7 +51,11 @@ class CheckoutSuccessCoordinator: BaseCoordinator {
             }
             .store(in: &cancellables)
         
-        router.setCheckoutRootModule(viewController, animated: true)
+        if showAtRoot {
+            router.setRootModule(viewController, animated: true)
+        } else {
+            router.setCheckoutRootModule(viewController, animated: true)
+        }
     }
     
 }
