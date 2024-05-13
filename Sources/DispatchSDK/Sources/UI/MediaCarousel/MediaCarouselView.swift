@@ -20,7 +20,7 @@ struct MediaCarouselView: View {
                     ForEach(viewModel.images.indices, id: \.self) { index in
                         if isZoomable {
                             ZoomableScrollView(scale: $fullscreenScale) {
-                                AsyncImage(url: URL(string: viewModel.images[index])) { image in
+                                CacheAsyncImage(url: URL(string: viewModel.images[index])) { image in
                                     image
                                         .resizable()
                                         .scaledToFit()
@@ -33,7 +33,7 @@ struct MediaCarouselView: View {
                             .background(theme.backgroundColor)
 
                         } else {
-                            AsyncImage(url: URL(string: viewModel.images[index])) { image in
+                            CacheAsyncImage(url: URL(string: viewModel.images[index])) { image in
                                 image
                                     .resizable()
                                     .scaledToFill()
@@ -61,7 +61,7 @@ struct MediaCarouselView: View {
                                             viewModel.currentIndex = index
                                         }
                                     }) {
-                                        AsyncImage(url: URL(string: viewModel.images[index])) { image in
+                                        CacheAsyncImage(url: URL(string: viewModel.images[index])) { image in
                                             image
                                                 .resizable()
                                                 .scaledToFill()
