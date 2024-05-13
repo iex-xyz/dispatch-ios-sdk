@@ -105,7 +105,6 @@ public class DispatchSDK {
                 analyticsClient: analyticsClient
             )
         }
-
     }
     
     public func setup(using config: DispatchConfig) {
