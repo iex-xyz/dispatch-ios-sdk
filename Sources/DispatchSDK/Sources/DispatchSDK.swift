@@ -1,6 +1,7 @@
 import UIKit
 import Foundation
 
+
 public struct DispatchConfig: Equatable {
     let applicationId: String
     let environment: AppEnvironment
@@ -150,7 +151,7 @@ class DefaultDispatchSDK: DispatchSDKService {
     
     internal func makeCoordinator() -> Coordinator {
         return MainCoordinator(
-            router: RouterImp(rootController: UINavigationController(), checkoutController: UINavigationController()),
+            router: RouterImp(rootController: NoRotationNavigationController(), checkoutController: NoRotationNavigationController()),
             apiClient: apiClient,
             analyticsClient: analyticsClient,
             config: config
