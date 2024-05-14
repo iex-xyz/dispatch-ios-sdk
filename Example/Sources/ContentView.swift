@@ -6,9 +6,7 @@ struct ContentView: View {
     @State var events: [LoggedDispatchEvent] = []
     
     let buildInfo = """
-• Checkout preview needs some testing with multiple attribute variant
-
-• Rotation indicator is not implemented yet
+• Checkout success header needs design input
 """
     var body: some View {
             List {
