@@ -13,6 +13,7 @@ struct CloseButton: View {
                 .resizable()
                 .scaledToFit()
                 .frame(width: 10, height: 10)
+                .padding()
         }
         .foregroundStyle(.primary)
         .background(
@@ -21,7 +22,6 @@ struct CloseButton: View {
                 .frame(width: 30, height: 30)
         )
         .frame(width: 44, height: 44)
-        .clipShape(.rect)
         .colorScheme(theme.colorScheme)
     }
 }
@@ -31,4 +31,5 @@ struct CloseButton: View {
     CloseButton {
         //
     }
+    .background(.red)
 }

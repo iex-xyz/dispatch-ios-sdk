@@ -17,7 +17,7 @@ struct CarouselArrowButtonStyle: ButtonStyle {
                 Circle()
                     .stroke(Colors.borderGray)
             )
-            .padding(8)
+            .padding(12)
             .scaleEffect(configuration.isPressed ? 0.975 : 1)
             .animation(.interactiveSpring, value: configuration.isPressed)
 
@@ -46,11 +46,13 @@ struct CarouselArrowButtonStyle: ButtonStyle {
                 Image(systemName: "chevron.left")
             }
             .buttonStyle(CarouselArrowButtonStyle())
+            .background(.red)
             Button(action: {
             }) {
                 Image(systemName: "chevron.right")
             }
             .buttonStyle(CarouselArrowButtonStyle())
+            .background(.red)
         }
         .preferredColorScheme(.dark)
     }
