@@ -163,7 +163,6 @@ class CreditCardInputViewModel: ShippingAddressViewModel {
             country: country.code
         )
         
-        // FIXME: We need a better fallback here
         let billingInfo = BillingInfo(cardPreview: String(cardNumber.suffix(4)), cardType: cardType ?? .visa)
         DispatchQueue.main.async {
             self._onPaymentTokenGenerated.send((response.paymentToken, address, billingInfo))
