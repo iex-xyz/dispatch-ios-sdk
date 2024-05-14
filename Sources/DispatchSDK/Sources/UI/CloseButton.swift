@@ -20,7 +20,8 @@ struct CloseButton: View {
                 .fill(Colors.secondaryBackgroundColor)
                 .frame(width: 30, height: 30)
         )
-        .frame(width: 40, height: 40)
+        .frame(width: 44, height: 44)
+        .clipShape(.rect)
         .colorScheme(theme.colorScheme)
     }
 }

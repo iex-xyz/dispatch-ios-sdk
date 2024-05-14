@@ -141,6 +141,7 @@ class DefaultDispatchSDK: DispatchSDKService {
         LiveAnalyticsClient(
             environment: config.environment,
             applicationId: config.applicationId,
+            apiClient: apiClient,
             onEventTriggered: { [weak self] event in
                 self?.onEventTriggered?(event)
             }
@@ -166,6 +167,7 @@ class DefaultDispatchSDK: DispatchSDKService {
     
     func updateDistributionId(_ distributionId: String) {
         self.distributionId = distributionId
+        self.analyticsClient.updateDistributionId(distributionId)
     }
 
 }
@@ -182,7 +184,7 @@ class FallbackDispatchSDK: DispatchSDKService {
     }
     
     private lazy var analyticsClient: AnalyticsClient = {
-        LiveAnalyticsClient(
+        FallbackAnalyticsClient(
             environment: config.environment,
             applicationId: config.applicationId,
             onEventTriggered: { [weak self] event in
@@ -211,5 +213,6 @@ class FallbackDispatchSDK: DispatchSDKService {
 
     func updateDistributionId(_ distributionId: String) {
         self.distributionId = distributionId
+        self.analyticsClient.updateDistributionId(distributionId)
     }
 }

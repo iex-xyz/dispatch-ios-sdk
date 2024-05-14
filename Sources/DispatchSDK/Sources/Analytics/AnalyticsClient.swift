@@ -1,14 +1,14 @@
 import Combine
 import Foundation
 
-public struct LoggedDispatchEvent: Identifiable {
+public struct LoggedDispatchEvent: Encodable, Identifiable {
     public let id: UUID = .init()
     public let distributionId: String
     public let timestamp: Date = Date()
     public let event: DispatchEvent
 }
 
-public enum DispatchEvent: Equatable {
+public enum DispatchEvent: Equatable, Encodable {
     // Checkout
     case carouselSwipe_Checkout(direction: String, imageIndex: Int) // Added
     case checkoutDismissed_Checkout // Added
@@ -44,23 +44,26 @@ public enum DispatchEvent: Equatable {
     
     public var name: String {
         switch self {
-        case .carouselSwipe_Checkout: return "carouselSwipe_Checkout"
-        case .checkoutDismissed_Checkout: return "checkoutDismissed_Checkout"
-        case .checkoutRequested_Checkout: return "checkoutRequested_Checkout"
-        case .customerIdentifierCollected_Checkout: return "customerIdentifierCollected_Checkout"
-        case .navigatePrevious_Checkout: return "navigatePrevious_Checkout"
-        case .paymentSent_Checkout: return "paymentSent_Checkout"
-        case .paymentAuthorized_Checkout: return "paymentAuthorized_Checkout"
-        case .paymentFailed_Checkout: return "paymentFailed_Checkout"
-        case .paymentMethodSelected_Checkout: return "paymentMethodSelected_Checkout"
-        case .productDetailsOpened_Checkout: return "productDetailsOpened_Checkout"
-        case .shippingAddressCollected_Checkout: return "shippingAddressCollected_Checkout"
-        case .trustModalDismissed_Checkout: return "trustModalDismissed_Checkout"
-        case .trustModalOpened_Checkout: return "trustModalOpened_Checkout"
-        case .variantSelected_Checkout: return "variantSelected_Checkout"
-        case .quantitySelected_Checkout: return "quantitySelected_Checkout"
-        case .termsClicked_Checkout: return "termsClicked_Checkout"
-        case .view_Checkout: return "view_Checkout"
+            // MARK: Checkout
+        case .carouselSwipe_Checkout: return "carousel_swipe"
+        case .checkoutDismissed_Checkout: return "checkout_dismissed"
+        case .checkoutRequested_Checkout: return "checkout_requested"
+        case .customerIdentifierCollected_Checkout: return "customer_identifier_collected"
+        case .navigatePrevious_Checkout: return "navigate_previous"
+        case .paymentSent_Checkout: return "payment_sent"
+        case .paymentAuthorized_Checkout: return "payment_authorized"
+        case .paymentFailed_Checkout: return "payment_failed"
+        case .paymentMethodSelected_Checkout: return "payment_method_selected"
+        case .productDetailsOpened_Checkout: return "product_details_opened"
+        case .shippingAddressCollected_Checkout: return "shipping_address_collected"
+        case .trustModalDismissed_Checkout: return "trust_modal_dismissed"
+        case .trustModalOpened_Checkout: return "trust_modal_opened"
+        case .variantSelected_Checkout: return "variant_selected"
+        case .quantitySelected_Checkout: return "quantity_selected"
+        case .termsClicked_Checkout: return "terms_clicked"
+        case .view_Checkout: return "view"
+            
+            // MARK: Leadgen
         case .carouselSwipe_Leadgen: return "carouselSwipe_Leadgen"
         case .contactInfoCollected_Leadgen: return "contactInfoCollected_Leadgen"
         case .copyCode_Leadgen: return "copyCode_Leadgen"
@@ -173,6 +176,7 @@ class MockAnalyticsClient: AnalyticsClient {
     }
 }
 
+@available(iOS 15.0, *)
 class LiveAnalyticsClient: AnalyticsClient {
     
     internal var onEventTriggered: (LoggedDispatchEvent) -> Void
@@ -180,7 +184,61 @@ class LiveAnalyticsClient: AnalyticsClient {
     private var applicationId: String
     private var distributionId: String?
     
-    init(environment: AppEnvironment, applicationId: String, onEventTriggered: @escaping (LoggedDispatchEvent) -> Void) {
+    let apiClient: GraphQLClient
+    
+    init(
+        environment: AppEnvironment,
+        applicationId: String,
+        apiClient: GraphQLClient,
+        onEventTriggered: @escaping (LoggedDispatchEvent) -> Void
+    ) {
+        self.onEventTriggered = onEventTriggered
+        self.environment = environment
+        self.apiClient = apiClient
+        self.applicationId = applicationId
+    }
+
+    func updateEnvironment(_ environment: AppEnvironment) {
+        self.environment = environment
+    }
+    
+    func updateApplicationId(_ applicationId: String) {
+        self.applicationId = applicationId
+    }
+
+    func updateDistributionId(_ distributionId: String) {
+        self.distributionId = distributionId
+    }
+    
+    func send(event: DispatchEvent) {
+        let loggedEvent = LoggedDispatchEvent(distributionId: distributionId ?? "missing", event: event)
+        Task {
+            do {
+                let request = CreateEventRequest(event: loggedEvent, orderId: nil)
+                _ = try await apiClient.performOperation(request)
+            } catch {
+                print("[DispatchSDK] Error when sending DispatchEvent via the API", error)
+            }
+        }
+        
+        onEventTriggered(loggedEvent)
+    }
+
+    // TODO: Handle async event handler via API
+}
+class FallbackAnalyticsClient: AnalyticsClient {
+    
+    internal var onEventTriggered: (LoggedDispatchEvent) -> Void
+    private var environment: AppEnvironment
+    private var applicationId: String
+    private var distributionId: String?
+    
+    
+    init(
+        environment: AppEnvironment,
+        applicationId: String,
+        onEventTriggered: @escaping (LoggedDispatchEvent) -> Void
+    ) {
         self.onEventTriggered = onEventTriggered
         self.environment = environment
         self.applicationId = applicationId
@@ -199,11 +257,8 @@ class LiveAnalyticsClient: AnalyticsClient {
     }
     
     func send(event: DispatchEvent) {
-        // TODO: Implement REST API (missing from Postman)
-        
+        // NOTE: Events will be logged via the web session so we don't want to duplicate those here
         let loggedEvent = LoggedDispatchEvent(distributionId: distributionId ?? "missing", event: event)
         onEventTriggered(loggedEvent)
     }
-
-    // TODO: Handle async event handler via API
 }
