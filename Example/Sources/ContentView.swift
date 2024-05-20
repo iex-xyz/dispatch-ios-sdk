@@ -9,6 +9,7 @@ struct ContentView: View {
 • Checkout success header needs design input
 """
     var body: some View {
+        NavigationView {
             List {
                 Section("Options") {
                     Picker("Environment", selection: $environment) {
@@ -85,9 +86,10 @@ struct ContentView: View {
                         .multilineTextAlignment(.leading)
                 }
                 
-
+                
             }
             .listStyle(.insetGrouped)
+        }
     }
     
     func EventRow(for event: LoggedDispatchEvent) -> some View {

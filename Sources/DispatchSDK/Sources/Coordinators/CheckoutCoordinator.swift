@@ -123,7 +123,7 @@ class CheckoutCoordinator: BaseCoordinator {
                 case .applePay:
                     self?.showPayWithApplePay(for: checkout)
                 default:
-                    print("[WARNING] Invalid payment type handler")
+                    print("[DispatchSDK]: Warning: Invalid payment type handler")
                     return
                 }
         }
@@ -157,7 +157,7 @@ class CheckoutCoordinator: BaseCoordinator {
     }
     
     override func start(with route: DispatchRoute) {
-        print("[WARNING] Invalid deep link coordinator. Cannot handle deep link route")
+        print("[DispatchSDK]: Warning: Invalid deep link coordinator. Cannot handle deep link route")
         start()
     }
     

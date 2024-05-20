@@ -40,7 +40,7 @@ class ApplePayCoordinator: BaseCoordinator {
     }
     
     override func start(with route: DispatchRoute) {
-        print("[WARNING] Invalid deep link coordinator. Cannot handle deep link route")
+        print("[DispatchSDK]: Warning: Invalid deep link coordinator. Cannot handle deep link route")
         start()
     }
    

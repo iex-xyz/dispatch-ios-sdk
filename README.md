@@ -24,7 +24,7 @@ Click Finish.
 
 ### Cocoapods
 Add the following line to your Podfile:
-rubyCopy codepod 'DispatchSDK'
+pod 'DispatchSDK'
 Then run pod install.
 
 ## Setup
