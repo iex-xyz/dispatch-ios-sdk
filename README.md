@@ -17,11 +17,15 @@ iOS 12.0+ (versions below iOS 15 will fallback to a web view experience for olde
 
 Add this to your project using Swift Package Manager. In Xcode:
 
-Go to File > Swift Packages > Add Package Dependency...
-Enter the package URL: https://github.com/iex-xyz/dispatch-ios-sdk.git
-Click Next and select the version you want to use.
-Click Next and select the target where you want to use the SDK.
-Click Finish.
+1. Go to File > Swift Packages > Add Package Dependency...
+
+2. Enter the package URL: https://github.com/iex-xyz/dispatch-ios-sdk.git
+
+3. Click Next and select the version you want to use.
+
+4. Click Next and select the target where you want to use the SDK.
+
+5. Click Finish.
 
 ### Cocoapods
 Add the following line to your Podfile:
