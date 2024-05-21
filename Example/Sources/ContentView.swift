@@ -2,94 +2,94 @@ import SwiftUI
 import DispatchSDK
 
 struct ContentView: View {
-    @State var environment: AppEnvironment = .staging
+    @State var environment: AppEnvironment = .demo
     @State var events: [LoggedDispatchEvent] = []
     
-    let buildInfo = """
-• Checkout success header needs design input
-"""
+    let applicationId: String = "<INSERT_APPLICATION_ID>"
+    
     var body: some View {
-        NavigationView {
-            List {
-                Section("Options") {
-                    Picker("Environment", selection: $environment) {
-                        Text("Staging").tag(AppEnvironment.staging)
-                        Text("Demo").tag(AppEnvironment.demo)
-                        Text("Production").tag(AppEnvironment.production)
-                    }
-                    .pickerStyle(SegmentedPickerStyle())
+        List {
+            Section("Options") {
+                Picker("Environment", selection: $environment) {
+                    Text("Staging").tag(AppEnvironment.staging)
+                    Text("Demo").tag(AppEnvironment.demo)
+                    Text("Production").tag(AppEnvironment.production)
                 }
-                Section("Checkouts") {
-                    Button(action: {
-                        handleItemTapped(.testYetiCheckout)
-                    }) {
-                        Text("Yeti Cooler")
-                    }
-                    Button(action: {
-                        handleItemTapped(.testStanleyCheckout)
-                    }) {
-                        Text("Stanley Cup")
-                    }
-                    Button(action: {
-                        handleItemTapped(.testMysteryCheckout)
-                    }) {
-                        Text("Mystery Box")
-                    }
-                    Button(action: {
-                        handleItemTapped(.testTidePods)
-                    }) {
-                        Text("Tide Pods")
-                    }
-                    Button(action: {
-                        handleItemTapped(.testNanoX)
-                    }) {
-                        Text("Ledger Nano X")
-                    }
-                    Button(action: {
-                        handleItemTapped(.testFaitesUnDonPour)
-                    }) {
-                        Text("Faites un don pour")
-                    }
+                .pickerStyle(SegmentedPickerStyle())
+            }
+            if applicationId == "<INSERT_APPLICATION_ID>" {
+                Section("Warnings") {
+                    Button("Application ID must be set") {}
+                        .foregroundStyle(.red)
+                }
+            }
+            
+            Section("Staging Checkouts") {
+                Button(action: {
+                    handleItemTapped(.testYetiCheckout)
+                }) {
+                    Text("Yeti Cooler")
+                }
+                Button(action: {
+                    handleItemTapped(.testMysteryCheckout)
+                }) {
+                    Text("Mystery Box")
+                }
+                Button(action: {
+                    handleItemTapped(.testTidePods)
+                }) {
+                    Text("Tide Pods")
+                }
+                Button(action: {
+                    handleItemTapped(.testNanoX)
+                }) {
+                    Text("Ledger Nano X")
+                }
+                Button(action: {
+                    handleItemTapped(.testFaitesUnDonPour)
+                }) {
+                    Text("Faites un don pour")
+                }
+            }
+            
+            Section("Demo Checkouts") {
+                Button(action: {
+                    handleItemTapped(.testStanleyCheckout)
+                }) {
+                    Text("Stanley Cup")
+                }
+            }
+            
+            Section("Content") {
+                Button(action: {
+                    handleItemTapped(.testQuantityPicker)
+                }) {
+                    Text("Quantity Picker")
+                }
+            }
+            
+            Section("Logged Analytics Events") {
+                if events.isEmpty {
+                    Text("No analytics events logged yet")
+                        .foregroundStyle(.secondary)
+                }
+                ForEach(events, id: \.id) { event in
+                    EventRow(for: event)
                 }
                 
-                Section("Content") {
-                    Button(action: {
-                        handleItemTapped(.testQuantityPicker)
+                if !events.isEmpty {
+                    Button(role: .destructive, action: {
+                        events.removeAll()
                     }) {
-                        Text("Quantity Picker")
-                    }
-                }
-                
-                Section("Logged Analytics Events") {
-                    if events.isEmpty {
-                        Text("No analytics events logged yet")
-                            .foregroundStyle(.secondary)
-                    }
-                    ForEach(events, id: \.id) { event in
-                        EventRow(for: event)
-                    }
-                    
-                    if !events.isEmpty {
-                        Button(role: .destructive, action: {
-                            events.removeAll()
-                        }) {
-                            HStack {
-                                Image(systemName: "trash")
-                                Text("Clear")
-                            }
+                        HStack {
+                            Image(systemName: "trash")
+                            Text("Clear")
                         }
                     }
                 }
-                Section("Current Build Information") {
-                    Text(buildInfo)
-                        .font(.caption.monospaced())
-                        .multilineTextAlignment(.leading)
-                }
-                
-                
             }
-            .listStyle(.insetGrouped)
         }
+        .listStyle(.insetGrouped)
     }
     
     func EventRow(for event: LoggedDispatchEvent) -> some View {
@@ -111,9 +111,9 @@ struct ContentView: View {
     }
     func handleItemTapped(_ route: DispatchRoute) {
         let config: DispatchConfig = DispatchConfig(
-            applicationId: "64b86c02453510acde70250f",
+            applicationId: applicationId,
             environment: environment,
-            merchantId: "merchant.co.dispatch.checkout",
+            merchantId: nil, // Set a Merchant ID here to enable Apple Pay
             orderCompletionCTA: "Back to List"
         )
         DispatchSDK.shared.setup(using: config)

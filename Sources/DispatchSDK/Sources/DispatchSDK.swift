@@ -5,7 +5,7 @@ import Foundation
 public struct DispatchConfig: Equatable {
     let applicationId: String
     let environment: AppEnvironment
-    let merchantId: String
+    let merchantId: String?
     let orderCompletionCTA: String
     let hideOrderCompletionCTA: Bool
     let hideRootCloseButton: Bool
@@ -13,7 +13,7 @@ public struct DispatchConfig: Equatable {
     public init(
         applicationId: String,
         environment: AppEnvironment,
-        merchantId: String,
+        merchantId: String? = nil,
         orderCompletionCTA: String = "Keep Shopping",
         hideOrderCompletionCTA: Bool = false,
         hideRootCloseButton: Bool = false

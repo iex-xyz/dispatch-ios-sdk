@@ -253,13 +253,20 @@ class CheckoutCoordinator: BaseCoordinator {
     }
     
     private func showPayWithApplePay(for checkout: Checkout) {
+        guard let merchantId = config.merchantId else {
+            print("[DispatchSDK] Warning: Invalid merchantId set in DispatchConfig. A merchant id must be set to use Apple Pay.")
+            return
+        }
+
         let viewModel = ApplePayViewModel(
             content: checkout,
             quantity: viewModel.currentQuantity,
             selectedVariant: viewModel.selectedVariation,
             apiClient: apiClient,
-            analyticsClient: analyticsClient
+            analyticsClient: analyticsClient,
+            merchantId: merchantId
         )
+
         let coordinator = ApplePayCoordinator(
             router: router,
             apiClient: apiClient,

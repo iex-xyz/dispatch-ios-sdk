@@ -27,13 +27,3 @@ struct CloseButton: View {
         .clipShape(Circle())
     }
 }
-
-@available(iOS 15.0, *)
-struct CloseButton_Previews: PreviewProvider {
-    static var previews: some View {
-        CloseButton {
-            // Action for the button
-        }
-    }
-    .background(.red)
-}

@@ -62,7 +62,8 @@ class ApplePayViewModel: NSObject, ObservableObject {
         quantity: Int,
         selectedVariant: Variation?,
         apiClient: GraphQLClient,
-        analyticsClient: AnalyticsClient
+        analyticsClient: AnalyticsClient,
+        merchantId: String
     ) {
         self.content = content
         self.apiClient = apiClient
@@ -73,7 +74,7 @@ class ApplePayViewModel: NSObject, ObservableObject {
         self.order = nil
         
         let paymentRequest = PKPaymentRequest()
-        paymentRequest.merchantIdentifier = "merchant.co.dispatch.checkout"
+        paymentRequest.merchantIdentifier = merchantId
         paymentRequest.merchantCapabilities = [.debit, .credit, .threeDSecure]
         paymentRequest.countryCode = "US"
         paymentRequest.currencyCode = content.product.currencyCode
