@@ -104,7 +104,7 @@ class CreditCardInputViewModel: ShippingAddressViewModel {
                 }
                 try await generatePaymentToken()
             } catch {
-                print("[DispatchSDK]: Warning: Unable to generate payment token", error)
+                print("[DispatchSDK]: Error: Unable to generate payment token", error)
                 DispatchQueue.main.async {
                     self.isGeneratingPaymentToken = false
                 }
@@ -163,7 +163,6 @@ class CreditCardInputViewModel: ShippingAddressViewModel {
             country: country.code
         )
         
-        // FIXME: We need a better fallback here
         let billingInfo = BillingInfo(cardPreview: String(cardNumber.suffix(4)), cardType: cardType ?? .visa)
         DispatchQueue.main.async {
             self._onPaymentTokenGenerated.send((response.paymentToken, address, billingInfo))

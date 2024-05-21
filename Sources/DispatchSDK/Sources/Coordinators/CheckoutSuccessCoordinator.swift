@@ -52,9 +52,9 @@ class CheckoutSuccessCoordinator: BaseCoordinator {
             .store(in: &cancellables)
         
         if showAtRoot {
-            router.setRootModule(viewController, animated: true)
+            router.setRootModule(viewController, hideBar: true, animated: true)
         } else {
-            router.setCheckoutRootModule(viewController, animated: true)
+            router.setCheckoutRootModule(viewController, hideBar: true, animated: true)
         }
     }
     

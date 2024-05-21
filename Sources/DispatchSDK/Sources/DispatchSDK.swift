@@ -1,6 +1,7 @@
 import UIKit
 import Foundation
 
+
 public struct DispatchConfig: Equatable {
     let applicationId: String
     let environment: AppEnvironment
@@ -141,6 +142,7 @@ class DefaultDispatchSDK: DispatchSDKService {
         LiveAnalyticsClient(
             environment: config.environment,
             applicationId: config.applicationId,
+            apiClient: apiClient,
             onEventTriggered: { [weak self] event in
                 self?.onEventTriggered?(event)
             }
@@ -149,7 +151,7 @@ class DefaultDispatchSDK: DispatchSDKService {
     
     internal func makeCoordinator() -> Coordinator {
         return MainCoordinator(
-            router: RouterImp(rootController: UINavigationController(), checkoutController: UINavigationController()),
+            router: RouterImp(rootController: NoRotationNavigationController(), checkoutController: NoRotationNavigationController()),
             apiClient: apiClient,
             analyticsClient: analyticsClient,
             config: config
@@ -166,6 +168,7 @@ class DefaultDispatchSDK: DispatchSDKService {
     
     func updateDistributionId(_ distributionId: String) {
         self.distributionId = distributionId
+        self.analyticsClient.updateDistributionId(distributionId)
     }
 
 }
@@ -182,7 +185,7 @@ class FallbackDispatchSDK: DispatchSDKService {
     }
     
     private lazy var analyticsClient: AnalyticsClient = {
-        LiveAnalyticsClient(
+        FallbackAnalyticsClient(
             environment: config.environment,
             applicationId: config.applicationId,
             onEventTriggered: { [weak self] event in
@@ -211,5 +214,6 @@ class FallbackDispatchSDK: DispatchSDKService {
 
     func updateDistributionId(_ distributionId: String) {
         self.distributionId = distributionId
+        self.analyticsClient.updateDistributionId(distributionId)
     }
 }

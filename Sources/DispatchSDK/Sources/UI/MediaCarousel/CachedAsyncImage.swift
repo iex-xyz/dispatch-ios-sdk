@@ -43,9 +43,6 @@ struct CacheAsyncImage<Content, Content2>: View where Content: View, Content2: V
                 contentImage?(cached)
             }
         } else{
-#if DEBUG
-            let _ = print("[DispatchSDK]: Image not cached. Fetching from \(url?.absoluteString ?? "")")
-#endif
             if contentPhase != nil {
                 AsyncImage(url: url,
                            scale: scale,

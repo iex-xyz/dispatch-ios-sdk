@@ -23,7 +23,7 @@ struct CheckoutSuccessView: View {
                             .foregroundStyle(.primary)
                     })
                     .frame(maxWidth: .infinity)
-                    .frame(height: 200)
+                    .frame(height: 320)
                     .clipShape(Rectangle())
                 }
                 

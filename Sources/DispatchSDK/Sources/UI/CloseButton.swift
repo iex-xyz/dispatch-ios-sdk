@@ -22,6 +22,7 @@ struct CloseButton: View {
                 .frame(width: 30, height: 30)
         )
         .frame(width: 44, height: 44)
+        .colorScheme(theme.colorScheme)
         .foregroundColor(.primary)
         .clipShape(Circle())
     }
@@ -34,4 +35,5 @@ struct CloseButton_Previews: PreviewProvider {
             // Action for the button
         }
     }
+    .background(.red)
 }

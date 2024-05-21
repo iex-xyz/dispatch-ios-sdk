@@ -10,8 +10,6 @@ struct Leadgen: Codable {
     let externalTracker: ExternalTracker?
     let externalTrackerId: String?
     let id: String
-    // FIXME: !
-//    let initScreen: InitScreenLeadgen
     let merchantAvailableShippingZones: [String]?
     let merchantEmployerIdentificationNumber: String?
     let merchantId: String
@@ -30,8 +28,6 @@ struct Leadgen: Codable {
     let successBody: String?
     let successHeadlineText: String?
     let successTitle: String?
-    // FIXME: !
-//    let theme: Theme?
     let type: String
     
     

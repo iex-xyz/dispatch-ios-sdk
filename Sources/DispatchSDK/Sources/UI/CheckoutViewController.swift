@@ -30,7 +30,15 @@ struct CheckoutView: View {
                             }
                             .background(theme.backgroundColor)
                             .colorScheme(theme.colorScheme)
-
+                            .gesture(DragGesture(coordinateSpace: .local)
+                                .onEnded { value in
+                                    let width = value.translation.width
+                                    let height = value.translation.height
+                                    // check for down swipe gesture
+                                    if -100 <= width && width <= 100 && height > 0 {
+                                        viewModel.mediaViewModel.selectedImage = nil
+                                    }
+                                })
                         }
 
                     VStack(alignment: .leading) {

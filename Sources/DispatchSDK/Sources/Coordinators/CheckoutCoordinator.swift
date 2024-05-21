@@ -129,7 +129,7 @@ class CheckoutCoordinator: BaseCoordinator {
         }
         .store(in: &cancellables)
 
-        let viewController = UIHostingController<CheckoutView>.init(
+        let viewController = NoRotationHostingController<CheckoutView>.init(
             rootView: .init(viewModel: viewModel)
         )
         
