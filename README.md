@@ -9,7 +9,8 @@ To run the demo project, clone this repo, and open Example.xcworkspace from the 
 
 
 ## Requirements
-iOS 15.0+
+
+iOS 12.0+ (versions below iOS 15 will fallback to a web view experience for older devices)
 
 ## Installation
 ### Swift Package Manager
