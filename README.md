@@ -24,7 +24,9 @@ Click Finish.
 
 ### Cocoapods
 Add the following line to your Podfile:
-pod 'DispatchSDK'
+
+`pod 'DispatchSDK'`
+
 Then run pod install.
 
 ## Setup
@@ -33,7 +35,7 @@ Then run pod install.
 
 `import DispatchSDK`
 
-2. Configure the SDK in your AppDelegate's application(_:didFinishLaunchingWithOptions:) method:
+2. Configure the SDK in your AppDelegate's `application(_:didFinishLaunchingWithOptions:)` method:
 
 ```
 func application(_ application: UIApplication, didFinishLaunchingWithOptions launchOptions: [UIApplication.LaunchOptionsKey: Any]?) -> Bool {
@@ -50,7 +52,8 @@ func application(_ application: UIApplication, didFinishLaunchingWithOptions lau
 
 4. Present the SDK from anywhere in your app:
 
-DispatchSDK.shared.present(with: .checkout(id: "DISTRIBUTION_ID")) 
+`DispatchSDK.shared.present(with: .checkout(id: "DISTRIBUTION_ID"))` 
+
 Replace "DISTRIBUTION_ID" with the actual distribution ID you want to present.
 
 5. (Optional) Register for analytics events:

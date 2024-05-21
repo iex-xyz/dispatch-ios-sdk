@@ -104,7 +104,7 @@ class CreditCardInputViewModel: ShippingAddressViewModel {
                 }
                 try await generatePaymentToken()
             } catch {
-                print("[DispatchSDK] Unable to generate payment token", error)
+                print("[DispatchSDK]: Error: Unable to generate payment token", error)
                 DispatchQueue.main.async {
                     self.isGeneratingPaymentToken = false
                 }
