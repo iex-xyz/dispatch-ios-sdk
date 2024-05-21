@@ -16,7 +16,7 @@ final class MainCoordinator: BaseCoordinator {
     }
     
     override func start() {
-        print("[WARNING] Invalid coordinator invocation. Must use deep link route to start flow")
+        print("[DispatchSDK]: Warning: Invalid coordinator invocation. Must use deep link route to start flow")
     }
     
     override func start(with route: DispatchRoute) {

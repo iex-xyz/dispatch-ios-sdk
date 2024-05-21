@@ -126,13 +126,13 @@ class InitiateCreditCardCheckoutViewModel: ObservableObject {
                 
             } catch let error as GraphQLError {
                 DispatchQueue.main.async {
-                    print("[ERROR] Unable to initiate order: \(error)")
+                    print("[DispatchSDK]: Error: Unable to initiate order: \(error)")
                     self.orderState = .error(error)
                     self.showError = true
                 }
             } catch {
                 DispatchQueue.main.async {
-                    print("[ERROR] Unable to initiate order: \(error)")
+                    print("[DispatchSDK]: Error: Unable to initiate order: \(error)")
                     self.orderState = .error(error)
                 }
             }

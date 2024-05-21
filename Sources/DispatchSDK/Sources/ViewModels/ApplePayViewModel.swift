@@ -245,7 +245,7 @@ extension ApplePayViewModel: PKPaymentAuthorizationViewControllerDelegate {
     func paymentAuthorizationViewControllerDidRequestMerchantSessionUpdate(
         controller: PKPaymentAuthorizationViewController
     ) async -> PKPaymentRequestMerchantSessionUpdate {
-        print("[ApplePay] Merchant update requested")
+        print("[DispatchSDK]: ApplePay: Merchant update requested")
         return .init(status: .success, merchantSession: .init())
     }
     
@@ -258,7 +258,7 @@ extension ApplePayViewModel: PKPaymentAuthorizationViewControllerDelegate {
         do {
             
             if order == nil {
-                print("[ApplePay] Initiating order (no current order found)")
+                print("[DispatchSDK]: ApplePay: Initiating order (no current order found)")
                 self.order = try await initiateOrder()
             }
             
@@ -267,7 +267,7 @@ extension ApplePayViewModel: PKPaymentAuthorizationViewControllerDelegate {
                 let address = contact.postalAddress
             else {
                 // TODO: Error handling
-                print("[ApplePay] Error when updating shipping contact. Missing order or postal address: ", contact.postalAddress ?? "no-address")
+                print("[DispatchSDK]: ApplePay: Error when updating shipping contact. Missing order or postal address: ", contact.postalAddress ?? "no-address")
                 return .init()
             }
 
@@ -306,7 +306,7 @@ extension ApplePayViewModel: PKPaymentAuthorizationViewControllerDelegate {
                 shippingMethods: self.paymentRequest.shippingMethods ?? []
             )
         } catch {
-            print("[ApplePay] Error when updating selected contact: ", error)
+            print("[DispatchSDK]: ApplePay: Error when updating selected contact: ", error)
             return .init(
                 errors: [error],
                 paymentSummaryItems: paymentSummaryItemsGenerator(),
@@ -323,7 +323,7 @@ extension ApplePayViewModel: PKPaymentAuthorizationViewControllerDelegate {
             let orderId = self.order?.id,
             let shippingMethodId = shippingMethod.identifier
         else {
-            print("[ApplePay] Error when updating shipping method. Missing order or shippingMethod identifier: ", shippingMethod.identifier ?? "no-identifier")
+            print("[DispatchSDK]: ApplePay: Error when updating shipping method. Missing order or shippingMethod identifier: ", shippingMethod.identifier ?? "no-identifier")
             return .init()
         }
         let request = UpdateOrderShippingMethodRequest(
@@ -338,18 +338,18 @@ extension ApplePayViewModel: PKPaymentAuthorizationViewControllerDelegate {
             self.selectedShippingMethod = shippingMethod
             self.order = order
 
-            print("[ApplePay] Order (\(order.id) updated shippingMethod: \(shippingMethodId)")
+            print("[DispatchSDK]: ApplePay: Order (\(order.id) updated shippingMethod: \(shippingMethodId)")
             return PKPaymentRequestShippingMethodUpdate(
                 paymentSummaryItems: self.paymentSummaryItemsGenerator()
             )
         } catch {
-            print("[ApplePay] Error when updating shipping method: ", error)
+            print("[DispatchSDK]: ApplePay: Error when updating shipping method: ", error)
             return .init(paymentSummaryItems: paymentSummaryItemsGenerator())
         }
     }
     
     func paymentAuthorizationViewControllerWillAuthorizePayment(_ controller: PKPaymentAuthorizationViewController) {
-        print("[ApplePay] Will authorize payment")
+        print("[DispatchSDK]: ApplePay: Will authorize payment")
     }
 
     func paymentAuthorizationViewController(
@@ -364,7 +364,7 @@ extension ApplePayViewModel: PKPaymentAuthorizationViewControllerDelegate {
             let billingAddress = billing.postalAddress
         else {
             // TODO: Add more verbose errors
-            print("[ApplePay] Error when authorizing payment. Missing billing info or billing contact: ", payment.billingContact ?? "no-billing-contact")
+            print("[DispatchSDK]: ApplePay: Error when authorizing payment. Missing billing info or billing contact: ", payment.billingContact ?? "no-billing-contact")
             return .init(status: .failure, errors: [])
         }
         self.analyticsClient.send(event: .paymentAuthorized_Checkout)
@@ -487,7 +487,7 @@ extension ApplePayViewModel: PKPaymentAuthorizationViewControllerDelegate {
             self.analyticsClient.send(event: .paymentSent_Checkout)
             return PKPaymentAuthorizationResult(status: .success, errors: nil)
         } catch {
-            print("[ApplePay] Error when authorizing payment: ", error)
+            print("[DispatchSDK]: ApplePay: Error when authorizing payment: ", error)
             self.analyticsClient.send(event: .paymentFailed_Checkout)
             return PKPaymentAuthorizationResult(status: .failure, errors: [error])
         }
