@@ -20,5 +20,8 @@ Pod::Spec.new do |s|
   s.resource_bundles = {
     'DispatchSDK' => ['Sources/DispatchSDK/Resources/**/*']
   }
+  
+  s.resources = ['Sources/DispatchSDK/Resources/*.{xcassets}']
+
 end
 
