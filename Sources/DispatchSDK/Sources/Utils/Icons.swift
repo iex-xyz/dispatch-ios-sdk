@@ -57,4 +57,14 @@ struct Icons {
         static var googlePayBadgeDark = Image("payment-badge-gpay-dark", bundle: .module)
 
     }
+    
+    static func bundledImage(named: String) -> UIImage? {
+        let image = UIImage(named: named)
+        if image == nil {
+            return UIImage(named: named, in: Bundle(for: BundleFinder.self), compatibleWith: nil)
+        } // Replace MyBasePodClass with yours
+        return image
+    }
 }
+
+fileprivate class BundleFinder {}
