@@ -19,16 +19,11 @@ class WebViewCoordinator: Coordinator {
         switch route {
         case let .checkout(id):
             navigateToDistribution(with: id)
-        default:
-            break
         }
     }
     
     private func navigateToDistribution(with id: String) {
-        guard let url = URL(string: "https://dispatch.co/") else {
-            return
-        }
-        
+        let url = config.environment.webBaseURL.appendingPathComponent(id)
         let viewController = SFSafariViewController(url: url)
         viewController.modalPresentationStyle = .currentContext
         

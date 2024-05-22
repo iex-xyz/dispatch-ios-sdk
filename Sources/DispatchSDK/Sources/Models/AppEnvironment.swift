@@ -15,6 +15,17 @@ public enum AppEnvironment {
             return URL(string: "https://checkout-api.dispatch.co/graphql")!
         }
     }
+    
+    public var webBaseURL: URL {
+        switch self {
+        case .demo:
+            return URL(string: "https://checkout-demo.dispatch.co/v1/")!
+        case .staging:
+            return URL(string: "https://checkout-staging.dispatch.co/v1/")!
+        case .production:
+            return URL(string: "https://checkout.dispatch.co/v1/")!
+        }
+    }
 }
 
 

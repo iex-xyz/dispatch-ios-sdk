@@ -125,6 +125,35 @@ struct ContentView: View {
     }
 }
 
+extension DispatchRoute {
+    static var testYetiCheckout: Self {
+        return .checkout("652ef22e5599070b1b8b9986")
+    }
+    static var testStanleyCheckout: Self {
+        return .checkout("6638f910ebe97a4d41672c0c")
+    }
+
+    static var testMysteryCheckout: Self {
+        return .checkout("65df6f3a4ae12e4cec1d3eb2")
+    }
+    
+    static var testQuantityPicker: Self {
+        return .checkout("661e8c14116bdd2bfe95eb29")
+    }
+    
+    static var testTidePods: Self {
+        return .checkout("651f1702562b1a728e606392")
+    }
+
+    static var testNanoX: Self {
+        return .checkout("64dabb5fa62014aafefbe89e")
+    }
+
+    static var testFaitesUnDonPour: Self {
+        return .checkout("657207c8281f971e15759444")
+    }
+}
+
 #Preview {
     ContentView()
 }
