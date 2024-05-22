@@ -23,10 +23,7 @@ class WebViewCoordinator: Coordinator {
     }
     
     private func navigateToDistribution(with id: String) {
-        guard let url = URL(string: "https://dispatch.co/") else {
-            return
-        }
-        
+        let url = config.environment.webBaseURL.appendingPathComponent(id)
         let viewController = SFSafariViewController(url: url)
         viewController.modalPresentationStyle = .currentContext
         
