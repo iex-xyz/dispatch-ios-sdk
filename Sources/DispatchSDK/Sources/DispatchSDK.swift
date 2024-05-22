@@ -86,10 +86,6 @@ public class DispatchSDK {
         switch route {
         case let .checkout(id):
             self.distributionId = id
-        case let .leadgen(id):
-            self.distributionId = id
-        default:
-            break
         }
         
         core.updateDistributionId(distributionId)

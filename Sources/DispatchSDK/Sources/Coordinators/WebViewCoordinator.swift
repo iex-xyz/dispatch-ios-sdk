@@ -19,8 +19,6 @@ class WebViewCoordinator: Coordinator {
         switch route {
         case let .checkout(id):
             navigateToDistribution(with: id)
-        default:
-            break
         }
     }
     

@@ -23,32 +23,6 @@ final class MainCoordinator: BaseCoordinator {
         switch route {
         case let .checkout(id):
             runCheckoutFlow(for: id)
-        case let .leadgen(id):
-            runLeadgenFlow(for: id)
-        case let .mock(scenario):
-            switch scenario {
-            case .orderSuccess:
-                let successCoordinator = CheckoutSuccessCoordinator(
-                    router: router,
-                    apiClient: apiClient, 
-                    analyticsClient: analyticsClient,
-                    viewModel: .init(
-                        checkout: .mock(),
-                        orderNumber: UUID().uuidString,
-                        shippingAddress: Address.mock(),
-                        billingInfo: .mock(),
-                        continueCTA: "Keep Shopping",
-                        hideOrderCompletionCTA: false
-                    ),
-                    showAtRoot: true
-                )
-                
-                addDependency(successCoordinator)
-                router.presentSelf {
-                    successCoordinator.start()
-                }
-                
-            }
         }
     }
     
