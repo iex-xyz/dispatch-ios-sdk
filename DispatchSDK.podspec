@@ -1,11 +1,3 @@
-#
-# Be sure to run `pod lib lint DispatchSDK.podspec' to ensure this is a
-# valid spec before submitting.
-#
-# Any lines starting with a # are optional, but their use is encouraged
-# To learn more about a Podspec see https://guides.cocoapods.org/syntax/podspec.html
-#
-
 Pod::Spec.new do |s|
   s.name             = 'DispatchSDK'
   s.version          = '1.0.0'
@@ -13,19 +5,23 @@ Pod::Spec.new do |s|
 
   s.description      = <<-DESC
   iOS SDK that allows applications to enable enable Dispatch’s checkout conversion experiences to be invoked in-app
-    DESC
+  DESC
 
   s.homepage         = 'https://github.com/iex-xyz/dispatch-ios-sdk'
   s.license          = { :type => 'MIT', :file => 'LICENSE' }
   s.author           = { 'Dispatch Solutions, Inc' => 'stephensilber@gmail.com' }
   s.source           = { :git => 'https://github.com/iex-xyz/dispatch-ios-sdk.git', :tag => s.version.to_s }
 
-  s.ios.deployment_target = '15.0'
+  s.ios.deployment_target = '12.0'
   s.swift_version    = '5.5'
 
   s.source_files = 'Sources/DispatchSDK/Sources/**/*'
   
   s.resource_bundles = {
-    'DispatchSDK' => ['Sources/DispatchSDK/Resources/*.json']
+    'DispatchSDK' => ['Sources/DispatchSDK/Resources/**/*']
   }
+  
+  s.resources = ['Sources/DispatchSDK/Resources/*.{xcassets}']
+
 end
+
