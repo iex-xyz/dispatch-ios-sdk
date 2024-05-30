@@ -1,7 +1,7 @@
 import SwiftUI
 import DispatchSDK
 
-struct ContentView: View {
+struct ExampleAppContentView: View {
     @State var environment: AppEnvironment = .demo
     @State var events: [LoggedDispatchEvent] = []
     
@@ -155,5 +155,5 @@ extension DispatchRoute {
 }
 
 #Preview {
-    ContentView()
+    ExampleAppContentView()
 }

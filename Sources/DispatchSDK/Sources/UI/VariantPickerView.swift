@@ -19,6 +19,7 @@ struct VariantPickerView: View {
     func VariantCell(for variant: Variation) -> some View {
         Button(action: {
             viewModel.onVariantTapped(variant)
+            dismiss()
         }) {
             if
                 let attributeKey = variant.attributes?[viewModel.attribute.id],

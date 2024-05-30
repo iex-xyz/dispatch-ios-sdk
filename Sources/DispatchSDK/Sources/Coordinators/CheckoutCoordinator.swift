@@ -25,15 +25,6 @@ class CheckoutCoordinator: BaseCoordinator {
         return controller
     }()
 
-    private lazy var navigationTitleController: UIHostingController<CheckoutNavigationTitle> = {
-        let controller = UIHostingController<CheckoutNavigationTitle>(rootView: CheckoutNavigationTitle(viewModel: viewModel, tapHandler: { [weak self] checkout in
-            self?.showSecureCheckout(for: checkout)
-        }))
-        controller.view.backgroundColor = .clear
-        controller.view.translatesAutoresizingMaskIntoConstraints = false
-        return controller
-    }()
-
     private lazy var leftBarButtonController: UIHostingController<CheckoutLogoImageView> = {
         let controller = UIHostingController<CheckoutLogoImageView>(rootView: CheckoutLogoImageView(viewModel: viewModel))
         
@@ -64,7 +55,7 @@ class CheckoutCoordinator: BaseCoordinator {
         viewModel
             ._onSecureCheckoutButtonTapped
             .sink { [weak self] checkout in
-                self?.showSecureCheckout(for: checkout)
+                self?.showSecureCheckout()
         }
         .store(in: &cancellables)
         
@@ -101,7 +92,7 @@ class CheckoutCoordinator: BaseCoordinator {
             ._onLockButtonTapped
             .sink { [weak self] checkout in
                 self?.analyticsClient.send(event: .trustModalOpened_Checkout)
-                self?.showSecureCheckout(for: checkout)
+                self?.showSecureCheckout()
         }
         .store(in: &cancellables)
         
@@ -137,15 +128,6 @@ class CheckoutCoordinator: BaseCoordinator {
             viewController.navigationItem.rightBarButtonItem = .init(customView: rightBarButtonController.view)
         }
         viewController.navigationItem.leftBarButtonItem = .init(customView: leftBarButtonController.view)
-        viewController.navigationItem.titleView = navigationTitleController.view
-
-        viewModel
-            .$checkout
-            .sink { [weak self] checkout in
-                viewController.navigationItem.titleView = nil
-                viewController.navigationItem.titleView = self?.navigationTitleController.view
-            }
-            .store(in: &cancellables)
 
         viewController.navigationItem.setHidesBackButton(true, animated: false)
         let emptyView = UIView(frame: .zero)
@@ -209,21 +191,23 @@ class CheckoutCoordinator: BaseCoordinator {
         })
     }
     
-    private func showSecureCheckout(for checkout: Checkout) {
-        let viewController = UIHostingController(
-            rootView: SecureCheckoutOverview(checkout: checkout)
-        )
-        if let sheet = viewController.sheetPresentationController {
-            sheet.detents = [.medium()]
-            sheet.preferredCornerRadius = 16
-            sheet.prefersGrabberVisible = true
+    private func showSecureCheckout() {
+        if let checkout = viewModel.checkout {
+            let viewController = UIHostingController(
+                rootView: SecureCheckoutOverview(checkout: checkout)
+            )
+            if let sheet = viewController.sheetPresentationController {
+                sheet.detents = [.medium()]
+                sheet.preferredCornerRadius = 16
+                sheet.prefersGrabberVisible = true
+            }
+            viewController.navigationItem.leftBarButtonItem = .init(customView: leftBarButtonController.view)
+            router.present(viewController, animated: true, completion: { [weak self] in
+                self?.analyticsClient.send(event: .trustModalDismissed_Checkout)
+            })
+            
+            analyticsClient.send(event: .trustModalOpened_Checkout)
         }
-        viewController.navigationItem.leftBarButtonItem = .init(customView: leftBarButtonController.view)
-        router.present(viewController, animated: true, completion: { [weak self] in
-            self?.analyticsClient.send(event: .trustModalDismissed_Checkout)
-        })
-        
-        analyticsClient.send(event: .trustModalOpened_Checkout)
     }
     
     func showProductOverview(for checkout: Checkout) {
