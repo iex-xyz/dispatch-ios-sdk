@@ -7,17 +7,21 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		532FFA3A2C077D7100A13338 /* MusicAppContentView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 532FFA392C077D7100A13338 /* MusicAppContentView.swift */; };
+		532FFA3C2C08FEA200A13338 /* song.mp3 in Resources */ = {isa = PBXBuildFile; fileRef = 532FFA3B2C08FEA200A13338 /* song.mp3 */; };
 		D9004FD22BB384700060A00E /* ExampleApp.swift in Sources */ = {isa = PBXBuildFile; fileRef = D9004FD12BB384700060A00E /* ExampleApp.swift */; };
-		D9004FD42BB384700060A00E /* ContentView.swift in Sources */ = {isa = PBXBuildFile; fileRef = D9004FD32BB384700060A00E /* ContentView.swift */; };
+		D9004FD42BB384700060A00E /* ExampleAppContentView.swift in Sources */ = {isa = PBXBuildFile; fileRef = D9004FD32BB384700060A00E /* ExampleAppContentView.swift */; };
 		D9004FD62BB384710060A00E /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = D9004FD52BB384710060A00E /* Assets.xcassets */; };
 		D9004FD92BB384710060A00E /* Preview Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = D9004FD82BB384710060A00E /* Preview Assets.xcassets */; };
 		DC31C2442BE4639B00EADAAD /* DispatchSDK in Frameworks */ = {isa = PBXBuildFile; productRef = DC31C2432BE4639B00EADAAD /* DispatchSDK */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
+		532FFA392C077D7100A13338 /* MusicAppContentView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MusicAppContentView.swift; sourceTree = "<group>"; };
+		532FFA3B2C08FEA200A13338 /* song.mp3 */ = {isa = PBXFileReference; lastKnownFileType = audio.mp3; path = song.mp3; sourceTree = "<group>"; };
 		D9004FCE2BB384700060A00E /* Example.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = Example.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		D9004FD12BB384700060A00E /* ExampleApp.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ExampleApp.swift; sourceTree = "<group>"; };
-		D9004FD32BB384700060A00E /* ContentView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ContentView.swift; sourceTree = "<group>"; };
+		D9004FD32BB384700060A00E /* ExampleAppContentView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ExampleAppContentView.swift; sourceTree = "<group>"; };
 		D9004FD52BB384710060A00E /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
 		D9004FD82BB384710060A00E /* Preview Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = "Preview Assets.xcassets"; sourceTree = "<group>"; };
 		DC439B852BE475C4005E5DA1 /* dispatch-sdk */ = {isa = PBXFileReference; lastKnownFileType = wrapper; name = "dispatch-sdk"; path = ..; sourceTree = "<group>"; };
@@ -58,8 +62,10 @@
 			isa = PBXGroup;
 			children = (
 				D9004FD12BB384700060A00E /* ExampleApp.swift */,
-				D9004FD32BB384700060A00E /* ContentView.swift */,
+				D9004FD32BB384700060A00E /* ExampleAppContentView.swift */,
+				532FFA392C077D7100A13338 /* MusicAppContentView.swift */,
 				D9004FD52BB384710060A00E /* Assets.xcassets */,
+				532FFA3B2C08FEA200A13338 /* song.mp3 */,
 				D9004FD72BB384710060A00E /* Preview Content */,
 			);
 			path = Sources;
@@ -138,6 +144,7 @@
 			files = (
 				D9004FD92BB384710060A00E /* Preview Assets.xcassets in Resources */,
 				D9004FD62BB384710060A00E /* Assets.xcassets in Resources */,
+				532FFA3C2C08FEA200A13338 /* song.mp3 in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -148,7 +155,8 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				D9004FD42BB384700060A00E /* ContentView.swift in Sources */,
+				D9004FD42BB384700060A00E /* ExampleAppContentView.swift in Sources */,
+				532FFA3A2C077D7100A13338 /* MusicAppContentView.swift in Sources */,
 				D9004FD22BB384700060A00E /* ExampleApp.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
