@@ -17,7 +17,7 @@ struct CheckoutSuccessView: View {
                     AsyncImage(url: url, content: { content in
                         content
                             .resizable()
-                            .scaledToFill()
+                            .scaledToFit()
                     }, placeholder: {
                         ProgressView()
                             .foregroundStyle(.primary)
