@@ -164,6 +164,7 @@ class DefaultDispatchSDK: DispatchSDKService {
     
     func updateDistributionId(_ distributionId: String) {
         self.distributionId = distributionId
+        self.apiClient.updateDistributionId(distributionId)
         self.analyticsClient.updateDistributionId(distributionId)
     }
 
