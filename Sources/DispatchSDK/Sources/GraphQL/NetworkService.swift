@@ -49,6 +49,10 @@ class RealNetworkService: NetworkService {
 // TODO: Add mock data support
 @available(iOS 15.0, *)
 class PreviewNetworkService: NetworkService {
+    func updateDistribution(_ distributionId: String) {
+        //
+    }
+    
     func performRequest(_ urlRequest: URLRequest) async throws -> Data {
         throw NetworkError.serverError(statusCode: 400)
     }
@@ -56,6 +60,10 @@ class PreviewNetworkService: NetworkService {
 
 @available(iOS 13.0.0, *)
 class EmptyNetworkService: NetworkService {
+    func updateDistribution(_ distributionId: String) {
+        //
+    }
+    
     @available(iOS 13.0.0, *)
     func performRequest(_ urlRequest: URLRequest) async throws -> Data {
         throw NetworkError.serverError(statusCode: 400)
