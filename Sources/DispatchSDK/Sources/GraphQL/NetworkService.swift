@@ -8,16 +8,21 @@ enum NetworkError: Error {
 @available(iOS 15.0, *)
 protocol NetworkService {
     func performRequest(_ urlRequest: URLRequest) async throws -> Data
+    func updateDistribution(_ distributionId: String)
 }
 
 @available(iOS 15.0, *)
 class RealNetworkService: NetworkService {
     
     private let applicationId: String
-    private let distributionId: String
+    private var distributionId: String
 
     init(applicationId: String, distributionId: String) {
         self.applicationId = applicationId
+        self.distributionId = distributionId
+    }
+
+    func updateDistribution(_ distributionId: String) {
         self.distributionId = distributionId
     }
     

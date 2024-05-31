@@ -29,4 +29,8 @@ class GraphQLClient {
     func updateEnvironment(_ environment: AppEnvironment) {
         self.environment = environment
     }
+
+    func updateDistributionId(_ distributionId: String) {
+        self.networkService.updateDistribution(distributionId)
+    }
 }
