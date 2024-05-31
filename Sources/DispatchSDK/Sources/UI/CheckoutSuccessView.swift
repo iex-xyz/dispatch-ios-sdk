@@ -14,17 +14,19 @@ struct CheckoutSuccessView: View {
         ZStack {
             VStack {
                 if let imageUrlString = viewModel.checkout.product.baseImages.first, let url = URL(string: imageUrlString) {
-                    AsyncImage(url: url, content: { content in
-                        content
-                            .resizable()
-                            .scaledToFill()
-                    }, placeholder: {
-                        ProgressView()
-                            .foregroundStyle(.primary)
-                    })
-                    .frame(maxWidth: .infinity)
-                    .frame(height: 320)
-                    .clipShape(Rectangle())
+                    GeometryReader { geometry in
+                        AsyncImage(url: url, content: { content in
+                            content
+                                .resizable()
+                                .scaledToFill()
+                        }, placeholder: {
+                            ProgressView()
+                                .foregroundStyle(.primary)
+                        })
+                        .frame(width: geometry.size.width)
+                        .frame(height: 320)
+                        .clipShape(Rectangle())
+                    }
                 }
                 
                 ScrollView {
