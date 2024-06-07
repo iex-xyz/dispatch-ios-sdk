@@ -15,15 +15,19 @@ protocol NetworkService {
 class RealNetworkService: NetworkService {
     
     private let applicationId: String
+    private var sessionId: String
     private var distributionId: String
 
     init(applicationId: String, distributionId: String) {
         self.applicationId = applicationId
         self.distributionId = distributionId
+        self.sessionId = UUID().uuidString
     }
 
     func updateDistribution(_ distributionId: String) {
         self.distributionId = distributionId
+        // generate new session ID when distribution ID has been updated
+        self.sessionId = UUID().uuidString
     }
     
     func performRequest(_ urlRequest: URLRequest) async throws -> Data {
@@ -31,6 +35,7 @@ class RealNetworkService: NetworkService {
         request.setValue(applicationId, forHTTPHeaderField: "x-application-id")
         request.setValue(distributionId, forHTTPHeaderField: "x-source-id")
         request.setValue("IOS", forHTTPHeaderField: "x-application-context")
+        request.setValue(sessionId, forHTTPHeaderField: "x-session-id")
 
         let (data, response) = try await URLSession.shared.data(for: request)
         
