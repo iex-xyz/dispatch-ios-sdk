@@ -14,15 +14,8 @@ struct SecureCheckoutOverview: View {
     var body: some View {
         VStack(alignment: .leading, spacing: 16) {
             ZStack {
-                if let domain = checkout.product.pdpDomain {
-                    MerchantSecurityTag(domain: domain, tapHandler: {})
-                }
                 HStack {
-                    if let url = checkout.merchantLogoUrl {
-                        LogoImageView(logoUrl: url)
-                            .frame(width: 40, height: 40)
-                            .clipShape(Circle())
-                    }
+                    MerchantSecurityTag(tapHandler: {})
                     Spacer()
                     CloseButton {
                         dismiss()

@@ -17,13 +17,15 @@ class CreditCardCoordinator: BaseCoordinator {
     private let didComplete: (InitiateOrder, Address?, BillingInfo?) -> Void
     private let didCancel: () -> Void
     
-    private lazy var navigationTitleController: UIHostingController<MerchantSecurityTag> = {
-        let controller = UIHostingController<MerchantSecurityTag>(rootView: MerchantSecurityTag(domain: viewModel.checkout.product.pdpDomain ?? "", tapHandler: {}))
+    private lazy var securityModalController: UIHostingController<MerchantSecurityTag> = {
+        let controller = UIHostingController<MerchantSecurityTag>(rootView: MerchantSecurityTag(tapHandler: {
+            self.showSecureCheckout()
+        }))
         controller.view.backgroundColor = .clear
         controller.view.translatesAutoresizingMaskIntoConstraints = false
         return controller
     }()
-
+    
     private lazy var closeButtonController: UIHostingController<CloseButton> = {
         let controller = UIHostingController<CloseButton>(rootView: CloseButton { [weak self] in
             self?.router.dismissCheckout(completion: nil)
@@ -71,10 +73,10 @@ class CreditCardCoordinator: BaseCoordinator {
         let viewController = UIHostingController<ContactInformationForm>(
             rootView: ContactInformationForm(viewModel: viewModel)
         )
-
+        
         viewController.navigationItem.rightBarButtonItem = .init(customView: closeButtonController.view)
-        viewController.navigationItem.titleView = navigationTitleController.view
-
+        viewController.navigationItem.leftBarButtonItem = .init(customView: securityModalController.view)
+        
         viewModel
             ._onOrderInitiated
             .sink { [weak self] order, email in
@@ -87,7 +89,7 @@ class CreditCardCoordinator: BaseCoordinator {
                 )
             }
             .store(in: &cancellables)
-
+        
         router.presentCheckout(viewController, completion: nil)
     }
     
@@ -105,10 +107,9 @@ class CreditCardCoordinator: BaseCoordinator {
         let viewController: UIHostingController<ShippingAddressFormContainer> = .init(
             rootView: ShippingAddressFormContainer(viewModel: viewModel)
         )
-
+        
         viewController.navigationItem.rightBarButtonItem = .init(customView: closeButtonController.view)
-        viewController.navigationItem.titleView = navigationTitleController.view
-
+        
         viewModel
             ._onOrderUpdated
             .sink {
@@ -141,10 +142,9 @@ class CreditCardCoordinator: BaseCoordinator {
                 viewModel: viewModel
             )
         )
-
+        
         viewController.navigationItem.rightBarButtonItem = .init(customView: closeButtonController.view)
-        viewController.navigationItem.titleView = navigationTitleController.view
-
+        
         viewModel
             ._onShippingMethodTapped
             .sink { [weak self] shippingMethod in
@@ -152,7 +152,7 @@ class CreditCardCoordinator: BaseCoordinator {
                     for: order,
                     variant: variant,
                     email: email,
-                    shippingAddress: address, 
+                    shippingAddress: address,
                     phone: phone,
                     shippingMethod: shippingMethod
                 )
@@ -180,15 +180,14 @@ class CreditCardCoordinator: BaseCoordinator {
                 viewModel: viewModel
             )
         )
-
+        
         viewController.navigationItem.rightBarButtonItem = .init(customView: closeButtonController.view)
-        viewController.navigationItem.titleView = navigationTitleController.view
-
+        
         viewModel
             ._onPaymentTokenGenerated
             .sink {
                 [weak self] (paymentToken,
-                billingAddress, billingInfo) in
+                             billingAddress, billingInfo) in
                 self?.showOrderPreview(
                     for: order,
                     email: email,
@@ -254,8 +253,26 @@ class CreditCardCoordinator: BaseCoordinator {
         else {
             return
         }
-            
+        
         UIApplication.shared.open(url)
+    }
+    
+    private func showSecureCheckout() {
+        let viewController = UIHostingController(
+            rootView: SecureCheckoutOverview(checkout: viewModel.checkout)
+        )
+        if let sheet = viewController.sheetPresentationController {
+            sheet.detents = [.medium()]
+            sheet.preferredCornerRadius = 16
+            sheet.prefersGrabberVisible = true
+        }
+        
+        router.dismissSelf(completion: {
+            self.router.present(viewController, animated: true, completion:  { [weak self] in
+                self?.analyticsClient.send(event: .trustModalDismissed_Checkout)
+            })
+        })
+        analyticsClient.send(event: .trustModalOpened_Checkout)
     }
     
 }

@@ -49,7 +49,7 @@ struct ContactInformationForm: View {
             }
             
             Toggle(isOn: $viewModel.hasAgreedToTerms, label: {
-                Text("Allow \(viewModel.checkout.merchantName) to use this email address for marketing and newsletters.")
+                Text("Allow merchant to use this email address for marketing and newsletters.")
                     .font(.caption)
             })
             .toggleStyle(
@@ -95,7 +95,7 @@ struct ContactInformationForm_Preview: PreviewProvider {
             ContactInformationForm(
                 viewModel: .init(
                     checkout: .mock(),
-                    variant: nil, 
+                    variant: nil,
                     quantity: 1,
                     apiClient: GraphQLClient(
                         networkService: PreviewNetworkService(),

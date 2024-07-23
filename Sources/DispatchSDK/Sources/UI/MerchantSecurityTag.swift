@@ -4,7 +4,6 @@ import SwiftUI
 struct MerchantSecurityTag: View {
     @Preference(\.theme) var theme
 
-    let domain: String
     let tapHandler: () -> Void
     
     var body: some View {
@@ -14,9 +13,6 @@ struct MerchantSecurityTag: View {
             HStack {
                 Image(systemName: "lock.circle") // TODO: Dotted version from figma?
                     .foregroundStyle(Color.dispatchBlue)
-                Text(domain)
-                    .font(.footnote)
-                    .foregroundStyle(.primary)
             }
             .padding(4)
             .background(Colors.secondaryBackgroundColor)
@@ -29,7 +25,7 @@ struct MerchantSecurityTag: View {
 
 @available(iOS 15.0, *)
 #Preview {
-    MerchantSecurityTag(domain: "nike.com", tapHandler: {})
+    MerchantSecurityTag(tapHandler: {})
 }
 
 // WIP: This still has some tweaks before it can work well in the MerchantSecurityTag

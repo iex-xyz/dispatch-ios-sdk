@@ -5,10 +5,8 @@ struct ExampleApp: App {
     var body: some Scene {
         WindowGroup {
             NavigationView {
-                ContentView()
-                    .navigationTitle("Dispatch SDK")
-            }
-            .navigationBarTitleDisplayMode(.large)
+                MusicPlayerView()
+            }.background(Color.black.edgesIgnoringSafeArea(.all))
         }
     }
 }
