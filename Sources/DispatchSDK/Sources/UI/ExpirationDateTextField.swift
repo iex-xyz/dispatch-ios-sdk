@@ -84,31 +84,6 @@ struct ExpirationDateTextField: UIViewRepresentable {
             textField.text = formatted
             parent.text = formatted
             return false // We've handled the text input manually
-            
-            //            let currentText = (textField.text as NSString?)?.replacingCharacters(in: range, with: string) ?? ""
-            //            if string == "" { // Allow deletion
-            //                parent.text = currentText
-            //                return true
-            //            }
-            //            let cleaned = currentText.filter { "0123456789".contains($0) }
-            //            var formatted = ""
-            //
-            //            if cleaned.count >= 1 {
-            //                let month = String(cleaned.prefix(2))
-            //                formatted += month
-            //                if Int(month) ?? 0 > 12 {
-            //                    formatted = "12"
-            //                }
-            //                if cleaned.count >= 3 {
-            //                    formatted += "/"
-            //                    formatted += String(cleaned.suffix(cleaned.count - 2))
-            //                }
-            //            }
-            //            formatted = String(formatted.prefix(5)) // Limit to MM/YY format
-            //
-            //            textField.text = formatted
-            //            parent.text = formatted
-            //            return false // We've handled the text input manually
         }
     }
 }

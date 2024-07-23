@@ -1,5 +1,5 @@
 //
-//  MusicAppContentView.swift
+//  MusicPlayerView.swift
 //  Example
 //
 //  Created by Yesh Chandiramani (Dispatch) on 5/29/24.
@@ -7,7 +7,7 @@
 
 import SwiftUI
 
-struct MusicAppContentView: View {
+struct MusicPlayerView: View {
     @StateObject private var audioPlayer = AudioPlayer()
     
     var body: some View {
@@ -101,5 +101,5 @@ struct MusicAppContentView: View {
 }
 
 #Preview {
-    MusicAppContentView()
+    MusicPlayerView()
 }
