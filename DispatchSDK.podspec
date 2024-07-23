@@ -1,6 +1,6 @@
 Pod::Spec.new do |s|
   s.name             = 'DispatchSDK'
-  s.version          = '1.0.1'
+  s.version          = '1.0.3'
   s.summary          = 'Enable Dispatch’s checkout experiences to be invoked in-app'
 
   s.description      = <<-DESC
