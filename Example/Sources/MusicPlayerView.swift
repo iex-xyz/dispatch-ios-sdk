@@ -82,6 +82,14 @@ struct MusicPlayerView: View {
                     }
                     Spacer()
                     Button(action: {
+                        audioPlayer.toggleLooping()
+                    }) {
+                        Image(systemName: "repeat")
+                            .foregroundColor(audioPlayer.isLooping ? Color(red: 255/255, green: 93/255, blue: 36/255) : .white)
+                            .font(.title)
+                    }
+                    Spacer()
+                    Button(action: {
                         audioPlayer.fastForward()
                     }) {
                         Image(systemName: "goforward.15")

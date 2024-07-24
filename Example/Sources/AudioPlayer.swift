@@ -12,6 +12,7 @@ class AudioPlayer: NSObject, ObservableObject, AVAudioPlayerDelegate {
     var player: AVAudioPlayer?
     @Published var isPlaying = false
     @Published var currentTime: TimeInterval = 0
+    @Published var isLooping = true
     var timer: Timer?
 
     override init() {
@@ -26,6 +27,7 @@ class AudioPlayer: NSObject, ObservableObject, AVAudioPlayerDelegate {
                 try AVAudioSession.sharedInstance().setCategory(.playback)
                 player?.delegate = self
                 player?.prepareToPlay()
+                player?.numberOfLoops = isLooping ? -1 : 0 // -1 is to set the loop infinitely until stopped
             } catch {
                 print("Error loading audio file: \(error)")
             }
@@ -73,10 +75,17 @@ class AudioPlayer: NSObject, ObservableObject, AVAudioPlayerDelegate {
     }
     
     func audioPlayerDidFinishPlaying(_ player: AVAudioPlayer, successfully flag: Bool) {
-        stopTimer()
-        isPlaying = false
-        currentTime = 0
-        player.currentTime = 0
+        if !isLooping {
+            stopTimer()
+            isPlaying = false
+            currentTime = 0
+            player.currentTime = 0
+        }
+    }
+    
+    func toggleLooping() {
+        isLooping.toggle()
+        player?.numberOfLoops = isLooping ? -1 : 0
     }
     
     deinit {
