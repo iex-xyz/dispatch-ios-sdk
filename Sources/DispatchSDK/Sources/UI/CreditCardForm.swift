@@ -20,7 +20,10 @@ struct CreditCardForm: View {
         case cardNumber, expiry, securityCode
     }
     var body: some View {
-        VStack {
+        VStack(alignment: .leading){
+            Text("Credit Card Details")
+                .font(.title3.bold())
+                .padding(.horizontal)
             ScrollView {
                 VStack(spacing: 16) {
                     VStack(alignment: .leading, spacing: 8) {

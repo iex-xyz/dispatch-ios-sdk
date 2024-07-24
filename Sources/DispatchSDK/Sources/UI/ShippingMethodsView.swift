@@ -10,31 +10,36 @@ struct ShippingMethodsView: View {
     }
     
     var body: some View {
-        ScrollView {
-            VStack {
-                switch viewModel.state {
-                case .idle:
-                    EmptyView()
-                case .loading:
-                    ForEach(0..<3) { idx in
-                        ShippingMethodCell.SkeletonView()
-                    }
-                case let .loaded(shippingMethods):
-                    ForEach(shippingMethods) { shippingMethod in
-                        Button(action: {
-                            viewModel.onShippingMethodTapped(shippingMethod)
-                        }) {
-                            ShippingMethodCell(shippingMethod: shippingMethod)
-                                .tint(.primary)
+        VStack(alignment: .leading) {
+            Text("Shipping Method")
+                .font(.title3.bold())
+                .padding(.horizontal)
+            ScrollView {
+                VStack {
+                    switch viewModel.state {
+                    case .idle:
+                        EmptyView()
+                    case .loading:
+                        ForEach(0..<3) { idx in
+                            ShippingMethodCell.SkeletonView()
                         }
-                        .disabled(viewModel.shippingMethodState.isButtonDisabled)
+                    case let .loaded(shippingMethods):
+                        ForEach(shippingMethods) { shippingMethod in
+                            Button(action: {
+                                viewModel.onShippingMethodTapped(shippingMethod)
+                            }) {
+                                ShippingMethodCell(shippingMethod: shippingMethod)
+                                    .tint(.primary)
+                            }
+                            .disabled(viewModel.shippingMethodState.isButtonDisabled)
+                        }
+                        
+                    case .error:
+                        Text("Something went wrong")
                     }
-                    
-                case .error:
-                    Text("Something went wrong")
                 }
+                .padding()
             }
-            .padding()
         }
         .background(theme.backgroundColor)
         .colorScheme(theme.colorScheme)
