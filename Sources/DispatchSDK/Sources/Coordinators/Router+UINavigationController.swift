@@ -37,6 +37,7 @@ final class RouterImp: NSObject, Router {
         
         checkoutController.setViewControllers([rootViewController], animated: false)
         checkoutController.modalPresentationStyle = .overFullScreen
+        checkoutController.isNavigationBarHidden = false
         
         rootController?
             .present(
