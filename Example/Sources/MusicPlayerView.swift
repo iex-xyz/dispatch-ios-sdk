@@ -8,7 +8,9 @@
 import SwiftUI
 
 struct MusicPlayerView: View {
-    @StateObject private var audioPlayer = AudioPlayer()
+    @EnvironmentObject private var audioPlayer: AudioPlayer
+    
+    let orangeColor = Color(red: 255/255, green: 93/255, blue: 36/255)
     
     var body: some View {
         VStack {
@@ -59,8 +61,9 @@ struct MusicPlayerView: View {
                         Image(systemName: audioPlayer.isPlaying ? "pause.circle.fill" : "play.circle.fill")
                             .resizable()
                             .frame(width: 60, height: 60)
-                            .foregroundColor(Color(red: 255/255, green: 93/255, blue: 36/255))
+                            .foregroundColor(orangeColor)
                     }
+                    .id(audioPlayer.isPlaying)
                 }
                 .padding()
                 .background(Color.black.opacity(0.6))
@@ -69,7 +72,7 @@ struct MusicPlayerView: View {
                 Slider(value: $audioPlayer.currentTime, in: 0...(audioPlayer.player?.duration ?? 1), onEditingChanged: { _ in
                     audioPlayer.player?.currentTime = audioPlayer.currentTime
                 })
-                .accentColor(Color(red: 255/255, green: 93/255, blue: 36/255))
+                .accentColor(orangeColor)
                 .padding([.leading, .trailing])
                 
                 HStack {
@@ -85,7 +88,7 @@ struct MusicPlayerView: View {
                         audioPlayer.toggleLooping()
                     }) {
                         Image(systemName: "repeat")
-                            .foregroundColor(audioPlayer.isLooping ? Color(red: 255/255, green: 93/255, blue: 36/255) : .white)
+                            .foregroundColor(audioPlayer.isLooping ? orangeColor : .white)
                             .font(.title)
                     }
                     Spacer()
@@ -102,12 +105,10 @@ struct MusicPlayerView: View {
             Spacer()
         }
         .background(Color.black.edgesIgnoringSafeArea(.all))
-        .onAppear {
-            audioPlayer.loadAudio()
-        }
     }
 }
 
 #Preview {
     MusicPlayerView()
+        .environmentObject(AudioPlayer())
 }

@@ -14,11 +14,12 @@ class AudioPlayer: NSObject, ObservableObject, AVAudioPlayerDelegate {
     @Published var currentTime: TimeInterval = 0
     @Published var isLooping = true
     var timer: Timer?
-
+    
     override init() {
         super.init()
+        loadAudio()
     }
-
+    
     func loadAudio() {
         if let path = Bundle.main.path(forResource: "song", ofType: "mp3") {
             let url = URL(fileURLWithPath: path)
@@ -27,7 +28,7 @@ class AudioPlayer: NSObject, ObservableObject, AVAudioPlayerDelegate {
                 try AVAudioSession.sharedInstance().setCategory(.playback)
                 player?.delegate = self
                 player?.prepareToPlay()
-                player?.numberOfLoops = isLooping ? -1 : 0 // -1 is to set the loop infinitely until stopped
+                updateLoopingState()
             } catch {
                 print("Error loading audio file: \(error)")
             }
@@ -43,7 +44,7 @@ class AudioPlayer: NSObject, ObservableObject, AVAudioPlayerDelegate {
             player.play()
             startTimer()
         }
-        isPlaying.toggle()
+        isPlaying = player.isPlaying
     }
     
     func rewind() {
@@ -75,17 +76,29 @@ class AudioPlayer: NSObject, ObservableObject, AVAudioPlayerDelegate {
     }
     
     func audioPlayerDidFinishPlaying(_ player: AVAudioPlayer, successfully flag: Bool) {
-        if !isLooping {
+        if isLooping {
+            player.currentTime = 0
+            player.play()
+            isPlaying = true
+            startTimer()
+        } else {
             stopTimer()
             isPlaying = false
             currentTime = 0
-            player.currentTime = 0
         }
     }
     
     func toggleLooping() {
         isLooping.toggle()
-        player?.numberOfLoops = isLooping ? -1 : 0
+        updateLoopingState()
+    }
+    
+    private func updateLoopingState() {
+        if isLooping {
+            player?.numberOfLoops = -1  // Loop indefinitely
+        } else {
+            player?.numberOfLoops = 0  // No looping
+        }
     }
     
     deinit {

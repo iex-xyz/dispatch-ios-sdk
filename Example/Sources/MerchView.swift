@@ -15,6 +15,8 @@ struct CheckoutItem {
 }
 
 struct MerchView: View {
+    @EnvironmentObject private var audioPlayer: AudioPlayer
+
     let items = [
         CheckoutItem(id: "6658978ca433607696246daa", name: "Tshirt", price: "$29.99"),
         CheckoutItem(id: "665a2a57a433607696247b74", name: "Crew Neck", price: "$49.99")
@@ -64,7 +66,7 @@ struct MerchView: View {
             applicationId: "64b86c02453510acde70250f",
             environment: .demo,
             merchantId: "merchant.co.dispatch.checkout",
-            orderCompletionCTA: "Back To Merch"
+            orderCompletionCTA: "Back To Music"
         )
         DispatchSDK.shared.setup(using: config)
         DispatchSDK.shared.present(with: .checkout(checkoutId))
@@ -73,4 +75,5 @@ struct MerchView: View {
 
 #Preview {
     MerchView()
+        .environmentObject(AudioPlayer())
 }
