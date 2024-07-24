@@ -15,21 +15,28 @@ struct CheckoutSuccessView: View {
             VStack {
                 if let imageUrlString = viewModel.checkout.product.baseImages.first, let url = URL(string: imageUrlString) {
                     GeometryReader { geometry in
-                        AsyncImage(url: url, content: { content in
-                            content
-                                .resizable()
-                                .scaledToFill()
-                        }, placeholder: {
-                            ProgressView()
-                                .foregroundStyle(.primary)
-                        })
-                        .frame(width: geometry.size.width)
+                        AsyncImage(url: url) { phase in
+                            switch phase {
+                            case .empty:
+                                ProgressView()
+                                    .foregroundStyle(.primary)
+                            case .success(let image):
+                                image
+                                    .resizable()
+                                    .scaledToFill()
+                            case .failure:
+                                Color.gray // Placeholder for failed image load
+                            @unknown default:
+                                EmptyView()
+                            }
+                        }
                         .frame(height: 320)
                         .clipShape(Rectangle())
                     }
                 }
                 
                 ScrollView {
+                    // Content of the success view (order details, etc.)
                     VStack(alignment: .leading) {
                         VStack(alignment: .leading) {
                             Text("Success!")
@@ -75,6 +82,7 @@ struct CheckoutSuccessView: View {
                     }
                 }
                 
+                // Bottom buttons and footer
                 VStack(spacing: 16) {
                     if !viewModel.hideOrderCompletionCTA {
                         Button(action: {
@@ -90,10 +98,10 @@ struct CheckoutSuccessView: View {
             }
             .background(theme.backgroundColor)
             .colorScheme(theme.colorScheme)
-            GeometryReader { geo in
-                SpriteView(scene: ParticleScene(size: geo.size), options: [.allowsTransparency])
-                    .frame(width: geo.size.width, height: geo.size.height)
-                    .allowsHitTesting(false)
+            GeometryReader { geometry in
+                // Overlay the particle effect
+                ParticleView(size: geometry.size)
+                    .allowsHitTesting(false) // Prevent the particle effect from intercepting touches
             }
         }
     }
@@ -113,7 +121,7 @@ struct CheckoutSuccessView: View {
         orderNumber: "C0192329328",
         shippingAddress: .mock(),
         billingInfo: .mock(),
-        continueCTA: "Keep Shopping", 
+        continueCTA: "Keep Shopping",
         hideOrderCompletionCTA: false
     )
     return CheckoutSuccessView(
